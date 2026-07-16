@@ -1,0 +1,45 @@
+# Render Blueprint — Baret backend (apps/server, Fastify analyzer API).
+# Usage: render.com → New → Blueprint → pick this repo. Render reads this file.
+# Free plan sleeps after 15 min idle; first request then cold-starts in ~30 s.
+services:
+  - type: web
+    name: baret-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    # Render injects PORT; the server reads it (apps/server/src/config/index.ts).
+    # --prod=false is required so pnpm installs devDeps (typescript, @types/node)
+    # — otherwise the tsc build fails. Build @baret/guard before @baret/server
+    # because the server imports it as a workspace dependency (resolves to dist).
+    buildCommand: corepack enable && corepack prepare pnpm@10.33.2 --activate && pnpm install --frozen-lockfile --prod=false && pnpm --filter @baret/guard build && pnpm --filter @baret/server build
+    startCommand: node apps/server/dist/index.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: NETWORK
+        value: testnet
+      # Required — without a valid URL the server refuses to start (zod .url()).
+      - key: RPC_URL
+        value: https://testnet-rpc.monad.xyz
+      # Real client IP + rate limiting behind Render's proxy.
+      - key: DELTAG_TRUST_PROXY
+        value: "true"
+      # The showcase/wallet send "dev-key-change-me" by default; match it so the
+      # public demo works out of the box. Change here + in the frontend env to lock down.
+      - key: DELTAG_API_KEYS
+        value: dev-key-change-me
+      # Allow the Vercel-hosted wallet (separate origin) to call the API.
+      - key: CORS_ALLOW_ORIGIN
+        value: "*"
+      # x402 payment gate off for the free demo.
+      - key: X402_ENABLED
+        value: "false"
+      # Set to the real USDC contract on your target chain before relying on token metadata / x402.
+      # - key: USDC_ADDRESS
+      #   value: "0x..."

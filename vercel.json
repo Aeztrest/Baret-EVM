@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "pnpm install --frozen-lockfile --prod=false",
+  "buildCommand": "pnpm run vercel-build",
+  "outputDirectory": "apps/showcase/dist",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://baret-api.onrender.com/:path*" },
+    { "source": "/wallet/:path*", "destination": "/wallet/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

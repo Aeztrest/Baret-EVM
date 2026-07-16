@@ -1,0 +1,15 @@
+{
+  "name": "baret",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "build": "pnpm --filter @baret/server build",
+    "build:server": "pnpm --filter @baret/server build",
+    "build:guard": "pnpm --filter @baret/guard build",
+    "dev": "pnpm --filter @baret/server dev",
+    "dev:server": "pnpm --filter @baret/server dev",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "pnpm --filter @baret/server test",
+    "vercel-build": "pnpm --filter @baret/guard build && pnpm --filter @baret/wallet-adapter build && pnpm --filter @baret/ui build && VITE_ANALYZE_URL=/api VITE_WALLET_URL=https://baret.example/wallet pnpm --filter @baret/showcase build && WALLET_BASE=/wallet/ VITE_ANALYZE_URL=/api pnpm --filter @baret/wallet build && rm -rf apps/showcase/dist/wallet && cp -r apps/wallet/dist apps/showcase/dist/wallet"
+  }
+}
