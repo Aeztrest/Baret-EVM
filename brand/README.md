@@ -1,14 +1,13 @@
 # Baret — Brand assets
 
-The Baret mark is a **foresight eye**: the firewall *sees* the transaction
-before you sign it.
+The Baret mark is a **hard hat**: protection before you sign.
 
 ## Files
 
 | File | Use |
 | --- | --- |
-| `baret-mark.svg` / `baret-mark-{64,128,256,512,1024}.png` | App icon / avatar (ink tile + eye). Primary mark. |
-| `baret-glyph.svg` / `baret-glyph-512.png` | Eye only, transparent (no tile) — for tinted contexts. |
+| `baret-mark.svg` / `baret-mark-{64,128,256,512,1024}.png` | App icon / avatar (ink tile + hard hat). Primary mark. |
+| `baret-glyph.svg` / `baret-glyph-512.png` | Hard hat only, transparent (no tile) — for tinted contexts. |
 | `baret-lockup.svg` / `.png` | Horizontal mark + wordmark, **dark text** (light backgrounds). |
 | `baret-lockup-light.svg` / `.png` | Horizontal lockup, **white text** (dark backgrounds). |
 
@@ -21,9 +20,14 @@ installed).
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| Signature Violet | `#836EF9` | Iris / accent / wordmark dot |
-| Ink | `#141414` | Tile / wordmark on light |
-| White | `#FFFFFF` | Eye / wordmark on dark |
+| Ink | `#141414` | Tile / wordmark on light / primary text |
+| Luxury Gray | `#5B6169` | Brim / accent / wordmark dot |
+| Luxury Gray (soft) | `#454A50` | Hover / pressed states |
+| White | `#FFFFFF` | Dome / wordmark on dark |
+
+A deliberately monochrome palette — black, white, and one graphite gray — kept
+legible and low-fatigue: no saturated hues competing with the risk-severity
+colors (`--ok` / `--warn` / `--bad` / `--live`) used elsewhere in the product.
 
 ## Typeface
 
@@ -31,7 +35,7 @@ Wordmark: **Space Grotesk**, weight 700, letter-spacing ~0.04em, uppercase.
 
 ## Don'ts
 
-- Don't recolor the iris to anything but the signature violet.
+- Don't recolor the brim/accent to anything but the luxury gray.
 - Don't add effects (shadows, gradients) to the mark.
 - Keep clear space around the mark ≥ 25% of its height.
 

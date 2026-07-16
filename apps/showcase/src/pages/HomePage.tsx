@@ -1,5 +1,5 @@
 /**
- * Baret home — white-first landing with violet + ink-black.
+ * Baret home — white-first landing with graphite + ink-black.
  * Voice: construction-site safety for your signature. "Sign safe. Build on."
  */
 
@@ -157,7 +157,7 @@ function LiveAnalysisCard() {
       className="relative"
     >
       <div className="absolute -inset-6 rounded-[2rem] opacity-60 blur-2xl"
-           style={{ background: "radial-gradient(closest-side, rgba(131, 110, 249,0.18), transparent 70%)" }} />
+           style={{ background: "radial-gradient(closest-side, rgba(91, 97, 105,0.18), transparent 70%)" }} />
 
       {/* The analysis console renders dark — Baret's "inspection booth" inside the white page */}
       <div className="relative rounded-2xl overflow-hidden bg-ink-900 text-white shadow-lift">
@@ -208,11 +208,11 @@ function LiveAnalysisCard() {
                 className="flex items-start gap-3 p-3 rounded-xl border"
                 style={{
                   borderColor:
-                    f.sev === "danger" ? "rgba(131, 110, 249,0.45)" :
+                    f.sev === "danger" ? "rgba(91, 97, 105,0.45)" :
                     f.sev === "warn"   ? "rgba(255,171,110,0.30)" :
                                          "rgba(255,255,255,0.10)",
                   background:
-                    f.sev === "danger" ? "rgba(131, 110, 249,0.10)" :
+                    f.sev === "danger" ? "rgba(91, 97, 105,0.10)" :
                     f.sev === "warn"   ? "rgba(255,171,110,0.06)" :
                                          "rgba(255,255,255,0.03)",
                 }}
@@ -395,7 +395,7 @@ function PillarCard({ tag, icon: Icon, title, body, points, index }:
       <div
         aria-hidden
         className="absolute -top-24 -right-24 w-56 h-56 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: "radial-gradient(closest-side, rgba(131, 110, 249,0.10), transparent 70%)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(91, 97, 105,0.10), transparent 70%)" }}
       />
 
       <div className="relative">

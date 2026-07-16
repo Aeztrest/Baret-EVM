@@ -1,7 +1,7 @@
 /**
  * Baret brand chrome — logo mark, header, footer, light backdrop.
  *
- * Identity: "Baret" = transaction foresight. White-first surfaces, violet (#836EF9)
+ * Identity: "Baret" = transaction foresight. White-first surfaces, graphite (#5B6169)
  * accents, ink-black (#141414) type. Signature motif: the hazard stripe.
  */
 
@@ -20,16 +20,13 @@ const NAV_LINKS = [
   { label: "Install",   to: "/install" },
 ];
 
-/** The Baret foresight mark: an eye on an ink tile — the firewall sees the tx. */
+/** The Baret hard-hat mark on an ink tile — protection before you sign. */
 export function BaretMark({ size = 32 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
       <rect width="32" height="32" rx="8" fill="#141414" />
-      <path
-        d="M6 16c3-4.7 7-7 10-7s7 2.3 10 7c-3 4.7-7 7-10 7s-7-2.3-10-7Z"
-        fill="#FFFFFF"
-      />
-      <circle cx="16" cy="16" r="3.7" fill="#836EF9" />
+      <ellipse cx="16" cy="20.5" rx="11" ry="2.3" fill="#5B6169" />
+      <path d="M7,20 C7,13 11,9.5 16,9.5 C21,9.5 25,13 25,20 Z" fill="#FFFFFF" />
     </svg>
   );
 }
@@ -66,7 +63,7 @@ export function BackdropGrid() {
       />
       <div
         className="absolute -top-48 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full"
-        style={{ background: "radial-gradient(closest-side, rgba(131, 110, 249,0.10), transparent 70%)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(91, 97, 105,0.10), transparent 70%)" }}
       />
     </div>
   );

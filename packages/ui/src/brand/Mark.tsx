@@ -1,19 +1,19 @@
 /**
- * BARET brand glyph — a foresight "eye": the firewall sees the transaction
- * before you sign it. Renders in signature violet (#836EF9) by default; pass
- * `mono` to inherit `currentColor` (for tinted contexts).
+ * BARET brand glyph — a hard hat: the firewall protects before you sign.
+ * Renders in signature graphite (#5B6169) by default; pass `mono` to inherit
+ * `currentColor` (for tinted contexts).
  */
 
 import type { SVGProps } from "react";
 
 export interface MarkProps extends SVGProps<SVGSVGElement> {
   size?: number | string;
-  /** Render single-color using currentColor instead of the signature violet. */
+  /** Render single-color using currentColor instead of the signature graphite. */
   mono?: boolean;
 }
 
 export function Mark({ size = 24, mono = false, ...rest }: MarkProps) {
-  const c = mono ? "currentColor" : "#836EF9";
+  const c = mono ? "currentColor" : "#5B6169";
   return (
     <svg
       width={size}
@@ -26,12 +26,14 @@ export function Mark({ size = 24, mono = false, ...rest }: MarkProps) {
       {...rest}
     >
       <path
-        d="M2 12c2.4-3.7 5.6-5.5 10-5.5S19.6 8.3 22 12c-2.4 3.7-5.6 5.5-10 5.5S4.4 15.7 2 12Z"
+        d="M4 17c0-4.4 3.6-8 8-8s8 3.6 8 8"
         stroke={c}
         strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="12" cy="12" r="3" fill={c} />
+      <path d="M2.5 17.5h19" stroke={c} strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="9" r="1.4" fill={c} />
     </svg>
   );
 }

@@ -152,8 +152,8 @@ export default function AgentsPage() {
                       onClick={() => setAction(a.id)}
                       className="w-full text-left px-3 py-2.5 rounded-xl border transition-all"
                       style={{
-                        borderColor: action === a.id ? "rgba(131,110,249,0.5)" : "rgba(20,20,20,0.1)",
-                        background: action === a.id ? "rgba(131,110,249,0.06)" : "transparent",
+                        borderColor: action === a.id ? "rgba(91,97,105,0.5)" : "rgba(20,20,20,0.1)",
+                        background: action === a.id ? "rgba(91,97,105,0.06)" : "transparent",
                       }}
                     >
                       <p className="text-sm font-semibold text-ink-900">{a.label}</p>
@@ -172,9 +172,9 @@ export default function AgentsPage() {
                       onClick={() => setPolicyName(p)}
                       className="flex-1 px-3 py-2 rounded-xl text-sm font-semibold capitalize border transition-all"
                       style={{
-                        borderColor: policyName === p ? "rgba(131,110,249,0.5)" : "rgba(20,20,20,0.1)",
-                        background: policyName === p ? "rgba(131,110,249,0.06)" : "transparent",
-                        color: policyName === p ? "#5B40D6" : "rgba(20,20,20,0.6)",
+                        borderColor: policyName === p ? "rgba(91,97,105,0.5)" : "rgba(20,20,20,0.1)",
+                        background: policyName === p ? "rgba(91,97,105,0.06)" : "transparent",
+                        color: policyName === p ? "#33373C" : "rgba(20,20,20,0.6)",
                       }}
                     >
                       {p}

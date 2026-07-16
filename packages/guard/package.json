@@ -1,7 +1,7 @@
 {
   "name": "@baret/guard",
   "version": "0.1.0",
-  "description": "Baret pre-sign transaction guard SDK for Monad / EVM (chain-light, no ethers required to consume).",
+  "description": "Baret pre-sign transaction guard SDK for EVM (chain-light, no ethers required to consume).",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
     }
   },
   "files": ["dist", "README.md"],
-  "keywords": ["monad", "evm", "ethereum", "wallet", "security", "transaction", "firewall", "x402", "baret"],
+  "keywords": ["evm", "ethereum", "wallet", "security", "transaction", "firewall", "x402", "baret"],
   "homepage": "https://baret.example",
   "repository": { "type": "git", "url": "git+https://github.com/Aeztrest/Baret-EVM.git", "directory": "packages/guard" },
   "publishConfig": { "access": "public" },

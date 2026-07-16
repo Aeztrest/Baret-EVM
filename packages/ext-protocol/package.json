@@ -1,7 +1,7 @@
 {
   "name": "@baret/ext-protocol",
   "version": "0.1.0",
-  "description": "Message protocol shared across the Baret extension surfaces (Monad / EVM).",
+  "description": "Message protocol shared across the Baret extension surfaces (EVM).",
   "private": true,
   "type": "module",
   "main": "dist/index.js",

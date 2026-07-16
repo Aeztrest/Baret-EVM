@@ -1,12 +1,10 @@
 /*
  * BARET — Design Tokens
- * The visual contract from docs/brand.md, materialized as CSS custom properties.
- * Imported by every app that ships UI: apps/wallet, apps/extension, apps/showcase.
+ * Materialized as CSS custom properties. Imported by every app that ships
+ * UI: apps/wallet, apps/extension, apps/showcase.
  *
- * Source of truth. Edit docs/brand.md first, then mirror here.
- *
- * Baret identity: white-first surfaces, Monad-purple accent (#836EF9),
- * ink-black (#141414) type. "Transaction foresight for Monad."
+ * Baret identity: white-first surfaces, graphite accent (#5B6169),
+ * ink-black (#141414) type.
  */
 
 :root {
@@ -25,15 +23,15 @@
   --text-faint:  rgba(20, 20, 20, 0.40);
   --text-ghost:  rgba(20, 20, 20, 0.24);
 
-  /* ─── Brand accent — Safety orange ──────────────────
-   * Baret ships a white/orange/black palette: ink type on
-   * white surfaces with the safety-orange accent doing the
+  /* ─── Brand accent — Graphite ────────────────────────
+   * Baret ships a white/graphite/black palette: ink type on
+   * white surfaces with a sober gunmetal-gray accent doing the
    * pointing. Semantic colors (ok/warn/bad/live) are kept —
    * risk states need visual differentiation. */
-  --accent:       #836EF9;
-  --accent-soft:  #6E54F2;
-  --accent-dim:   rgba(131, 110, 249, 0.10);
-  --accent-glow:  rgba(131, 110, 249, 0.22);
+  --accent:       #5B6169;
+  --accent-soft:  #454A50;
+  --accent-dim:   rgba(91, 97, 105, 0.10);
+  --accent-glow:  rgba(91, 97, 105, 0.22);
 
   /* ─── Semantic accents (tuned for light surfaces) ── */
   --ok:        #059669;

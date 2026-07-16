@@ -13,7 +13,7 @@
     "baret": "./dist/cli.js"
   },
   "files": ["dist", "README.md"],
-  "keywords": ["monad", "evm", "ethereum", "agent", "ai-agent", "wallet", "security", "ethers", "signer", "baret"],
+  "keywords": ["evm", "ethereum", "agent", "ai-agent", "wallet", "security", "ethers", "signer", "baret"],
   "homepage": "https://baret.example/agents",
   "repository": { "type": "git", "url": "git+https://github.com/Aeztrest/Baret-EVM.git", "directory": "packages/agent-kit" },
   "publishConfig": { "access": "public" },

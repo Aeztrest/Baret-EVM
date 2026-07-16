@@ -427,7 +427,7 @@ function SiteCard({ site }: { site: SiteSpec }) {
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
           style={{
             opacity: over ? 1 : 0,
-            background: `radial-gradient(360px circle at ${pos.x}px ${pos.y}px, rgba(131, 110, 249,0.07), transparent 50%)`,
+            background: `radial-gradient(360px circle at ${pos.x}px ${pos.y}px, rgba(91, 97, 105,0.07), transparent 50%)`,
           }}
         />
 

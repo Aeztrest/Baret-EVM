@@ -13,8 +13,8 @@ function BaretMark({ size = 32 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
       <rect width="32" height="32" rx="8" fill="#141414" />
-      <path d="M6 16c3-4.7 7-7 10-7s7 2.3 10 7c-3 4.7-7 7-10 7s-7-2.3-10-7Z" fill="#FFFFFF" />
-      <circle cx="16" cy="16" r="3.7" fill="#836EF9" />
+      <ellipse cx="16" cy="20.5" rx="11" ry="2.3" fill="#5B6169" />
+      <path d="M7,20 C7,13 11,9.5 16,9.5 C21,9.5 25,13 25,20 Z" fill="#FFFFFF" />
     </svg>
   );
 }
