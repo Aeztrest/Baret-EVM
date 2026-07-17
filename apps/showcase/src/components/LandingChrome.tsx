@@ -87,7 +87,7 @@ export function BackdropGrid() {
 
 function NavLink({ to, label, onClick }: { to: string; label: string; onClick?: () => void }) {
   const { pathname } = useLocation();
-  const active = to === pathname || (to === "/showcase" && pathname === "/");
+  const active = to === pathname || (to === "/home" && pathname === "/");
   return (
     <Link
       to={to}
@@ -121,10 +121,9 @@ export function LandingHeader({ cta }: { cta?: { label: string; to: string } | n
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const defaultCta =
-    pathname.startsWith("/showcase") || pathname === "/"
-      ? { label: "Get the wallet", to: "/install" }
-      : { label: "Try the demo", to: "/showcase" };
+  const defaultCta = pathname.startsWith("/showcase")
+    ? { label: "Get the wallet", to: "/install" }
+    : { label: "Try the demo", to: "/showcase" };
   const headerCta = cta === null ? null : (cta ?? defaultCta);
 
   return (

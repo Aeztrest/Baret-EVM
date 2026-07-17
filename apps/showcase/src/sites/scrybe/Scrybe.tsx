@@ -113,7 +113,7 @@ export default function Scrybe() {
 
   return (
     <div className="min-h-screen text-ink-900 bg-paper">
-      <Link to="/" className="fixed top-4 left-4 z-50 flex items-center gap-1.5 text-xs text-ink-900/40 hover:text-ink-900/80 transition-colors">
+      <Link to="/showcase" className="fixed top-4 left-4 z-50 flex items-center gap-1.5 text-xs text-ink-900/40 hover:text-ink-900/80 transition-colors">
         <ArrowLeft size={12} /> Showcase
       </Link>
 

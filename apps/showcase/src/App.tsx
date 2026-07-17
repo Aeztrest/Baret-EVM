@@ -48,9 +48,9 @@ export default function App() {
       <WalletProvider appName="Premon Showcase">
         <BrowserRouter>
           <Routes>
-            <Route path="/"          element={<RouteShell><Hub /></RouteShell>} />
-            <Route path="/showcase"  element={<RouteShell><Hub /></RouteShell>} />
+            <Route path="/"          element={<RouteShell><HomePage /></RouteShell>} />
             <Route path="/home"      element={<RouteShell><HomePage /></RouteShell>} />
+            <Route path="/showcase"  element={<RouteShell><Hub /></RouteShell>} />
             <Route path="/docs"      element={<RouteShell><DocsPage /></RouteShell>} />
             <Route path="/agents"    element={<RouteShell><AgentsPage /></RouteShell>} />
             <Route path="/novaswap"  element={<RouteShell><NovaSwap /></RouteShell>} />

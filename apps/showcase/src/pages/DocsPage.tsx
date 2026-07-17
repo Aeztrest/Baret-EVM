@@ -86,7 +86,7 @@ export default function DocsPage() {
           <p className="mt-2 text-ink-500 max-w-md mx-auto">
             The showcase puts every layer of the wallet through its paces in your browser.
           </p>
-          <Link to="/" className="btn-brand mt-6 !px-5 !py-2.5">
+          <Link to="/showcase" className="btn-brand mt-6 !px-5 !py-2.5">
             Open the showcase <ArrowUpRight size={14} />
           </Link>
         </div>

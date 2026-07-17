@@ -87,7 +87,7 @@ export function SiteShell({ theme, children, navLinks }: Props) {
       style={{ "--site-primary": theme.primary, "--site-accent": theme.accent ?? theme.primary, "--site-bg": theme.bg, background: theme.bg } as React.CSSProperties}
     >
       <Link
-        to="/"
+        to="/showcase"
         className="fixed bottom-5 left-5 z-50 flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-2 rounded-full bg-ink-900/90 hover:bg-ink-900 shadow-lift transition-colors"
       >
         <ArrowLeft size={12} className="text-brand-400" />
