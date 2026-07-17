@@ -1,6 +1,6 @@
-import type { AnalysisResult, GuardDecision } from "@baret/guard";
+import type { AnalysisResult, GuardDecision } from "@premon/guard";
 
-const KEY = "baret.history.v1";
+const KEY = "premon.history.v1";
 const MAX_ENTRIES = 200;
 
 export interface HistoryEntry {

@@ -4,8 +4,8 @@
  */
 
 import { ChevronDown, Settings as SettingsIcon } from "lucide-react";
-import { Mark } from "@baret/ui";
-import type { WalletStateSnapshot } from "@baret/ext-protocol";
+import { Mark } from "@premon/ui";
+import type { WalletStateSnapshot } from "@premon/ext-protocol";
 
 interface Props {
   state: WalletStateSnapshot;

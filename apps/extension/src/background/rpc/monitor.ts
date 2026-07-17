@@ -2,8 +2,8 @@
  * Post-sign monitor.
  *
  * Polls the provider for the user's native MON balance. When the balance drops
- * but Baret has no broadcast in its recent history to explain it, that's a
- * *drift alert* — value left the wallet that Baret never approved.
+ * but Premon has no broadcast in its recent history to explain it, that's a
+ * *drift alert* — value left the wallet that Premon never approved.
  *
  * MV3 caveat: the polling loop lives only as long as the service worker. On
  * wake, `start()` re-reads the last-seen balance from storage so a single
@@ -16,7 +16,7 @@ import { appendAlert, countUnread } from "../db/alerts";
 import { appendHistory, listHistory } from "../db/history";
 import { dispatch, subscribe, getState } from "../state/store";
 
-const LAST_SEEN_KEY = "baret.monitor.lastSeen.v1";
+const LAST_SEEN_KEY = "premon.monitor.lastSeen.v1";
 const POLL_INTERVAL_MS = 12_000;
 /** A broadcast we made within this window explains a balance drop. */
 const SELF_TX_WINDOW_MS = 5 * 60_000;
@@ -36,7 +36,7 @@ class Monitor {
     this.running = true;
     this.address = address;
     this.scheduleNext();
-    console.info("[BARET] post-sign monitor live for", `${address.slice(0, 10)}…`);
+    console.info("[PREMON] post-sign monitor live for", `${address.slice(0, 10)}…`);
   }
 
   async stop(): Promise<void> {
@@ -71,7 +71,7 @@ class Monitor {
       }
       await writeLastSeen({ address: this.address, wei });
     } catch (err) {
-      console.warn("[BARET] monitor poll failed:", err);
+      console.warn("[PREMON] monitor poll failed:", err);
     }
   }
 
@@ -87,7 +87,7 @@ class Monitor {
       kind: "drift",
       merchantOrigin: "unknown",
       txHash: null,
-      body: "Your MON balance dropped without a transaction Baret approved.",
+      body: "Your MON balance dropped without a transaction Premon approved.",
       createdAt: Date.now(),
       dismissedAt: null,
     });
@@ -97,7 +97,7 @@ class Monitor {
       origin: null,
       summary: `Drift detected — ${deltaWei.toString()} wei left your wallet unexpectedly`,
       decision: "block",
-      reasons: ["Baret didn't sign a transaction explaining this balance change. Investigate."],
+      reasons: ["Premon didn't sign a transaction explaining this balance change. Investigate."],
       broadcast: false,
       createdAt: Date.now(),
     });
@@ -110,10 +110,10 @@ class Monitor {
         type: "basic",
         iconUrl: browser.runtime.getURL("icons/128.png"),
         title: "Unexpected balance change",
-        message: "Baret didn't approve this movement. Open the wallet to investigate.",
+        message: "Premon didn't approve this movement. Open the wallet to investigate.",
       });
     } catch (err) {
-      console.warn("[BARET] notification failed:", err);
+      console.warn("[PREMON] notification failed:", err);
     }
   }
 }

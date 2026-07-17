@@ -1,19 +1,19 @@
 /**
- * BARET brand glyph — a hard hat: the firewall protects before you sign.
- * Renders in signature graphite (#5B6169) by default; pass `mono` to inherit
- * `currentColor` (for tinted contexts).
+ * PREMON brand glyph — a foresight "eye": the firewall sees the transaction
+ * before you sign it. Renders in Monad purple (#836EF9) by default; pass `mono`
+ * to inherit `currentColor` (for tinted contexts).
  */
 
 import type { SVGProps } from "react";
 
 export interface MarkProps extends SVGProps<SVGSVGElement> {
   size?: number | string;
-  /** Render single-color using currentColor instead of the signature graphite. */
+  /** Render single-color using currentColor instead of Monad purple. */
   mono?: boolean;
 }
 
 export function Mark({ size = 24, mono = false, ...rest }: MarkProps) {
-  const c = mono ? "currentColor" : "#5B6169";
+  const c = mono ? "currentColor" : "#836EF9";
   return (
     <svg
       width={size}
@@ -22,18 +22,16 @@ export function Mark({ size = 24, mono = false, ...rest }: MarkProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="BARET"
+      aria-label="PREMON"
       {...rest}
     >
       <path
-        d="M4 17c0-4.4 3.6-8 8-8s8 3.6 8 8"
+        d="M2 12c2.4-3.7 5.6-5.5 10-5.5S19.6 8.3 22 12c-2.4 3.7-5.6 5.5-10 5.5S4.4 15.7 2 12Z"
         stroke={c}
         strokeWidth="2"
-        strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M2.5 17.5h19" stroke={c} strokeWidth="2" strokeLinecap="round" />
-      <circle cx="12" cy="9" r="1.4" fill={c} />
+      <circle cx="12" cy="12" r="3" fill={c} />
     </svg>
   );
 }

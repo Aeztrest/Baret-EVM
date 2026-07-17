@@ -11,7 +11,7 @@
 import browser from "webextension-polyfill";
 
 const POPUP_URL_PATH = "src/popup/index.html";
-const POPUP_WIDTH = 400;
+const POPUP_WIDTH = 357;
 const POPUP_HEIGHT = 640;
 
 let currentPopupWindowId: number | null = null;
@@ -40,7 +40,7 @@ export async function openPopupWindow(): Promise<void> {
     });
     currentPopupWindowId = created.id ?? null;
   } catch (err) {
-    console.warn("[BARET] failed to open popup window:", err);
+    console.warn("[PREMON] failed to open popup window:", err);
   }
 }
 

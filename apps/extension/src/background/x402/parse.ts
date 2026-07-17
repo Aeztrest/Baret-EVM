@@ -13,7 +13,7 @@
  */
 
 import { isAddress } from "ethers";
-import type { EvmNetwork } from "@baret/ext-protocol";
+import type { EvmNetwork } from "@premon/ext-protocol";
 import { CHAINS } from "../../shared/chain";
 
 export interface PaymentRequirements {

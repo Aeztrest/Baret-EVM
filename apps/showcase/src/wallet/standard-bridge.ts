@@ -1,30 +1,30 @@
 /**
- * Showcase ↔ Baret wallet bridge.
+ * Showcase ↔ Premon wallet bridge.
  *
  * The showcase pages use a small adapter shape `{ signTransaction,
  * signAndSendTransaction, account_pubkey }`. There are two ways to
  * reach a wallet:
  *
- *   - Baret — the dApp opens the wallet popup via `BaretAdapter`
- *     (`@baret/wallet-adapter`) and handshakes over postMessage. Every
- *     signature is gated by Baret's policy + analysis, by design.
+ *   - Premon — the dApp opens the wallet popup via `PremonAdapter`
+ *     (`@premon/wallet-adapter`) and handshakes over postMessage. Every
+ *     signature is gated by Premon's policy + analysis, by design.
  *   - An injected EIP-1193 provider (`window.ethereum`, e.g. MetaMask) — the
- *     "without Baret" comparison: it signs immediately, no firewall.
+ *     "without Premon" comparison: it signs immediately, no firewall.
  *
  * This module wraps both behind one provider interface the picker + context
  * consume.
  */
 
 import {
-  BaretAdapter,
+  PremonAdapter,
   WalletAdapterError,
   type TxRequest,
-} from "@baret/wallet-adapter";
+} from "@premon/wallet-adapter";
 
 /** EVM testnet chain id. */
 export const CHAIN_ID = 10143;
 
-/** Default origin of the Baret wallet popup. */
+/** Default origin of the Premon wallet popup. */
 const DEFAULT_WALLET_URL =
   import.meta.env.VITE_WALLET_URL ?? "http://localhost:5180";
 
@@ -56,12 +56,12 @@ declare global {
 
 /** A wallet provider the picker can render + the context can connect to. */
 export interface EvmWalletProvider {
-  /** Display name, e.g. "Baret" or "MetaMask". */
+  /** Display name, e.g. "Premon" or "MetaMask". */
   name: string;
   /** Data-URI icon. */
   icon: string;
-  /** True for the Baret wallet (the recommended, firewall-protected option). */
-  baret: boolean;
+  /** True for the Premon wallet (the recommended, firewall-protected option). */
+  premon: boolean;
   /** Request access; returns the connected EOA + chain id. */
   connect: () => Promise<{ address: string; chainId: number }>;
   /** Sign + broadcast a tx; returns the on-chain tx hash. */
@@ -141,8 +141,8 @@ interface Eip6963Detail {
   provider: Eip1193Provider;
 }
 
-/** rdns the Baret extension announces itself with (apps/extension inpage). */
-const BARET_RDNS = "dev.baret.wallet";
+/** rdns the Premon extension announces itself with (apps/extension inpage). */
+const PREMON_RDNS = "dev.premon.wallet";
 
 /**
  * Synchronously collect EIP-6963 providers. Wallets respond to
@@ -164,35 +164,35 @@ function collectAnnounced(): Eip6963Detail[] {
 
 /**
  * Discover wallet providers available to the page.
- *  - If the Baret EXTENSION is announced (EIP-6963), it's the primary
- *    "Baret" provider and connects through its own approval UI — no separate
+ *  - If the Premon EXTENSION is announced (EIP-6963), it's the primary
+ *    "Premon" provider and connects through its own approval UI — no separate
  *    web-wallet tab.
  *  - Otherwise we fall back to the popup web wallet at VITE_WALLET_URL.
- *  - Every other announced/injected wallet becomes a "without Baret" option.
+ *  - Every other announced/injected wallet becomes a "without Premon" option.
  */
 export function discoverEvmProviders(): EvmWalletProvider[] {
   const announced = collectAnnounced();
-  const baretDetail = announced.find(
-    (d) => d.info.rdns === BARET_RDNS || d.info.name?.toLowerCase() === "baret",
+  const premonDetail = announced.find(
+    (d) => d.info.rdns === PREMON_RDNS || d.info.name?.toLowerCase() === "premon",
   );
 
   const out: EvmWalletProvider[] = [];
 
-  if (baretDetail) {
+  if (premonDetail) {
     out.push(
-      injectedProvider(baretDetail.provider, {
-        name: "BARET",
-        icon: BARET_ICON,
-        baret: true,
+      injectedProvider(premonDetail.provider, {
+        name: "PREMON",
+        icon: PREMON_ICON,
+        premon: true,
       }),
     );
   } else {
-    out.push(baretProvider());
+    out.push(premonProvider());
   }
 
   for (const d of announced) {
-    if (d === baretDetail) continue;
-    out.push(injectedProvider(d.provider, { name: d.info.name, icon: d.info.icon, baret: false }));
+    if (d === premonDetail) continue;
+    out.push(injectedProvider(d.provider, { name: d.info.name, icon: d.info.icon, premon: false }));
   }
 
   // Legacy window.ethereum only when no EIP-6963 wallet announced at all.
@@ -203,7 +203,7 @@ export function discoverEvmProviders(): EvmWalletProvider[] {
         injectedProvider(legacy, {
           name: legacy.isMetaMask ? "MetaMask" : "Browser Wallet",
           icon: METAMASK_ICON,
-          baret: false,
+          premon: false,
         }),
       );
     }
@@ -212,8 +212,8 @@ export function discoverEvmProviders(): EvmWalletProvider[] {
   return out;
 }
 
-const BARET_ICON = (() => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#141414"/><ellipse cx="16" cy="20.5" rx="11" ry="2.3" fill="#5B6169"/><path d="M7,20 C7,13 11,9.5 16,9.5 C21,9.5 25,13 25,20 Z" fill="#FFFFFF"/></svg>`;
+const PREMON_ICON = (() => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#141414"/><path d="M6 16c3-4.7 7-7 10-7s7 2.3 10 7c-3 4.7-7 7-10 7s-7-2.3-10-7Z" fill="#FFFFFF"/><circle cx="16" cy="16" r="3.7" fill="#836EF9"/></svg>`;
   return `data:image/svg+xml;base64,${btoa(svg)}`;
 })();
 
@@ -222,15 +222,15 @@ const METAMASK_ICON = (() => {
   return `data:image/svg+xml;base64,${btoa(svg)}`;
 })();
 
-function baretProvider(): EvmWalletProvider {
-  const adapter = new BaretAdapter({
+function premonProvider(): EvmWalletProvider {
+  const adapter = new PremonAdapter({
     walletUrl: DEFAULT_WALLET_URL,
-    appName: "Baret Showcase",
+    appName: "Premon Showcase",
   });
   return {
-    name: "BARET",
-    icon: BARET_ICON,
-    baret: true,
+    name: "PREMON",
+    icon: PREMON_ICON,
+    premon: true,
     async connect() {
       try {
         const a = await adapter.connect();
@@ -262,13 +262,13 @@ function baretProvider(): EvmWalletProvider {
 
 function injectedProvider(
   eth: Eip1193Provider,
-  opts: { name: string; icon: string; baret: boolean },
+  opts: { name: string; icon: string; premon: boolean },
 ): EvmWalletProvider {
-  const { name, icon, baret } = opts;
+  const { name, icon, premon } = opts;
   return {
     name,
     icon,
-    baret,
+    premon,
     async connect() {
       const accounts = (await eth.request({
         method: "eth_requestAccounts",
@@ -291,11 +291,11 @@ function injectedProvider(
       return { txHash };
     },
     async signTransaction(tx) {
-      // Baret implements eth_signTransaction; other injected wallets usually
-      // don't, so the x402 payment leg needs Baret.
-      if (!baret) {
+      // Premon implements eth_signTransaction; other injected wallets usually
+      // don't, so the x402 payment leg needs Premon.
+      if (!premon) {
         throw new WalletStandardBridgeError(
-          `${name} can't sign without broadcasting. Reconnect with Baret for x402 payments.`,
+          `${name} can't sign without broadcasting. Reconnect with Premon for x402 payments.`,
           "NO_SIGN_TRANSACTION",
         );
       }

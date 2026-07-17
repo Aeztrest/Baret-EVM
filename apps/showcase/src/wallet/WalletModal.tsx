@@ -48,8 +48,8 @@ export function WalletModal({
     setTimeout(() => setRescanning(false), 350);
   }, []);
 
-  const baret = available.find((w) => w.baret);
-  const others = available.filter((w) => !w.baret);
+  const premon = available.find((w) => w.premon);
+  const others = available.filter((w) => !w.premon);
 
   return (
     <AnimatePresence>
@@ -93,25 +93,25 @@ export function WalletModal({
             </div>
 
             <div className="p-4 space-y-3">
-              {baret ? (
+              {premon ? (
                 <button
-                  onClick={() => onConnect(baret)}
+                  onClick={() => onConnect(premon)}
                   disabled={connecting}
                   className="w-full flex items-center gap-3 p-4 rounded-xl text-left transition-all hover:bg-brand-50 disabled:opacity-60"
                   style={{
-                    background: "rgba(91, 97, 105,0.06)",
-                    border: "1px solid rgba(91, 97, 105,0.45)",
+                    background: "rgba(131, 110, 249,0.06)",
+                    border: "1px solid rgba(131, 110, 249,0.45)",
                   }}
                 >
                   <WalletIcon
-                    icon={baret.icon}
+                    icon={premon.icon}
                     fallback={<Eye size={16} className="text-white" />}
                     variant="primary"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-1.5">
                       <p className="text-sm font-bold text-ink-900">
-                        Baret Wallet
+                        Premon Wallet
                       </p>
                       <span
                         className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-bold bg-brand-500 text-white"
@@ -130,13 +130,13 @@ export function WalletModal({
                   )}
                 </button>
               ) : (
-                <BaretMissing othersCount={others.length} />
+                <PremonMissing othersCount={others.length} />
               )}
 
               {others.length > 0 && (
                 <div className="space-y-1">
                   <p className="text-[10px] uppercase tracking-wider text-ink-400 font-bold px-1 mb-1.5">
-                    {baret ? "Other wallets" : "Wallets we did detect"}
+                    {premon ? "Other wallets" : "Wallets we did detect"}
                   </p>
                   {others.map((w) => (
                     <button
@@ -154,7 +154,7 @@ export function WalletModal({
                       />
                       <p className="text-sm text-ink-900 flex-1">{w.name}</p>
                       <span className="text-[10px] text-ink-400">
-                        No Baret protection
+                        No Premon protection
                       </span>
                     </button>
                   ))}
@@ -164,7 +164,7 @@ export function WalletModal({
 
             <div className="px-5 pb-5 space-y-2">
               <p className="text-xs text-ink-400 leading-relaxed">
-                Baret sits between this site and your signature. Every
+                Premon sits between this site and your signature. Every
                 transaction is simulated, policy-checked, and surfaced at the
                 wallet level — not on this page.
               </p>
@@ -176,27 +176,27 @@ export function WalletModal({
   );
 }
 
-function BaretMissing({ othersCount }: { othersCount: number }) {
+function PremonMissing({ othersCount }: { othersCount: number }) {
   const likelyInstalled = othersCount > 0;
   return (
     <div className="space-y-2">
       <div
         className="rounded-xl p-4"
         style={{
-          background: "rgba(91, 97, 105,0.06)",
-          border: "1px solid rgba(91, 97, 105,0.45)",
+          background: "rgba(131, 110, 249,0.06)",
+          border: "1px solid rgba(131, 110, 249,0.45)",
         }}
       >
         <div className="flex items-center gap-2 mb-2">
           <Eye size={14} className="text-brand-600" />
           <p className="text-sm font-bold text-ink-900">
-            Baret not detected
+            Premon not detected
           </p>
         </div>
         {likelyInstalled ? (
           <div className="space-y-2.5 text-xs text-ink-600 leading-relaxed">
             <p>
-              We see other wallets but not Baret. The extension is probably
+              We see other wallets but not Premon. The extension is probably
               installed but didn't register itself on this page.
             </p>
             <div
@@ -215,7 +215,7 @@ function BaretMissing({ othersCount }: { othersCount: number }) {
                   <span className="font-mono">about:debugging</span> or{" "}
                   <span className="font-mono">chrome://extensions</span>)
                 </li>
-                <li>Remove the old Baret entry</li>
+                <li>Remove the old Premon entry</li>
                 <li>
                   Load the latest build (
                   <span className="font-mono">apps/extension/dist</span> or
@@ -279,7 +279,7 @@ function WalletIcon({
         borderRadius: radius,
         background:
           variant === "primary"
-            ? "linear-gradient(135deg,#5B6169,#33373C)"
+            ? "linear-gradient(135deg,#836EF9,#5B40D6)"
             : "rgba(20,20,20,0.06)",
       }}
     >

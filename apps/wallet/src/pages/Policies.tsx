@@ -5,7 +5,7 @@ import {
   validatePolicy,
   type GuardPolicy,
   type PolicyTemplateId,
-} from "@baret/guard";
+} from "@premon/guard";
 import { readPolicy, writePolicy } from "../storage/policy-store";
 
 type Tab = "form" | "json";
@@ -58,7 +58,7 @@ export function Policies() {
           <h1 className="text-2xl font-black font-display text-ink-900 tracking-tight flex items-center gap-2">
             <Shield size={20} className="text-accent" /> Policies
           </h1>
-          <p className="text-ink-500 text-sm mt-1">Rules Baret enforces on every transaction your wallet signs.</p>
+          <p className="text-ink-500 text-sm mt-1">Rules Premon enforces on every transaction your wallet signs.</p>
         </div>
         <div className="flex gap-2">
           <button onClick={onReset} className="btn-ghost"><RotateCcw size={12} /> Discard</button>
@@ -108,7 +108,7 @@ export function Policies() {
           />
           <PolicyToggle
             title="Block risky contracts"
-            help="Reject if the tx touches a contract flagged as risky by Baret's reputation database."
+            help="Reject if the tx touches a contract flagged as risky by Premon's reputation database."
             value={!!policy.blockRiskyContracts}
             onChange={(v) => update("blockRiskyContracts", v)}
           />
@@ -219,7 +219,7 @@ function PolicyToggle({ title, help, value, onChange }: { title: string; help: s
       </div>
       <button onClick={() => onChange(!value)}
         className="relative w-10 h-5 rounded-full transition-colors shrink-0"
-        style={{ background: value ? "#5B6169" : "rgba(20,20,20,0.14)" }}>
+        style={{ background: value ? "#836EF9" : "rgba(20,20,20,0.14)" }}>
         <div className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform"
           style={{ transform: value ? "translateX(21px)" : "translateX(2px)" }} />
       </button>

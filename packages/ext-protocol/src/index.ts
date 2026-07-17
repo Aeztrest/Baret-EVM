@@ -1,5 +1,5 @@
 /**
- * @baret/ext-protocol
+ * @premon/ext-protocol
  *
  * Single source of truth for messages exchanged between the four extension
  * surfaces: background service worker, popup, options page, content script +
@@ -76,7 +76,7 @@ export interface AlertEntry {
   dismissedAt: number | null;
 }
 
-/* ── 2b. Pre-sign analysis result (mirrors @baret/guard AnalysisResult) ── */
+/* ── 2b. Pre-sign analysis result (mirrors @premon/guard AnalysisResult) ── */
 
 export interface RiskFindingPayload {
   code: string;

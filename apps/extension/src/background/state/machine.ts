@@ -5,7 +5,7 @@
  * reads from here via the message router.
  */
 
-import type { EvmNetwork, WalletStateSnapshot } from "@baret/ext-protocol";
+import type { EvmNetwork, WalletStateSnapshot } from "@premon/ext-protocol";
 import { chainFor } from "../../shared/chain";
 
 export type WalletPhase =

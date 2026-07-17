@@ -1,4 +1,4 @@
-/** Install page — Baret light theme. */
+/** Install page — Premon light theme. */
 
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -18,8 +18,8 @@ interface ArtefactSpec {
 }
 
 const ARTEFACTS: Record<Exclude<Browser, "other">, ArtefactSpec> = {
-  chrome:  { label: "Baret for Chrome / Brave / Edge", href: "/baret-chrome.zip" },
-  firefox: { label: "Baret for Firefox",               href: "/baret-firefox.zip" },
+  chrome:  { label: "Premon for Chrome / Brave / Edge", href: "/premon-chrome.zip" },
+  firefox: { label: "Premon for Firefox",               href: "/premon-firefox.zip" },
 };
 
 function detectBrowser(): Browser {
@@ -83,7 +83,7 @@ function Hero({ browserCopy }: { browserCopy: string }) {
         transition={{ duration: 0.5 }}
         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.18em] font-bold border border-brand-500/30 bg-brand-50 text-brand-700"
       >
-        <Download size={11} /> Install Baret
+        <Download size={11} /> Install Premon
       </motion.div>
 
       <motion.h1
@@ -218,13 +218,13 @@ function ChromeSteps({ downloaded }: { downloaded: boolean }) {
   return (
     <ol className="space-y-3">
       <Step n="01" icon={FileArchive} done={downloaded} title="Unzip the file">
-        Right-click <Code>baret-chrome.zip</Code> → Extract All. Remember the folder.
+        Right-click <Code>premon-chrome.zip</Code> → Extract All. Remember the folder.
       </Step>
       <Step n="02" icon={FolderOpen} title="Open chrome://extensions/">
         Paste <Code>chrome://extensions/</Code> into your address bar (or Menu → Extensions). Toggle <b>Developer mode</b> on (top right).
       </Step>
       <Step n="03" icon={ShieldCheck} title="Load unpacked">
-        Click <b>"Load unpacked"</b> and pick the extracted <Code>baret-chrome</Code> folder. Baret appears in your toolbar — click it to create your wallet.
+        Click <b>"Load unpacked"</b> and pick the extracted <Code>premon-chrome</Code> folder. Premon appears in your toolbar — click it to create your wallet.
       </Step>
     </ol>
   );
@@ -234,7 +234,7 @@ function FirefoxSteps({ downloaded }: { downloaded: boolean }) {
   return (
     <ol className="space-y-3">
       <Step n="01" icon={FileArchive} done={downloaded} title="Unzip the file">
-        Right-click <Code>baret-firefox.zip</Code> → Extract Here. Remember the folder.
+        Right-click <Code>premon-firefox.zip</Code> → Extract Here. Remember the folder.
       </Step>
       <Step n="02" icon={FolderOpen} title="Open about:debugging">
         Paste <Code>about:debugging#/runtime/this-firefox</Code> into your address bar.
@@ -351,7 +351,7 @@ function AfterInstallCta() {
           Take it for a spin in the showcase.
         </h2>
         <p className="mt-5 text-white/60 leading-relaxed">
-          Six fake-but-real dApps trigger six different attack patterns. Baret
+          Six fake-but-real dApps trigger six different attack patterns. Premon
           catches each one live — you see the analysis before signing.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">

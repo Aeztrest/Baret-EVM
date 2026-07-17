@@ -3,7 +3,7 @@
  * Versioned so future schema changes can migrate cleanly. The v2 key is a
  * clean break from the prior storage shape — old blobs are ignored.
  */
-const KEY = "baret.wallet.v2";
+const KEY = "premon.wallet.v2";
 
 export interface PersistedWallet {
   /** EVM private key (0x-hex). Holds the full spending authority. */

@@ -1,8 +1,8 @@
-import { TransactionGuard } from "@baret/guard";
+import { TransactionGuard } from "@premon/guard";
 import { ACTIVE_NETWORK } from "../wallet/connection";
 
 /**
- * Base URL of the BARET analyze service. Defaults to the local dev server;
+ * Base URL of the PREMON analyze service. Defaults to the local dev server;
  * production builds override via VITE_ANALYZE_URL.
  */
 export const ANALYZE_URL =
@@ -13,7 +13,7 @@ export const ANALYZE_URL =
  * DELTAG_API_KEYS=dev-key-change-me — production deployments should override.
  */
 const API_KEY =
-  (import.meta.env.VITE_BARET_API_KEY as string | undefined) ?? "dev-key-change-me";
+  (import.meta.env.VITE_PREMON_API_KEY as string | undefined) ?? "dev-key-change-me";
 
 let cached: TransactionGuard | null = null;
 

@@ -1,5 +1,5 @@
 /**
- * postMessage protocol between a dApp and the Baret wallet popup.
+ * postMessage protocol between a dApp and the Premon wallet popup.
  * All messages tagged `__bt: "1"` so we can distinguish ours from unrelated
  * traffic on the page.
  *
@@ -68,7 +68,7 @@ export interface SignRejectedMessage {
   type: "sign-rejected";
   requestId: RequestId;
   reason: string;
-  /** When Baret policy blocked, this contains the analysis JSON. */
+  /** When Premon policy blocked, this contains the analysis JSON. */
   analysisJson?: string;
 }
 

@@ -12,8 +12,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Globe, ArrowRight, Loader2, ShieldOff, ShieldCheck, AlertTriangle } from "lucide-react";
-import type { AllowanceSnapshot, HistoryEntry } from "@baret/ext-protocol";
-import type { GuardPolicy } from "@baret/guard";
+import type { AllowanceSnapshot, HistoryEntry } from "@premon/ext-protocol";
+import type { GuardPolicy } from "@premon/guard";
 import { useRpc } from "../../shared/state-context";
 
 interface SiteSummary {

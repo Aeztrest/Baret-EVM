@@ -11,7 +11,7 @@ import { isAddress } from "ethers";
 import { X, Loader2, ArrowRight, ExternalLink } from "lucide-react";
 import { useRpc } from "../shared/state-context";
 import { explorerTxUrl } from "../shared/chain";
-import type { EvmNetwork } from "@baret/ext-protocol";
+import type { EvmNetwork } from "@premon/ext-protocol";
 
 interface Props {
   address: string;

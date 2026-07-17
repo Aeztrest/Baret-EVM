@@ -10,13 +10,13 @@ importers:
 
   apps/extension:
     dependencies:
-      '@baret/ext-protocol':
+      '@premon/ext-protocol':
         specifier: workspace:*
         version: link:../../packages/ext-protocol
-      '@baret/guard':
+      '@premon/guard':
         specifier: workspace:*
         version: link:../../packages/guard
-      '@baret/ui':
+      '@premon/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       bip39:
@@ -89,7 +89,7 @@ importers:
 
   apps/server:
     dependencies:
-      '@baret/guard':
+      '@premon/guard':
         specifier: workspace:*
         version: link:../../packages/guard
       '@fastify/rate-limit':
@@ -123,10 +123,10 @@ importers:
 
   apps/showcase:
     dependencies:
-      '@baret/guard':
+      '@premon/guard':
         specifier: workspace:*
         version: link:../../packages/guard
-      '@baret/wallet-adapter':
+      '@premon/wallet-adapter':
         specifier: workspace:*
         version: link:../../packages/wallet-adapter
       ethers:
@@ -181,13 +181,13 @@ importers:
 
   apps/wallet:
     dependencies:
-      '@baret/guard':
+      '@premon/guard':
         specifier: workspace:*
         version: link:../../packages/guard
-      '@baret/ui':
+      '@premon/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@baret/wallet-adapter':
+      '@premon/wallet-adapter':
         specifier: workspace:*
         version: link:../../packages/wallet-adapter
       ethers:
@@ -245,7 +245,7 @@ importers:
 
   packages/agent-kit:
     dependencies:
-      '@baret/guard':
+      '@premon/guard':
         specifier: workspace:*
         version: link:../guard
       ethers:

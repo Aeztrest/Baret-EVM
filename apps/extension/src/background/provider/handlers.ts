@@ -7,7 +7,7 @@
  * `tx.sign`.
  *
  * The transport carries plain JSON payloads — see ExtProviderMethods in
- * @baret/ext-protocol.
+ * @premon/ext-protocol.
  */
 
 import {
@@ -15,7 +15,7 @@ import {
   isHexString,
   TransactionRequest,
 } from "ethers";
-import type { ExtProviderMethods } from "@baret/ext-protocol";
+import type { ExtProviderMethods } from "@premon/ext-protocol";
 
 import { dispatch, getState } from "../state/store";
 import { isUnlocked, useWallet } from "../crypto/session";
@@ -42,10 +42,10 @@ type Rsp<M extends keyof ExtProviderMethods> = ExtProviderMethods[M]["rsp"];
 function ensureReady(): string {
   const s = getState();
   if (s.phase === "uninitialized") {
-    throw new Error("Baret wallet not initialized — open the wallet to set it up first.");
+    throw new Error("Premon wallet not initialized — open the wallet to set it up first.");
   }
   if (s.phase === "locked") {
-    throw new Error("Baret wallet is locked — open the wallet to unlock it first.");
+    throw new Error("Premon wallet is locked — open the wallet to unlock it first.");
   }
   if (!s.address) throw new Error("Wallet not ready.");
   return s.address;
@@ -88,7 +88,7 @@ const ethRequestAccounts: ProviderHandler = async (raw) => {
       });
     }
   } catch (err) {
-    console.warn("[BARET] failed to record connect:", err);
+    console.warn("[PREMON] failed to record connect:", err);
   }
 
   return { accounts: [address] } satisfies Rsp<"eth_requestAccounts">;
@@ -125,7 +125,7 @@ const walletSwitchEthereumChain: ProviderHandler = async (raw) => {
 
 function queueAndWait(kind: SignKind, origin: string, payload: string): Promise<SignSuccess> {
   if (!isUnlocked()) {
-    return Promise.reject(new Error("Baret wallet is locked."));
+    return Promise.reject(new Error("Premon wallet is locked."));
   }
   return new Promise<SignSuccess>((resolve, reject) => {
     const requestId = newRequestId();

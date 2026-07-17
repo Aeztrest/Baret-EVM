@@ -1,5 +1,5 @@
 {
-  "name": "@baret/showcase",
+  "name": "@premon/showcase",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@baret/wallet-adapter": "workspace:*",
-    "@baret/guard": "workspace:*",
+    "@premon/wallet-adapter": "workspace:*",
+    "@premon/guard": "workspace:*",
     "ethers": "^6.13.4",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.468.0",

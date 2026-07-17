@@ -14,7 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Shield, Coins, Store, Activity as ActivityIcon, Loader2, Globe, Clock,
 } from "lucide-react";
-import type { AllowanceSnapshot, HistoryEntry } from "@baret/ext-protocol";
+import type { AllowanceSnapshot, HistoryEntry } from "@premon/ext-protocol";
 import { useRpc } from "../../shared/state-context";
 
 export function X402Page() {

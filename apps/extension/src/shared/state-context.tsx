@@ -13,7 +13,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { WalletStateSnapshot } from "@baret/ext-protocol";
+import type { WalletStateSnapshot } from "@premon/ext-protocol";
 import { ExtRpcClient } from "./rpc";
 
 interface WalletContextValue {

@@ -1,6 +1,0 @@
-<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baret glyph">
-  <!-- Transparent hard-hat glyph. Use on its own where a tile isn't wanted. -->
-  <path d="M43 181c0-47 38-85 85-85s85 38 85 85" stroke="#5B6169" stroke-width="20" stroke-linecap="round" fill="none"/>
-  <path d="M26 187h204" stroke="#5B6169" stroke-width="20" stroke-linecap="round"/>
-  <circle cx="128" cy="96" r="15" fill="#5B6169"/>
-</svg>

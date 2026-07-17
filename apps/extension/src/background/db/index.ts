@@ -1,12 +1,12 @@
 /**
- * IndexedDB schema + open helper for the Baret extension.
+ * IndexedDB schema + open helper for the Premon extension.
  *
  * Object stores: keystore, allowances, history, alerts, monitor, prefs,
  * site_permissions. All CRUD lives in sibling files and uses the shared
  * helpers here.
  */
 
-const DB_NAME = "baret";
+const DB_NAME = "premon";
 const DB_VERSION = 1;
 
 let dbPromise: Promise<IDBDatabase> | null = null;

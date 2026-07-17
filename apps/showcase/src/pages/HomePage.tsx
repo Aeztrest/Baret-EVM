@@ -1,5 +1,5 @@
 /**
- * Baret home — white-first landing with graphite + ink-black.
+ * Premon home — white-first landing with Monad-purple + ink-black.
  * Voice: construction-site safety for your signature. "Sign safe. Build on."
  */
 
@@ -91,7 +91,7 @@ function Hero() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="mt-7 text-lg sm:text-xl text-ink-500 max-w-xl leading-relaxed"
           >
-            Baret is transaction foresight for EVM chains — every transaction is
+            Premon is transaction foresight for EVM chains — every transaction is
             simulated, explained in plain language, and blocked when dangerous,
             before your keys ever touch it.
           </motion.p>
@@ -157,9 +157,9 @@ function LiveAnalysisCard() {
       className="relative"
     >
       <div className="absolute -inset-6 rounded-[2rem] opacity-60 blur-2xl"
-           style={{ background: "radial-gradient(closest-side, rgba(91, 97, 105,0.18), transparent 70%)" }} />
+           style={{ background: "radial-gradient(closest-side, rgba(131, 110, 249,0.18), transparent 70%)" }} />
 
-      {/* The analysis console renders dark — Baret's "inspection booth" inside the white page */}
+      {/* The analysis console renders dark — Premon's "inspection booth" inside the white page */}
       <div className="relative rounded-2xl overflow-hidden bg-ink-900 text-white shadow-lift">
         <HazardRule className="h-1" />
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10">
@@ -208,11 +208,11 @@ function LiveAnalysisCard() {
                 className="flex items-start gap-3 p-3 rounded-xl border"
                 style={{
                   borderColor:
-                    f.sev === "danger" ? "rgba(91, 97, 105,0.45)" :
+                    f.sev === "danger" ? "rgba(131, 110, 249,0.45)" :
                     f.sev === "warn"   ? "rgba(255,171,110,0.30)" :
                                          "rgba(255,255,255,0.10)",
                   background:
-                    f.sev === "danger" ? "rgba(91, 97, 105,0.10)" :
+                    f.sev === "danger" ? "rgba(131, 110, 249,0.10)" :
                     f.sev === "warn"   ? "rgba(255,171,110,0.06)" :
                                          "rgba(255,255,255,0.03)",
                 }}
@@ -304,13 +304,13 @@ function ProblemSolution() {
     <Section
       eyebrow="The problem"
       title="Wallets ask for trust they can't earn."
-      sub="Today's wallets show you what to sign — not what will happen. Baret replaces the guessing with proof, on every signature."
+      sub="Today's wallets show you what to sign — not what will happen. Premon replaces the guessing with proof, on every signature."
     >
       <div className="card overflow-hidden">
         <div className="grid grid-cols-12 px-6 py-3 text-[10px] uppercase tracking-[0.2em] font-bold text-ink-400 border-b border-ink-900/8 bg-bone">
           <div className="col-span-3">Moment</div>
           <div className="col-span-5 flex items-center gap-2"><XCircle size={11} className="text-ink-400" /> Today</div>
-          <div className="col-span-4 flex items-center gap-2 text-brand-700"><ShieldCheck size={11} /> With Baret</div>
+          <div className="col-span-4 flex items-center gap-2 text-brand-700"><ShieldCheck size={11} /> With Premon</div>
         </div>
         {rows.map((r, i) => (
           <Row key={r.moment} row={r} delay={i * 0.08} last={i === rows.length - 1} />
@@ -360,7 +360,7 @@ function ThreePillars() {
       tag: "Layer 03",
       icon: Radar,
       title: "Post-sign Monitor",
-      body: "WebSocket subscription on your wallet. If something moves that Baret didn't sign, you get a browser notification immediately.",
+      body: "WebSocket subscription on your wallet. If something moves that Premon didn't sign, you get a browser notification immediately.",
       points: ["WebSocket subscribe", "Drift detection", "Cold-boot backfill"],
     },
   ];
@@ -395,7 +395,7 @@ function PillarCard({ tag, icon: Icon, title, body, points, index }:
       <div
         aria-hidden
         className="absolute -top-24 -right-24 w-56 h-56 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: "radial-gradient(closest-side, rgba(91, 97, 105,0.10), transparent 70%)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(131, 110, 249,0.10), transparent 70%)" }}
       />
 
       <div className="relative">
@@ -428,7 +428,7 @@ function ShowcaseStrip() {
     <Section
       eyebrow="Try it yourself"
       title="Six fake-but-real dApps. Each one demonstrates a different attack."
-      sub="Connect a wallet, click a button. Baret catches the threat live — no slides, no mocks."
+      sub="Connect a wallet, click a button. Premon catches the threat live — no slides, no mocks."
       action={{ label: "Open showcase hub", to: "/showcase" }}
     >
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -482,14 +482,14 @@ function X402Section() {
     <Section
       eyebrow="The wedge"
       title="The first wallet built for the x402 era."
-      sub="AI agents pay per request now. Without a wallet that understands x402, every agent is a silent drain waiting to happen. Baret is the first to enforce caps, allowlists, and kill switches at the signing layer."
+      sub="AI agents pay per request now. Without a wallet that understands x402, every agent is a silent drain waiting to happen. Premon is the first to enforce caps, allowlists, and kill switches at the signing layer."
       tone="bone"
     >
       <div className="card overflow-hidden">
         <div className="grid md:grid-cols-2">
           <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-ink-900/8 bg-bone">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-ink-400 uppercase tracking-wider">
-              <Cpu size={12} /> Without Baret
+              <Cpu size={12} /> Without Premon
             </div>
             <p className="mt-4 font-display text-2xl font-bold leading-tight text-ink-700">
               An agent re-signs micro-payments<br /> while you sleep.
@@ -510,7 +510,7 @@ function X402Section() {
 
           <div className="p-8 md:p-10 bg-white">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-600 uppercase tracking-wider">
-              <Eye size={13} /> With Baret
+              <Eye size={13} /> With Premon
             </div>
             <p className="mt-4 font-display text-2xl font-bold leading-tight">
               The agent gets a leash,<br /> a budget, and a kill switch.
@@ -590,7 +590,7 @@ function FinalCta() {
             See it coming.<br /> <span className="text-brand-500">Sign with sight.</span>
           </h2>
           <p className="mt-6 text-white/60 text-lg max-w-xl">
-            Open the showcase, connect a wallet, and watch Baret refuse a wallet drainer in real time.
+            Open the showcase, connect a wallet, and watch Premon refuse a wallet drainer in real time.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link to="/showcase" className="btn-brand">

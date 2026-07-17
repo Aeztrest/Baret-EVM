@@ -3,7 +3,7 @@ import { normalizePolicy, type GuardPolicy } from "./policy.js";
 import type { AnalysisResult, EvmNetwork, TransactionInput } from "./types.js";
 
 export interface AnalyzeClientConfig {
-  /** Base URL of the Baret server, e.g. http://localhost:8080 */
+  /** Base URL of the Premon server, e.g. http://localhost:8080 */
   baseUrl: string;
   apiKey?: string;
   fetchImpl?: typeof fetch;
@@ -69,7 +69,7 @@ export async function analyzeTransaction(
       } catch {
         /* ignore */
       }
-      throw new AnalyzeError(`Baret analyze returned HTTP ${res.status}`, res.status, body);
+      throw new AnalyzeError(`Premon analyze returned HTTP ${res.status}`, res.status, body);
     }
 
     return (await res.json()) as AnalysisResult;
@@ -77,14 +77,14 @@ export async function analyzeTransaction(
     if (err instanceof AnalyzeError) throw err;
     if (err instanceof DOMException && err.name === "AbortError") {
       throw new AnalyzeError(
-        `Baret analyze timed out after ${cfg.timeoutMs ?? DEFAULT_TIMEOUT}ms`,
+        `Premon analyze timed out after ${cfg.timeoutMs ?? DEFAULT_TIMEOUT}ms`,
         undefined,
         undefined,
         err,
       );
     }
     const msg = err instanceof Error ? err.message : String(err);
-    throw new AnalyzeError(`Baret analyze request failed: ${msg}`, undefined, undefined, err);
+    throw new AnalyzeError(`Premon analyze request failed: ${msg}`, undefined, undefined, err);
   } finally {
     clearTimeout(t);
   }

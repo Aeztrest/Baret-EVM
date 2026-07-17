@@ -14,7 +14,7 @@ import {
   PROTOCOL_TAG,
   type Envelope,
   type ExtRpcMethod,
-} from "@baret/ext-protocol";
+} from "@premon/ext-protocol";
 import { handlers as rpcHandlers } from "./handlers";
 import {
   provider_handlers,

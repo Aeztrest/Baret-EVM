@@ -50,13 +50,13 @@ function Awaiting() {
   return (
     <div className="space-y-4">
       <div className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center"
-        style={{ background: "rgba(91, 97, 105,0.10)", border: "1px solid rgba(91, 97, 105,0.35)" }}>
+        style={{ background: "rgba(131, 110, 249,0.10)", border: "1px solid rgba(131, 110, 249,0.35)" }}>
         <Loader2 size={22} className="animate-spin text-brand-500" />
       </div>
       <div>
-        <p className="text-lg font-bold text-ink-900">Approve in your Baret wallet</p>
+        <p className="text-lg font-bold text-ink-900">Approve in your Premon wallet</p>
         <p className="text-xs text-ink-500 mt-1.5 leading-relaxed">
-          We've opened the wallet popup. It's simulating this transaction with Baret
+          We've opened the wallet popup. It's simulating this transaction with Premon
           and checking your policy. Approve there to continue.
         </p>
       </div>
@@ -74,7 +74,7 @@ function Confirmed({ signature, onClose }: { signature: string | null; onClose: 
       </div>
       <div>
         <p className="text-lg font-bold text-emerald-600">Transaction confirmed</p>
-        <p className="text-xs text-ink-500 mt-1.5">Baret approved + your wallet signed.</p>
+        <p className="text-xs text-ink-500 mt-1.5">Premon approved + your wallet signed.</p>
       </div>
       {signature && (
         <a href={`${EXPLORER}/tx/${signature}`} target="_blank" rel="noreferrer"
@@ -91,13 +91,13 @@ function Blocked({ message, onClose }: { message: string | null; onClose: () => 
   return (
     <div className="space-y-4">
       <div className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center"
-        style={{ background: "rgba(91, 97, 105,0.10)", border: "1px solid rgba(91, 97, 105,0.40)" }}>
+        style={{ background: "rgba(131, 110, 249,0.10)", border: "1px solid rgba(131, 110, 249,0.40)" }}>
         <ShieldX size={24} className="text-brand-600" />
       </div>
       <div>
         <p className="text-lg font-bold text-brand-600">Blocked at the wallet</p>
         <p className="text-xs text-ink-500 mt-1.5 leading-relaxed">
-          Baret's policy refused to sign this transaction. Your funds never moved.
+          Premon's policy refused to sign this transaction. Your funds never moved.
         </p>
       </div>
       {message && (

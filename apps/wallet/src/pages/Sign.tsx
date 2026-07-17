@@ -7,11 +7,11 @@ import {
   type SignRequestMessage,
   type SignApprovedMessage,
   type SignRejectedMessage,
-} from "@baret/wallet-adapter";
-import type { GuardEvaluation } from "@baret/guard";
+} from "@premon/wallet-adapter";
+import type { GuardEvaluation } from "@premon/guard";
 import { useWallet } from "../wallet/state";
 import { signAndMaybeSubmit } from "../wallet/tx";
-import { getGuard } from "../baret/guard";
+import { getGuard } from "../premon/guard";
 import { readPolicy } from "../storage/policy-store";
 import { appendHistory, makeEntryId } from "../storage/history-store";
 import { AnalysisReport } from "../components/AnalysisReport";
@@ -168,7 +168,7 @@ export function Sign() {
         {phase === "evaluating" && (
           <div className="glass rounded-2xl p-10 flex flex-col items-center gap-3 text-center">
             <Loader2 size={22} className="animate-spin text-accent-soft" />
-            <p className="text-sm text-ink-600">Simulating with Baret…</p>
+            <p className="text-sm text-ink-600">Simulating with Premon…</p>
             <p className="text-xs text-ink-400">Analyzing the transaction · running policy checks</p>
           </div>
         )}
@@ -226,8 +226,8 @@ function Header({ request }: { request: SignRequestMessage }) {
       </h1>
       <p className="text-xs text-ink-500">
         {request.mode === "signAndSend"
-          ? "Baret simulates this tx, then signs and broadcasts on your behalf."
-          : "Baret simulates and signs; the dApp broadcasts."}
+          ? "Premon simulates this tx, then signs and broadcasts on your behalf."
+          : "Premon simulates and signs; the dApp broadcasts."}
       </p>
     </div>
   );

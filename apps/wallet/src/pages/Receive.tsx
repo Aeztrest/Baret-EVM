@@ -42,7 +42,7 @@ export function Receive() {
             <p className="text-xs text-ink-500 mt-0.5">Funds live here — this EOA is your wallet.</p>
           </div>
           <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
-            style={{ background: "rgba(91, 97, 105,0.12)", color: "#454A50" }}>EVM Testnet</span>
+            style={{ background: "rgba(131, 110, 249,0.12)", color: "#6E54F2" }}>EVM Testnet</span>
         </div>
 
         <div className="flex justify-center py-2">

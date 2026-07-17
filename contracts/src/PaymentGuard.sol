@@ -9,10 +9,10 @@ interface IERC20 {
 }
 
 /**
- * @title Baret PaymentGuard
+ * @title Premon PaymentGuard
  * @notice On-chain spending-limit vault for x402 / agentic micropayments.
  *
- * The off-chain firewall (the Baret analyzer + guard SDK) screens a tx before a
+ * The off-chain firewall (the Premon analyzer + guard SDK) screens a tx before a
  * human signs it. This contract is the on-chain counterpart: the owner deposits
  * a token (e.g. USDC) and grants each merchant a per-transaction cap plus a
  * rolling 24-hour cap. An agent can then call {pay} to settle payments WITHOUT

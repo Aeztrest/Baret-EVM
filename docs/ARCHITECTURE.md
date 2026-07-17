@@ -1,4 +1,4 @@
-# Baret — Architecture
+# Premon — Architecture
 
 Module-by-module description of the EVM implementation. Source of truth is the
 code under `apps/server/src`, `packages/guard/src`, `contracts/src`.
@@ -45,7 +45,7 @@ where `transaction` is a raw `0x` serialized tx or a `{from,to,value,data,…}` 
   `evm-danger` (selfdestruct/delegatecall/ownership/native-to-contract), `x402`.
 - **policy/** — `engine` (gates + `isBlocked` fail-closed; critical findings
   always block), `profiles` (strict/balanced/permissive).
-- **mcp/server.ts** — `baret_analyze`, `baret_health`, `baret_list_profiles`.
+- **mcp/server.ts** — `premon_analyze`, `premon_health`, `premon_list_profiles`.
 - **api/routes/** — health, analyze, batch, stream, replay, audit, mcp, demo-paywall.
 - **data/** — in-memory `audit-store`, seeded `reputation-db`.
 

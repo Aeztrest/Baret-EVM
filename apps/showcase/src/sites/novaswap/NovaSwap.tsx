@@ -2,11 +2,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpDown, ChevronDown, Settings, Info } from "lucide-react";
 import { SiteShell } from "../../components/SiteShell";
-import { ResultOverlay, type ResultState } from "../../baret/ResultOverlay";
-import { RiskPreview } from "../../baret/RiskPreview";
-import { buildScenario } from "../../baret/transactions";
+import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
+import { RiskPreview } from "../../premon/RiskPreview";
+import { buildScenario } from "../../premon/transactions";
 import { useWallet } from "../../wallet/context";
-import type { TxRequest } from "@baret/wallet-adapter";
+import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#FF6B00",
@@ -55,7 +55,7 @@ export default function NovaSwap() {
     }
   }
 
-  async function sendViaBaret() {
+  async function sendViaPremon() {
     if (!previewTx) return;
     const tx = previewTx;
     setPreviewTx(null);
@@ -73,10 +73,10 @@ export default function NovaSwap() {
   }
   // "Without protection" = same path through the connected wallet, but no
   // pre-sign review on the site side. Demo aid only — the wallet still
-  // applies its own policy, since Baret is the wallet itself. To truly
-  // bypass, swap to a different non-Baret wallet from the picker.
+  // applies its own policy, since Premon is the wallet itself. To truly
+  // bypass, swap to a different non-Premon wallet from the picker.
   async function sendRaw() {
-    return sendViaBaret();
+    return sendViaPremon();
   }
 
   function flip() {
@@ -233,7 +233,7 @@ export default function NovaSwap() {
         userWallet={walletAddress ?? null}
         scenarioLabel={scenarioLabel}
         onClose={() => setPreviewTx(null)}
-        onProceedWithBaret={sendViaBaret}
+        onProceedWithPremon={sendViaPremon}
         onProceedRaw={sendRaw}
       />
     </SiteShell>

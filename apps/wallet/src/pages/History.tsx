@@ -22,7 +22,7 @@ export function History() {
           <h1 className="text-2xl font-black font-display text-ink-900 tracking-tight flex items-center gap-2">
             <Clock size={20} className="text-accent" /> Activity
           </h1>
-          <p className="text-ink-500 text-sm mt-1">Every transaction Baret evaluated, allowed, or blocked.</p>
+          <p className="text-ink-500 text-sm mt-1">Every transaction Premon evaluated, allowed, or blocked.</p>
         </div>
         {entries.length > 0 && (
           <button onClick={onClear} className="btn-ghost text-[#DC2626] hover:text-[#B91C1C]">
@@ -35,7 +35,7 @@ export function History() {
         <div className="card p-12 text-center">
           <Clock size={28} className="mx-auto text-ink-300 mb-3" />
           <p className="text-sm text-ink-500">No activity yet</p>
-          <p className="text-xs text-ink-400 mt-1">Make your first send to see Baret's verdicts in here.</p>
+          <p className="text-xs text-ink-400 mt-1">Make your first send to see Premon's verdicts in here.</p>
         </div>
       ) : (
         <div className="space-y-2">

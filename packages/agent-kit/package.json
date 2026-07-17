@@ -1,7 +1,7 @@
 {
-  "name": "@baret/agent-kit",
+  "name": "@premon/agent-kit",
   "version": "0.1.0",
-  "description": "Guard your agent / program wallet with Baret: a drop-in ethers signer + CLI that runs every transaction through Baret's pre-sign firewall and refuses to sign what your policy blocks.",
+  "description": "Guard your agent / program wallet with Premon: a drop-in ethers signer + CLI that runs every transaction through Premon's pre-sign firewall and refuses to sign what your policy blocks.",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -10,11 +10,11 @@
     ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
   },
   "bin": {
-    "baret": "./dist/cli.js"
+    "premon": "./dist/cli.js"
   },
   "files": ["dist", "README.md"],
-  "keywords": ["evm", "ethereum", "agent", "ai-agent", "wallet", "security", "ethers", "signer", "baret"],
-  "homepage": "https://baret.example/agents",
+  "keywords": ["evm", "ethereum", "agent", "ai-agent", "wallet", "security", "ethers", "signer", "premon"],
+  "homepage": "https://premon.example/agents",
   "repository": { "type": "git", "url": "git+https://github.com/Aeztrest/Baret-EVM.git", "directory": "packages/agent-kit" },
   "publishConfig": { "access": "public" },
   "scripts": {
@@ -24,7 +24,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@baret/guard": "workspace:*",
+    "@premon/guard": "workspace:*",
     "ethers": "^6.13.4"
   },
   "devDependencies": {

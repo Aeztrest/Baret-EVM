@@ -67,7 +67,7 @@ function resetIdle(): void {
   if (idleTimer) clearTimeout(idleTimer);
   const ms = getState().idleTimeoutMs;
   idleTimer = setTimeout(() => {
-    console.info("[BARET] idle timeout — locking wallet");
+    console.info("[PREMON] idle timeout — locking wallet");
     lock();
   }, ms);
 }

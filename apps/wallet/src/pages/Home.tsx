@@ -17,7 +17,7 @@ export function Home() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-black font-display text-ink-900 tracking-tight">Welcome back</h1>
-        <p className="text-ink-500 text-sm mt-1">Your wallet is guarded by Baret — every signature is simulated first.</p>
+        <p className="text-ink-500 text-sm mt-1">Your wallet is guarded by Premon — every signature is simulated first.</p>
       </div>
 
       {/* Balance hero — deliberate dark inspection console on the light page */}
@@ -71,7 +71,7 @@ export function Home() {
             <Link to="/history" className="text-xs text-ink-500 hover:text-accent">All →</Link>
           </div>
           {history.length === 0 ? (
-            <p className="text-xs text-ink-400 py-6 text-center">No activity yet — try a Send to see Baret in action.</p>
+            <p className="text-xs text-ink-400 py-6 text-center">No activity yet — try a Send to see Premon in action.</p>
           ) : (
             <ul className="space-y-1.5">
               {history.map((h) => (
@@ -94,7 +94,7 @@ export function Home() {
         </div>
         <div className="flex-1">
           <p className="font-bold text-ink-900 text-sm">Customize your protection</p>
-          <p className="text-xs text-ink-500">Tune every Baret rule — loss caps, approval blocks, contract allowlists.</p>
+          <p className="text-xs text-ink-500">Tune every Premon rule — loss caps, approval blocks, contract allowlists.</p>
         </div>
         <ArrowRight size={14} className="text-ink-300 group-hover:text-accent transition-colors" />
       </Link>

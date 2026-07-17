@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { Clock, ExternalLink, Globe } from "lucide-react";
-import type { HistoryEntry, EvmNetwork } from "@baret/ext-protocol";
+import type { HistoryEntry, EvmNetwork } from "@premon/ext-protocol";
 import { useRpc, useWalletState } from "../shared/state-context";
 import { explorerTxUrl } from "../shared/chain";
 

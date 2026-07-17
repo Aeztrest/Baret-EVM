@@ -2,12 +2,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send as SendIcon, ArrowRight, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
 import { ethers } from "ethers";
-import type { GuardEvaluation } from "@baret/guard";
-import type { TxRequest } from "@baret/wallet-adapter";
+import type { GuardEvaluation } from "@premon/guard";
+import type { TxRequest } from "@premon/wallet-adapter";
 import { useWallet } from "../wallet/state";
 import { explorerUrl, NATIVE_SYMBOL } from "../wallet/connection";
 import { buildNativeTransfer, signAndMaybeSubmit } from "../wallet/tx";
-import { getGuard } from "../baret/guard";
+import { getGuard } from "../premon/guard";
 import { readPolicy } from "../storage/policy-store";
 import { appendHistory, makeEntryId } from "../storage/history-store";
 import { AnalysisReport } from "../components/AnalysisReport";
@@ -103,7 +103,7 @@ export function Send() {
         <h1 className="text-2xl font-black font-display text-ink-900 tracking-tight flex items-center gap-2">
           <SendIcon size={20} className="text-accent" /> Send
         </h1>
-        <p className="text-ink-500 text-sm mt-1">Every transaction passes Baret's policy gate before signing.</p>
+        <p className="text-ink-500 text-sm mt-1">Every transaction passes Premon's policy gate before signing.</p>
       </div>
 
       {phase === "form" && (
@@ -123,7 +123,7 @@ export function Send() {
             </div>
           </div>
           <button onClick={review} disabled={!recipient || !amount} className="btn-primary w-full disabled:opacity-50">
-            <ShieldCheck size={13} /> Review with Baret
+            <ShieldCheck size={13} /> Review with Premon
           </button>
           <p className="text-[10px] text-ink-400 text-center">No signature is created until you confirm on the next screen.</p>
         </motion.div>
@@ -160,7 +160,7 @@ export function Send() {
           <ShieldCheck size={32} className="mx-auto text-emerald-600" />
           <div>
             <p className="text-lg font-bold text-emerald-700">Transaction confirmed</p>
-            <p className="text-xs text-emerald-700/80 mt-1">Sent {amount} {NATIVE_SYMBOL} · Baret-protected</p>
+            <p className="text-xs text-emerald-700/80 mt-1">Sent {amount} {NATIVE_SYMBOL} · Premon-protected</p>
           </div>
           {hash && (
             <a href={explorerUrl("tx", hash)} target="_blank" rel="noreferrer"

@@ -1,5 +1,5 @@
 {
-  "name": "@baret/server",
+  "name": "@premon/server",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@baret/guard": "workspace:*",
+    "@premon/guard": "workspace:*",
     "@fastify/rate-limit": "^10.2.1",
     "ethers": "^6.13.4",
     "fastify": "^5.2.0",

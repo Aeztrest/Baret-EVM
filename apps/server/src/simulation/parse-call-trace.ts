@@ -19,7 +19,7 @@ function valueToDecimal(v: string | undefined): string {
 }
 
 /**
- * Converts a `callTracer` frame tree into Baret's chain-generic `CallTrace`.
+ * Converts a `callTracer` frame tree into Premon's chain-generic `CallTrace`.
  * Returns `EMPTY_CALL_TRACE` when no trace is available (node lacks debug RPC),
  * which downstream maps to "not traced → lower confidence".
  */

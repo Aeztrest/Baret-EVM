@@ -32,7 +32,7 @@ export function buildAnalyzePaymentRequirements(
     network: config.x402.network,
     maxAmountRequired: config.x402.analyzePrice,
     resource,
-    description: "Baret transaction analysis",
+    description: "Premon transaction analysis",
     mimeType: "application/json",
     asset: config.chain.usdcAddress,
     payTo: config.x402.payTo,

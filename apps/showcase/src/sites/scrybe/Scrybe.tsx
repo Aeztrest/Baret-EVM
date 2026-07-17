@@ -1,9 +1,9 @@
 /**
  * Scrybe — pay-per-question oracle, x402 over an EVM testnet.
  *
- * This is Baret's flagship demo. The page itself pays nothing: it just does a
+ * This is Premon's flagship demo. The page itself pays nothing: it just does a
  * plain `fetch` to the merchant. The merchant answers HTTP 402 with x402
- * PaymentRequirements, and the Baret BROWSER EXTENSION's x402 layer transparently
+ * PaymentRequirements, and the Premon BROWSER EXTENSION's x402 layer transparently
  * intercepts it, pays real USDC on-chain (under the user's x402 caps / auto-approve
  * setting), and retries with the `X-PAYMENT` header — so a successful fetch comes
  * back as a normal 200 with the answer.
@@ -47,7 +47,7 @@ const SUGGESTIONS = [
 ];
 
 const DECLINE_MESSAGE =
-  "Baret didn't authorize this payment — install/unlock the extension, or check your x402 settings (auto-approve + caps) in the wallet.";
+  "Premon didn't authorize this payment — install/unlock the extension, or check your x402 settings (auto-approve + caps) in the wallet.";
 
 export default function Scrybe() {
   const { connected, shortAddress, openWalletModal, disconnect } = useWallet();
@@ -71,7 +71,7 @@ export default function Scrybe() {
       setHistory((prev) => prev.map((e) => (e.id === entryId ? { ...e, ...patch } : e)));
 
     try {
-      // Plain fetch. If the Baret extension is installed + within caps, it pays
+      // Plain fetch. If the Premon extension is installed + within caps, it pays
       // real USDC on-chain and transparently retries — so we just see a 200.
       const res = await fetch(`/api/demo/scrybe?q=${encodeURIComponent(q)}`, {
         headers: { accept: "application/json" },
@@ -147,7 +147,7 @@ export default function Scrybe() {
               </button>
             )}
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-medium bg-brand-50 text-brand-700 border border-brand-500/20">
-              <ShieldCheck size={10} /> Baret x402
+              <ShieldCheck size={10} /> Premon x402
             </span>
             <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-mono font-medium bg-bone text-ink-900/60 border border-ink-900/10">
               $0.001/q
@@ -162,12 +162,12 @@ export default function Scrybe() {
             <div>
               <h2 className="font-display text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]">
                 Just ask.<br />
-                <span className="text-brand-500">Baret pays.</span>
+                <span className="text-brand-500">Premon pays.</span>
               </h2>
               <p className="text-ink-900/55 mt-3 leading-relaxed max-w-xl">
                 Pay-per-question oracle over HTTP&nbsp;402 on an EVM testnet. Each
                 question costs 0.001&nbsp;USDC — but you never sign anything here.
-                The Baret EXTENSION settles the x402 payment on-chain
+                The Premon EXTENSION settles the x402 payment on-chain
                 automatically, under your x402 caps. Flip <strong>x402
                 auto-approve</strong> off in the wallet's Policies and the
                 extension asks you to approve each payment instead.
@@ -281,7 +281,7 @@ function ConversationEntry({ entry }: { entry: AnswerEntry }) {
 function ProgressStep({ entry: _entry }: { entry: AnswerEntry }) {
   const PHASES = [
     { key: "ask",    label: "Asking" },
-    { key: "settle", label: "Baret settling x402" },
+    { key: "settle", label: "Premon settling x402" },
     { key: "answer", label: "Answered" },
   ];
   // Everything happens inside one transparent fetch, so we surface the middle
@@ -327,7 +327,7 @@ function SettlementReceipt({ network, txHash, elapsedMs }: {
       <ShieldCheck size={14} className="text-emerald-600 mt-0.5 shrink-0" />
       <div className="flex-1 min-w-0">
         <p className="text-emerald-700 font-medium mb-1">
-          Paid via Baret x402 · {network ?? "testnet"} · {(elapsedMs / 1000).toFixed(1)}s
+          Paid via Premon x402 · {network ?? "testnet"} · {(elapsedMs / 1000).toFixed(1)}s
         </p>
         {explorerTx ? (
           <a
@@ -364,7 +364,7 @@ function HowItWorksDisclosure() {
           {[
             { n: "01", t: "Ask",     b: "Page does a plain fetch" },
             { n: "02", t: "402",     b: "Server demands 0.001 USDC" },
-            { n: "03", t: "Baret",  b: "Extension pays USDC on-chain" },
+            { n: "03", t: "Premon",  b: "Extension pays USDC on-chain" },
             { n: "04", t: "Answer",  b: "Retried fetch returns 200" },
           ].map((s) => (
             <div key={s.n} className="rounded-lg p-2.5 bg-bone border border-ink-900/8">

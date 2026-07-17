@@ -1,5 +1,5 @@
 /**
- * RPC handlers — one per method in @baret/ext-protocol's ExtRpc.
+ * RPC handlers — one per method in @premon/ext-protocol's ExtRpc.
  */
 
 import {
@@ -15,8 +15,8 @@ import type {
   ExtRpcMethod,
   ExtRpcRequest,
   ExtRpcResponse,
-} from "@baret/ext-protocol";
-import { BALANCED_POLICY, type GuardPolicy } from "@baret/guard";
+} from "@premon/ext-protocol";
+import { BALANCED_POLICY, type GuardPolicy } from "@premon/guard";
 
 import { dispatch, getSnapshot } from "../state/store";
 import { encryptWithPassphrase, decryptWithPassphrase } from "../crypto/kdf";
@@ -43,7 +43,7 @@ import {
   size as signQueueSize,
   snapshot as peekSign,
 } from "../provider/sign-queue";
-import { analyzeTransaction } from "../baret/analyze-client";
+import { analyzeTransaction } from "../premon/analyze-client";
 import {
   listAllowances,
   setStatus as setAllowanceStatus,
@@ -55,7 +55,7 @@ import {
 } from "../db/history";
 import { countUnread, dismiss as dismissAlert, listAlerts } from "../db/alerts";
 
-const POLICY_STORAGE_KEY = "baret.policy.v1";
+const POLICY_STORAGE_KEY = "premon.policy.v1";
 const ERC20_ABI = [
   "function balanceOf(address) view returns (uint256)",
 ] as const;

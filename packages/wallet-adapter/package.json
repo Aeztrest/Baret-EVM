@@ -1,7 +1,7 @@
 {
-  "name": "@baret/wallet-adapter",
+  "name": "@premon/wallet-adapter",
   "version": "0.1.0",
-  "description": "dApp ↔ Baret wallet postMessage bridge (EVM). No ethers required to consume.",
+  "description": "dApp ↔ Premon wallet postMessage bridge (EVM). No ethers required to consume.",
   "private": true,
   "type": "module",
   "main": "dist/index.js",

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * baret — guard an agent / program wallet from the command line.
+ * premon — guard an agent / program wallet from the command line.
  *
- * Every `send` runs through Baret's pre-sign firewall first; if the policy
+ * Every `send` runs through Premon's pre-sign firewall first; if the policy
  * blocks it, nothing is signed. Config via env:
- *   BARET_PRIVATE_KEY   (required for address/analyze/send)
- *   BARET_RPC_URL       (default https://testnet-rpc.monad.xyz)
- *   BARET_ANALYZE_URL   (default https://baret-api.onrender.com)
- *   BARET_API_KEY       (default dev-key-change-me)
- *   BARET_NETWORK       (testnet | mainnet, default testnet)
- *   BARET_POLICY        (strict | balanced | permissive, default balanced)
+ *   PREMON_PRIVATE_KEY   (required for address/analyze/send)
+ *   PREMON_RPC_URL       (default https://testnet-rpc.monad.xyz)
+ *   PREMON_ANALYZE_URL   (default https://baret-api.onrender.com)
+ *   PREMON_API_KEY       (default dev-key-change-me)
+ *   PREMON_NETWORK       (testnet | mainnet, default testnet)
+ *   PREMON_POLICY        (strict | balanced | permissive, default balanced)
  */
 
 import { parseEther } from "ethers";
@@ -52,7 +52,7 @@ function parseFlags(args: string[]): Record<string, string | boolean> {
 }
 
 function resolvePolicy(flag?: string | boolean): { name: string; policy: GuardPolicy } {
-  const name = (typeof flag === "string" ? flag : env("BARET_POLICY", "balanced")) ?? "balanced";
+  const name = (typeof flag === "string" ? flag : env("PREMON_POLICY", "balanced")) ?? "balanced";
   const policy = POLICIES[name];
   if (!policy) {
     fail(`Unknown policy "${name}". Use: strict | balanced | permissive.`);
@@ -61,14 +61,14 @@ function resolvePolicy(flag?: string | boolean): { name: string; policy: GuardPo
 }
 
 function makeWallet(policy: GuardPolicy): GuardedWallet {
-  const privateKey = env("BARET_PRIVATE_KEY");
-  if (!privateKey) fail("BARET_PRIVATE_KEY is not set.");
+  const privateKey = env("PREMON_PRIVATE_KEY");
+  if (!privateKey) fail("PREMON_PRIVATE_KEY is not set.");
   return new GuardedWallet({
     privateKey: privateKey!,
-    rpcUrl: env("BARET_RPC_URL", "https://testnet-rpc.monad.xyz")!,
-    analyzeUrl: env("BARET_ANALYZE_URL", "https://baret-api.onrender.com")!,
-    apiKey: env("BARET_API_KEY", "dev-key-change-me"),
-    network: (env("BARET_NETWORK", "testnet") as EvmNetwork),
+    rpcUrl: env("PREMON_RPC_URL", "https://testnet-rpc.monad.xyz")!,
+    analyzeUrl: env("PREMON_ANALYZE_URL", "https://baret-api.onrender.com")!,
+    apiKey: env("PREMON_API_KEY", "dev-key-change-me"),
+    network: (env("PREMON_NETWORK", "testnet") as EvmNetwork),
     policy,
   });
 }
@@ -101,26 +101,26 @@ function printOutcome(o: { decision: string; blockingReasons: string[]; analysis
 }
 
 function fail(msg: string): never {
-  console.error(`baret: ${msg}`);
+  console.error(`premon: ${msg}`);
   process.exit(1);
 }
 
-const USAGE = `baret — Baret agent wallet guard
+const USAGE = `premon — Premon agent wallet guard
 
 Usage:
-  baret address                      Print the agent wallet address
-  baret analyze --to 0x.. [opts]     Dry-run: analyze a tx, print the verdict (no signing)
-  baret send    --to 0x.. [opts]     Guarded send: analyze, then sign+broadcast only if allowed
-  baret policy  [strict|balanced|permissive]   Print a policy as JSON
+  premon address                      Print the agent wallet address
+  premon analyze --to 0x.. [opts]     Dry-run: analyze a tx, print the verdict (no signing)
+  premon send    --to 0x.. [opts]     Guarded send: analyze, then sign+broadcast only if allowed
+  premon policy  [strict|balanced|permissive]   Print a policy as JSON
 
 Options:
   --to 0x...        Recipient / contract address
   --data 0x...      Calldata (for contract calls)
   --value 0.01      Native MON amount (decimal)
-  --policy <name>   strict | balanced | permissive (overrides BARET_POLICY)
+  --policy <name>   strict | balanced | permissive (overrides PREMON_POLICY)
 
-Env: BARET_PRIVATE_KEY, BARET_RPC_URL, BARET_ANALYZE_URL, BARET_API_KEY,
-     BARET_NETWORK, BARET_POLICY`;
+Env: PREMON_PRIVATE_KEY, PREMON_RPC_URL, PREMON_ANALYZE_URL, PREMON_API_KEY,
+     PREMON_NETWORK, PREMON_POLICY`;
 
 async function main(): Promise<void> {
   const [cmd, ...rest] = process.argv.slice(2);
@@ -151,7 +151,7 @@ async function main(): Promise<void> {
         console.log(`\n  ✅ Sent. tx: ${resp.hash}\n`);
       } catch (e) {
         if (e instanceof GuardBlockedError) {
-          console.log("\n  ⛔ BLOCKED by Baret — nothing was signed.");
+          console.log("\n  ⛔ BLOCKED by Premon — nothing was signed.");
           for (const r of e.blockingReasons) console.log(`    • ${r}`);
           console.log("");
           process.exit(2);
@@ -172,11 +172,11 @@ async function main(): Promise<void> {
       console.log(USAGE);
       return;
     default:
-      fail(`Unknown command "${cmd}". Run "baret help".`);
+      fail(`Unknown command "${cmd}". Run "premon help".`);
   }
 }
 
 main().catch((e) => {
-  console.error(`baret: ${e instanceof Error ? e.message : String(e)}`);
+  console.error(`premon: ${e instanceof Error ? e.message : String(e)}`);
   process.exit(1);
 });

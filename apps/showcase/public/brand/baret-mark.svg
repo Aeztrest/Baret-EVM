@@ -1,7 +1,0 @@
-<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baret">
-  <rect width="256" height="256" rx="56" fill="#141414"/>
-  <!-- hard hat: protection before you sign -->
-  <ellipse cx="128" cy="164" rx="88" ry="18.4" fill="#5B6169"/>
-  <path d="M56,160 C56,104 88,76 128,76 C168,76 200,104 200,160 Z" fill="#FFFFFF"/>
-  <rect x="120" y="76" width="16" height="22" rx="4" fill="#5B6169"/>
-</svg>

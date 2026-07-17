@@ -10,14 +10,14 @@
 
 import { ArrowRight, ExternalLink, ShieldCheck } from "lucide-react";
 import browser from "webextension-polyfill";
-import { Mark } from "@baret/ui";
+import { Mark } from "@premon/ui";
 
 const OPTIONS_PATH = "src/options/index.html";
 
 const STEPS = [
   "Set a passphrase and generate your keys — locally, on this device.",
   "Fund your wallet with testnet MON to start sending transactions.",
-  "Pick a security policy. Then every signature passes through Baret.",
+  "Pick a security policy. Then every signature passes through Premon.",
 ];
 
 export function UninitializedScreen() {
@@ -40,7 +40,7 @@ export function UninitializedScreen() {
     <div className="h-full flex flex-col px-6 py-7 gap-5 overflow-y-auto">
       <div className="text-accent-soft flex items-center gap-2">
         <Mark size={20} />
-        <span className="font-bold text-xs tracking-tight">Baret</span>
+        <span className="font-bold text-xs tracking-tight">Premon</span>
       </div>
 
       <div className="space-y-2">
@@ -62,7 +62,7 @@ export function UninitializedScreen() {
             <li key={line} className="flex items-start gap-2.5 text-xs text-text-muted">
               <span
                 className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-accent-soft"
-                style={{ background: "rgba(91, 97, 105,0.10)", border: "1px solid rgba(91, 97, 105,0.25)" }}
+                style={{ background: "rgba(131, 110, 249,0.10)", border: "1px solid rgba(131, 110, 249,0.25)" }}
               >
                 {i + 1}
               </span>
@@ -90,7 +90,7 @@ export function UninitializedScreen() {
           Open setup in a new tab <ExternalLink size={13} />
         </button>
         <p className="text-[10px] text-text-faint text-center flex items-center justify-center gap-1">
-          Opens the full Baret wallet page <ArrowRight size={9} /> you can close this popup
+          Opens the full Premon wallet page <ArrowRight size={9} /> you can close this popup
         </p>
       </div>
     </div>

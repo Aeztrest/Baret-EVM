@@ -16,7 +16,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useRpc, useWalletState } from "../../shared/state-context";
-import type { GuardPolicy } from "@baret/guard";
+import type { GuardPolicy } from "@premon/guard";
 import {
   OptionsSendModal,
   OptionsReceiveModal,
@@ -62,7 +62,7 @@ export function HomeOpt() {
         <h1 className="text-3xl font-extrabold tracking-tight">Welcome back</h1>
         <p className="text-text-muted text-sm mt-1">
           Your wallet is live on {state.network}. Every transaction passes
-          Baret before signing.
+          Premon before signing.
         </p>
       </div>
 
@@ -70,7 +70,7 @@ export function HomeOpt() {
         className="rounded-card p-6 relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, rgba(91, 97, 105,0.08), rgba(91, 97, 105,0.015))",
+            "linear-gradient(135deg, rgba(131, 110, 249,0.08), rgba(131, 110, 249,0.015))",
           border: "1px solid var(--line)",
         }}
       >

@@ -1,5 +1,5 @@
 /**
- * Sign request surface — full Baret pre-sign analysis flow.
+ * Sign request surface — full Premon pre-sign analysis flow.
  *
  * Pulls the pending sign request from background, fetches the structured
  * analysis (transaction kind only), renders the AnalysisReport, and resolves
@@ -10,7 +10,7 @@
 
 import { useEffect, useState } from "react";
 import { Globe, Loader2, X, ShieldCheck, AlertTriangle } from "lucide-react";
-import type { AnalyzeResponse } from "@baret/ext-protocol";
+import type { AnalyzeResponse } from "@premon/ext-protocol";
 import { useRpc } from "../shared/state-context";
 import { AnalysisReport } from "./AnalysisReport";
 
@@ -53,7 +53,7 @@ export function SignRequest() {
     return () => { cancelled = true; clearInterval(t); };
   }, [rpc]);
 
-  // Run Baret analysis as soon as we have a request.
+  // Run Premon analysis as soon as we have a request.
   useEffect(() => {
     if (!request) return;
     let cancelled = false;
@@ -98,7 +98,7 @@ export function SignRequest() {
         {analyzing && !analysis && (
           <div className="card !p-5 flex flex-col items-center gap-2.5 text-center">
             <Loader2 size={18} className="animate-spin text-accent-soft" />
-            <p className="text-text-muted text-xs">Simulating with Baret…</p>
+            <p className="text-text-muted text-xs">Simulating with Premon…</p>
             <p className="text-text-faint text-[10px]">Decoding calldata, running policy checks.</p>
           </div>
         )}
@@ -177,7 +177,7 @@ function Footer({
     <footer className="p-3 border-t border-line flex flex-col gap-2 shrink-0 bg-bg-elevated">
       {analysis?.offline && (
         <div className="text-[10px] text-warn px-2 leading-relaxed">
-          Baret couldn't reach the analyzer. You're signing without protection.
+          Premon couldn't reach the analyzer. You're signing without protection.
         </div>
       )}
 

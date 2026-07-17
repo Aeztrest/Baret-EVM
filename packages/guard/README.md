@@ -1,15 +1,15 @@
-# @baret/guard
+# @premon/guard
 
-Pre-sign transaction guard SDK for **Baret**, on any **EVM** chain. Chain-light —
-no `ethers` required to consume. Sends a transaction to Baret's analyzer, applies
+Pre-sign transaction guard SDK for **Premon**, on any **EVM** chain. Chain-light —
+no `ethers` required to consume. Sends a transaction to Premon's analyzer, applies
 your policy, and returns an allow/block decision. **Never signs, never submits.**
 
 ```bash
-pnpm add @baret/guard
+pnpm add @premon/guard
 ```
 
 ```ts
-import { TransactionGuard, STRICT_POLICY } from "@baret/guard";
+import { TransactionGuard, STRICT_POLICY } from "@premon/guard";
 
 const guard = new TransactionGuard({
   network: "testnet",
@@ -34,6 +34,6 @@ if (ev.decision === "block") {
 - Policy presets: `STRICT_POLICY`, `BALANCED_POLICY`, `PERMISSIVE_POLICY`
 
 For a drop-in **ethers signer** that enforces this automatically, see
-[`@baret/agent-kit`](https://www.npmjs.com/package/@baret/agent-kit).
+[`@premon/agent-kit`](https://www.npmjs.com/package/@premon/agent-kit).
 
-MIT · https://baret.example
+MIT · https://premon.example

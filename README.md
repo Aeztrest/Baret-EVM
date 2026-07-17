@@ -1,6 +1,6 @@
-# Baret
+# Premon
 
-**Pre-sign transaction security for EVM.** Baret analyzes a transaction
+**Pre-sign transaction security for EVM.** Premon analyzes a transaction
 **before it is signed**, runs it through independent risk detectors, applies the
 user's policy, and returns `safe: true/false` with reasons — for wallets, dApps,
 and AI agents.
@@ -34,8 +34,8 @@ An unlimited-approve tx returns:
 }
 ```
 
-The bundled default chain supports `debug_traceCall`, so Baret runs full
-internal-call tracing → `confidence: "high"`. On nodes without it, Baret
+The bundled default chain supports `debug_traceCall`, so Premon runs full
+internal-call tracing → `confidence: "high"`. On nodes without it, Premon
 degrades gracefully to calldata-projected deltas at `medium` confidence (still
 detects approvals, reverts, etc.).
 
@@ -47,11 +47,11 @@ detects approvals, reverts, etc.).
 apps/
   server/      Fastify + TypeScript analysis API (the core)
   wallet/      Standalone React smart-wallet (ethers + guard pre-sign)
-  showcase/    Demo gallery — EVM threat scenarios + Baret badge/overlay
+  showcase/    Demo gallery — EVM threat scenarios + Premon badge/overlay
   extension/   Chrome MV3 + Firefox wallet (EIP-1193/6963 provider + x402 interceptor)
 packages/
-  guard/         @baret/guard — pre-sign guard SDK (no ethers needed to consume)
-  agent-kit/     @baret/agent-kit — guarded ethers signer + CLI for agents
+  guard/         @premon/guard — pre-sign guard SDK (no ethers needed to consume)
+  agent-kit/     @premon/agent-kit — guarded ethers signer + CLI for agents
   wallet-adapter/dApp ↔ wallet postMessage bridge (EVM)
   ext-protocol/  extension message protocol (EIP-1193)
   ui/            design tokens + brand glyph
@@ -74,17 +74,17 @@ pnpm install
 cd apps/server && RPC_URL=https://testnet-rpc.monad.xyz pnpm dev   # :8080
 
 # 2) Standalone wallet
-pnpm --filter @baret/wallet dev        # :5180
+pnpm --filter @premon/wallet dev        # :5180
 
 # 3) Demo gallery (point it at the analyzer)
-pnpm --filter @baret/showcase dev      # :5175
+pnpm --filter @premon/showcase dev      # :5175
 
 # 4) Browser extension (load apps/extension/dist as an unpacked MV3 extension)
-pnpm --filter @baret/extension build
+pnpm --filter @premon/extension build
 ```
 
 The wallet, showcase, and extension all call the analyzer through
-`@baret/guard` and refuse to sign what the policy blocks.
+`@premon/guard` and refuse to sign what the policy blocks.
 
 ## Quickstart
 
@@ -116,7 +116,7 @@ object `{from,to,value,data,…}`.
 ## Use the guard SDK
 
 ```ts
-import { TransactionGuard, STRICT_POLICY } from "@baret/guard";
+import { TransactionGuard, STRICT_POLICY } from "@premon/guard";
 
 const guard = new TransactionGuard({
   network: "testnet",
@@ -131,7 +131,7 @@ const { decision, blockingReasons } = await guard.evaluate({
 // decision: "allow" | "block" — never signs, never submits
 ```
 
-For agents/programs, [`@baret/agent-kit`](packages/agent-kit) wraps this in a
+For agents/programs, [`@premon/agent-kit`](packages/agent-kit) wraps this in a
 drop-in ethers signer + CLI that refuses to sign what the policy blocks.
 
 ## Tests

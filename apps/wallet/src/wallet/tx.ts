@@ -4,7 +4,7 @@
  */
 
 import { ethers } from "ethers";
-import type { TxRequest } from "@baret/wallet-adapter";
+import type { TxRequest } from "@premon/wallet-adapter";
 import { getProvider } from "./connection";
 import type { WalletAccount } from "./keypair";
 

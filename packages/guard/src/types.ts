@@ -1,5 +1,5 @@
 /**
- * Mirror of the Baret /v1/analyze response shape.
+ * Mirror of the Premon /v1/analyze response shape.
  * Source of truth: apps/server/src/domain/decision.ts
  *
  * Kept SDK-free (no ethers) so wallet UIs and agents can consume it directly.

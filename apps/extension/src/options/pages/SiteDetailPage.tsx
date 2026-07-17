@@ -15,8 +15,8 @@ import {
   ArrowLeft, Globe, ShieldOff, ShieldCheck, Pause, Play, Trash2, Loader2,
   ExternalLink, AlertTriangle,
 } from "lucide-react";
-import type { AllowanceSnapshot, HistoryEntry } from "@baret/ext-protocol";
-import type { GuardPolicy } from "@baret/guard";
+import type { AllowanceSnapshot, HistoryEntry } from "@premon/ext-protocol";
+import type { GuardPolicy } from "@premon/guard";
 import { useRpc, useWalletState } from "../../shared/state-context";
 import { explorerTxUrl } from "../../shared/chain";
 

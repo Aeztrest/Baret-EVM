@@ -6,7 +6,7 @@
  */
 
 import { INITIAL_STATE, reduce, snapshot, type Action, type WalletState } from "./machine";
-import type { WalletStateSnapshot } from "@baret/ext-protocol";
+import type { WalletStateSnapshot } from "@premon/ext-protocol";
 
 type Listener = (s: WalletStateSnapshot, prev: WalletStateSnapshot) => void;
 
@@ -28,7 +28,7 @@ export function dispatch(action: Action): WalletState {
   if (!shallowEqual(prev, next)) {
     for (const l of listeners) {
       try { l(next, prev); }
-      catch (err) { console.error("[BARET] state listener threw:", err); }
+      catch (err) { console.error("[PREMON] state listener threw:", err); }
     }
   }
   return current;

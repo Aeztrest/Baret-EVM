@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@baret/ui/tokens.css";
+import "@premon/ui/tokens.css";
 import "./index.css";
 import App from "./App";
 

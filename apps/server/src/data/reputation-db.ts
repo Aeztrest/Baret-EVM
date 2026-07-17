@@ -49,13 +49,13 @@ const SEED: Record<string, ReputationEntry> = {
   "0x0000000000000000000000000000000000000bad": {
     label: "Known wallet drainer (demo seed)",
     category: "drainer",
-    source: "baret-seed",
+    source: "premon-seed",
     severity: "critical",
   },
   "0x00000000000000000000000000000000deadbeef": {
     label: "Phishing approval spender (demo seed)",
     category: "phishing",
-    source: "baret-seed",
+    source: "premon-seed",
     severity: "high",
   },
 };

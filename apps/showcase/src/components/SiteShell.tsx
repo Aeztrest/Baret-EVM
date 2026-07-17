@@ -1,5 +1,5 @@
 /**
- * SiteShell — common chrome (nav + content slot + Baret badge) shared
+ * SiteShell — common chrome (nav + content slot + Premon badge) shared
  * by every showcase dApp site. Light-theme variant: each fake dApp keeps
  * its own accent color (`theme.primary`) on a white/bone canvas so the
  * whole showcase reads as one product family.
@@ -9,7 +9,7 @@ import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ShieldCheck } from "lucide-react";
 import { useWallet } from "../wallet/context";
-import { BaretBadge } from "./BaretBadge";
+import { PremonBadge } from "./PremonBadge";
 
 interface SiteTheme {
   primary: string;
@@ -95,7 +95,7 @@ export function SiteShell({ theme, children, navLinks }: Props) {
       </Link>
       <NavBar theme={theme} navLinks={navLinks} />
       <main className="pt-20">{children}</main>
-      <BaretBadge />
+      <PremonBadge />
     </div>
   );
 }

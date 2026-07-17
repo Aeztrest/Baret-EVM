@@ -1,4 +1,4 @@
-# Deploying Baret (free tier)
+# Deploying Premon (free tier)
 
 The monorepo ships in 3 deployable parts; all fit free tiers.
 
@@ -56,7 +56,7 @@ repo, overriding the build in the project settings (the root `vercel.json`
 targets the showcase):
 
 - **Install Command:** `pnpm install --frozen-lockfile --prod=false`
-- **Build Command:** `pnpm --filter @baret/guard build && pnpm --filter @baret/wallet-adapter build && pnpm --filter @baret/ui build && pnpm --filter @baret/wallet build`
+- **Build Command:** `pnpm --filter @premon/guard build && pnpm --filter @premon/wallet-adapter build && pnpm --filter @premon/ui build && pnpm --filter @premon/wallet build`
 - **Output Directory:** `apps/wallet/dist`
 - **Env:** `VITE_ANALYZE_URL=https://baret-api.onrender.com` (cross-origin; the
   backend sends `Access-Control-Allow-Origin: *` so this works).
@@ -66,7 +66,7 @@ targets the showcase):
 ## 4) Extension → load unpacked
 
 ```bash
-pnpm --filter @baret/extension build      # → apps/extension/dist
+pnpm --filter @premon/extension build      # → apps/extension/dist
 ```
 Chrome: `chrome://extensions` → Developer mode → **Load unpacked** →
 `apps/extension/dist`. Point it at your Render API by setting `VITE_ANALYZE_URL`

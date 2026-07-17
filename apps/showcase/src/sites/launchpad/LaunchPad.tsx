@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { Rocket, Timer, Users, ExternalLink } from "lucide-react";
 import { useWallet } from "../../wallet/context";
 import { SiteShell } from "../../components/SiteShell";
-import { ResultOverlay, type ResultState } from "../../baret/ResultOverlay";
-import { RiskPreview } from "../../baret/RiskPreview";
-import { buildScenario } from "../../baret/transactions";
-import type { TxRequest } from "@baret/wallet-adapter";
+import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
+import { RiskPreview } from "../../premon/RiskPreview";
+import { buildScenario } from "../../premon/transactions";
+import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#C24E02",
@@ -48,7 +48,7 @@ export default function LaunchPad() {
     }
   }
 
-  async function sendViaBaret() {
+  async function sendViaPremon() {
     if (!previewTx) return;
     const tx = previewTx;
     setPreviewTx(null);
@@ -64,7 +64,7 @@ export default function LaunchPad() {
       }
     }
   }
-  const sendRaw = sendViaBaret;
+  const sendRaw = sendViaPremon;
 
   return (
     <SiteShell
@@ -253,7 +253,7 @@ export default function LaunchPad() {
         userWallet={walletAddress ?? null}
         scenarioLabel={scenarioLabel}
         onClose={() => setPreviewTx(null)}
-        onProceedWithBaret={sendViaBaret}
+        onProceedWithPremon={sendViaPremon}
         onProceedRaw={sendRaw}
       />
     </SiteShell>

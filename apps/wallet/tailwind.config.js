@@ -9,17 +9,17 @@ export default {
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       colors: {
-        // Baret light surfaces
+        // Premon light surfaces
         bg: {
           DEFAULT: "#FAF8F4",   // bone — window canvas
           elevated: "#FFFFFF",  // paper — raised panels
           card: "#FFFFFF",
         },
-        // Graphite brand accent
+        // Safety-orange brand accent
         accent: {
-          DEFAULT: "#5B6169",
-          soft: "#454A50",
-          dim: "rgba(91, 97, 105,0.10)",
+          DEFAULT: "#836EF9",
+          soft: "#6E54F2",
+          dim: "rgba(131, 110, 249,0.10)",
         },
         // Ink (warm black) scale for text + dark surfaces
         ink: {

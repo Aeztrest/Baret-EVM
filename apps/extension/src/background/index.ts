@@ -44,11 +44,11 @@ async function bootstrap(): Promise<void> {
 }
 
 browser.runtime.onInstalled.addListener(({ reason }) => {
-  console.info(`[BARET] installed (${reason})`);
+  console.info(`[PREMON] installed (${reason})`);
 });
 
 void bootstrap().catch((err) => {
-  console.error("[BARET] bootstrap failed:", err);
+  console.error("[PREMON] bootstrap failed:", err);
 });
 
 startRouter();

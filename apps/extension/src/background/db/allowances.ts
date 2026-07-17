@@ -1,9 +1,9 @@
 /**
  * Allowances store — per-(merchantOrigin, asset) authorization rows with
- * rolling caps. The stateful core Baret provides on top of x402.
+ * rolling caps. The stateful core Premon provides on top of x402.
  */
 
-import type { AllowanceSnapshot } from "@baret/ext-protocol";
+import type { AllowanceSnapshot } from "@premon/ext-protocol";
 import { asPromise, tx } from "./index";
 
 export interface AllowanceRow extends AllowanceSnapshot {

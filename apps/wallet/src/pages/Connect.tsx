@@ -7,7 +7,7 @@ import {
   type ConnectRequestMessage,
   type ConnectApprovedMessage,
   type ConnectRejectedMessage,
-} from "@baret/wallet-adapter";
+} from "@premon/wallet-adapter";
 import { useWallet } from "../wallet/state";
 import { CHAIN_ID, CHAIN } from "../wallet/connection";
 
@@ -107,17 +107,17 @@ export function Connect() {
       <PopupShell>
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center" style={{ background: "rgba(91, 97, 105,0.12)", border: "1px solid rgba(91, 97, 105,0.3)" }}>
+            <div className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center" style={{ background: "rgba(131, 110, 249,0.12)", border: "1px solid rgba(131, 110, 249,0.3)" }}>
               <ShieldCheck size={20} className="text-accent-soft" />
             </div>
-            <h1 className="text-xl font-display font-bold text-ink-900">Create your Baret wallet</h1>
+            <h1 className="text-xl font-display font-bold text-ink-900">Create your Premon wallet</h1>
             <p className="text-xs text-ink-500">
               No wallet exists in this browser yet. Create one now to connect
               {request?.origin ? <> to <span className="font-mono text-accent-soft">{request.origin}</span></> : null}.
             </p>
           </div>
 
-          <div className="rounded-xl p-3 text-xs flex items-start gap-2" style={{ background: "rgba(91, 97, 105,0.07)", border: "1px solid rgba(91, 97, 105,0.2)" }}>
+          <div className="rounded-xl p-3 text-xs flex items-start gap-2" style={{ background: "rgba(131, 110, 249,0.07)", border: "1px solid rgba(131, 110, 249,0.2)" }}>
             <AlertTriangle size={13} className="text-accent-soft shrink-0 mt-0.5" />
             <p className="text-ink-600 leading-relaxed">
               A fresh key is generated and stored in this browser. Back up your
@@ -151,12 +151,12 @@ export function Connect() {
     <PopupShell>
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
         <div className="text-center mb-5 space-y-2">
-          <div className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center" style={{ background: "rgba(91, 97, 105,0.12)", border: "1px solid rgba(91, 97, 105,0.3)" }}>
+          <div className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center" style={{ background: "rgba(131, 110, 249,0.12)", border: "1px solid rgba(131, 110, 249,0.3)" }}>
             <Globe size={20} className="text-accent-soft" />
           </div>
           <h1 className="text-xl font-display font-bold text-ink-900">Connection request</h1>
           <p className="text-xs text-ink-500">
-            <span className="font-mono text-accent-soft">{requestOrigin}</span> wants to connect to your Baret wallet.
+            <span className="font-mono text-accent-soft">{requestOrigin}</span> wants to connect to your Premon wallet.
           </p>
           {request.appName && <p className="text-xs text-ink-400">App: {request.appName}</p>}
         </div>
@@ -167,10 +167,10 @@ export function Connect() {
           <Row label="Chain ID" value={String(CHAIN_ID)} mono />
         </div>
 
-        <div className="rounded-xl p-3 mb-5 text-xs flex items-start gap-2" style={{ background: "rgba(91, 97, 105,0.07)", border: "1px solid rgba(91, 97, 105,0.2)" }}>
+        <div className="rounded-xl p-3 mb-5 text-xs flex items-start gap-2" style={{ background: "rgba(131, 110, 249,0.07)", border: "1px solid rgba(131, 110, 249,0.2)" }}>
           <ShieldCheck size={13} className="text-accent-soft shrink-0 mt-0.5" />
           <p className="text-ink-600 leading-relaxed">
-            Baret will simulate every transaction this dApp asks you to sign and check it against your policy. Risky txs are blocked at this wallet, not at the dApp.
+            Premon will simulate every transaction this dApp asks you to sign and check it against your policy. Risky txs are blocked at this wallet, not at the dApp.
           </p>
         </div>
 

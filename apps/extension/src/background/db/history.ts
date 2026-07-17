@@ -3,7 +3,7 @@
  * Bounded; the tail is trimmed to MAX_ENTRIES.
  */
 
-import type { HistoryEntry } from "@baret/ext-protocol";
+import type { HistoryEntry } from "@premon/ext-protocol";
 import { asPromise, tx } from "./index";
 
 const MAX_ENTRIES = 500;

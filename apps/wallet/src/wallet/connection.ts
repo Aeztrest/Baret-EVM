@@ -5,7 +5,7 @@
  */
 
 import { ethers } from "ethers";
-import type { EvmNetwork } from "@baret/guard";
+import type { EvmNetwork } from "@premon/guard";
 
 export const ACTIVE_NETWORK: EvmNetwork = "testnet";
 

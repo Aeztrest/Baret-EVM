@@ -4,7 +4,7 @@ import type { RouteDeps } from "./types.js";
 export function registerHealthRoutes(app: FastifyInstance, deps: RouteDeps): void {
   app.get("/health", async () => ({
     status: "ok",
-    service: "baret",
+    service: "premon",
     network: deps.config.chain.network,
     chainId: deps.config.chain.chainId,
   }));

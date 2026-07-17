@@ -45,7 +45,7 @@ function LoadingScreen() {
 export default function App() {
   return (
     <ErrorBoundary fallbackLabel="The showcase root crashed.">
-      <WalletProvider appName="Baret Showcase">
+      <WalletProvider appName="Premon Showcase">
         <BrowserRouter>
           <Routes>
             <Route path="/"          element={<RouteShell><Hub /></RouteShell>} />

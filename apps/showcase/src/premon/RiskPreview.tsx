@@ -1,12 +1,12 @@
 /**
  * RiskPreview — pre-sign analysis overlay rendered ON THE SITE before the
- * wallet popup opens. Calls Baret's analyze server (via `@baret/guard`)
+ * wallet popup opens. Calls Premon's analyze server (via `@premon/guard`)
  * with the candidate transaction, surfaces the verdict + reasons + balance
  * deltas + findings, and lets the user decide:
  *
- *   - "Sign with Baret" → the existing wallet flow (the wallet popup runs the
+ *   - "Sign with Premon" → the existing wallet flow (the wallet popup runs the
  *     same analysis a second time as the authoritative gatekeeper).
- *   - "Send without protection" → bypasses Baret's site-side review and signs
+ *   - "Send without protection" → bypasses Premon's site-side review and signs
  *     through the connected wallet. Lets visitors viscerally compare a guarded
  *     site vs a vanilla one.
  */
@@ -18,7 +18,7 @@ import {
   ShieldCheck, ShieldX, AlertTriangle, X, Loader2, Zap, EyeOff,
   ArrowDownRight, ArrowUpRight, Eye,
 } from "lucide-react";
-import type { TxRequest } from "@baret/wallet-adapter";
+import type { TxRequest } from "@premon/wallet-adapter";
 import {
   analyzeTransactionForPreview,
   type PreviewResult,
@@ -32,13 +32,13 @@ interface Props {
   userWallet: string | null;
   scenarioLabel: string;
   onClose: () => void;
-  onProceedWithBaret: () => void | Promise<void>;
+  onProceedWithPremon: () => void | Promise<void>;
   onProceedRaw: () => void | Promise<void>;
 }
 
 export function RiskPreview({
   open, transaction, userWallet, scenarioLabel,
-  onClose, onProceedWithBaret, onProceedRaw,
+  onClose, onProceedWithPremon, onProceedRaw,
 }: Props) {
   const [result, setResult] = useState<PreviewResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +81,7 @@ export function RiskPreview({
             <header className="px-5 py-4 border-b border-ink-900/8 flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs text-ink-600">
                 <Eye size={13} className="text-brand-500" />
-                <span className="uppercase tracking-wider font-bold">Baret pre-sign</span>
+                <span className="uppercase tracking-wider font-bold">Premon pre-sign</span>
               </div>
               <button onClick={onClose} className="text-ink-300 hover:text-ink-700">
                 <X size={16} />
@@ -104,7 +104,7 @@ export function RiskPreview({
 
               {error && (
                 <div className="rounded-xl p-3 text-xs flex items-start gap-2"
-                     style={{ background: "rgba(91, 97, 105,0.07)", color: "#33373C", border: "1px solid rgba(91, 97, 105,0.35)" }}>
+                     style={{ background: "rgba(131, 110, 249,0.07)", color: "#5B40D6", border: "1px solid rgba(131, 110, 249,0.35)" }}>
                   <AlertTriangle size={13} className="mt-0.5 shrink-0" />
                   <div>
                     <p className="font-semibold mb-0.5">Analyze server unreachable</p>
@@ -126,26 +126,26 @@ export function RiskPreview({
                   onClick={() => { void onProceedRaw(); }}
                   className="flex-1 px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 text-ink-600"
                   style={{ background: "#fff", border: "1px solid rgba(20,20,20,0.14)" }}
-                  title="Bypass Baret — sign + send without firewall"
+                  title="Bypass Premon — sign + send without firewall"
                 >
                   <EyeOff size={11} /> Send without protection
                 </button>
                 <button
-                  onClick={() => { void onProceedWithBaret(); }}
+                  onClick={() => { void onProceedWithPremon(); }}
                   disabled={loading}
                   className="flex-1 px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                   style={{
-                    background: blocked ? "rgba(91, 97, 105,0.12)" : advisory ? "rgba(255,136,56,0.14)" : "#141414",
-                    color: blocked ? "#33373C" : advisory ? "#232629" : "#fff",
-                    border: blocked ? "1px solid rgba(91, 97, 105,0.45)" : advisory ? "1px solid rgba(255,136,56,0.45)" : "1px solid #141414",
+                    background: blocked ? "rgba(131, 110, 249,0.12)" : advisory ? "rgba(255,136,56,0.14)" : "#141414",
+                    color: blocked ? "#5B40D6" : advisory ? "#4A35AC" : "#fff",
+                    border: blocked ? "1px solid rgba(131, 110, 249,0.45)" : advisory ? "1px solid rgba(255,136,56,0.45)" : "1px solid #141414",
                   }}
                 >
                   <Zap size={11} className={blocked || advisory ? "" : "text-brand-400"} />
-                  {blocked ? "Sign anyway with Baret" : "Sign with Baret"}
+                  {blocked ? "Sign anyway with Premon" : "Sign with Premon"}
                 </button>
               </div>
               <p className="text-[10px] text-ink-400 leading-snug px-1">
-                "Sign with Baret" routes through the wallet popup, where the same
+                "Sign with Premon" routes through the wallet popup, where the same
                 checks fire as the wallet's authoritative gatekeeper. "Without
                 protection" sends directly through the wallet, no firewall — shown
                 for demo comparison only.
@@ -163,8 +163,8 @@ export function RiskPreview({
 function Verdict({ result }: { result: PreviewResult }) {
   const decision = result.decision;
   const tone =
-    decision === "block"    ? { bg: "rgba(91, 97, 105,0.08)",  border: "rgba(91, 97, 105,0.45)",  color: "#33373C", label: "BLOCKED by your policy", Icon: ShieldX }
-  : decision === "advisory" ? { bg: "rgba(255,136,56,0.08)", border: "rgba(255,136,56,0.40)", color: "#232629", label: "Sign with caution",       Icon: AlertTriangle }
+    decision === "block"    ? { bg: "rgba(131, 110, 249,0.08)",  border: "rgba(131, 110, 249,0.45)",  color: "#5B40D6", label: "BLOCKED by your policy", Icon: ShieldX }
+  : decision === "advisory" ? { bg: "rgba(255,136,56,0.08)", border: "rgba(255,136,56,0.40)", color: "#4A35AC", label: "Sign with caution",       Icon: AlertTriangle }
                             : { bg: "rgba(16,185,129,0.07)", border: "rgba(16,185,129,0.35)", color: "#059669", label: "Safe to sign",             Icon: ShieldCheck };
   const Icon = tone.Icon;
   const reasons = result.analysis.reasons;
@@ -256,7 +256,7 @@ function trimDecimals(value: string): string {
 function DeltaRow({ label, value, negative, warn }: {
   label: string; value: string; negative?: boolean; warn?: boolean;
 }) {
-  const color = warn ? "#232629" : negative ? "#33373C" : "#059669";
+  const color = warn ? "#4A35AC" : negative ? "#5B40D6" : "#059669";
   const Arrow = negative ? ArrowUpRight : ArrowDownRight;
   return (
     <div className="flex items-center justify-between gap-2">
@@ -283,8 +283,8 @@ function Findings({ findings }: { findings: RiskFinding[] }) {
 
 function FindingRow({ finding }: { finding: RiskFinding }) {
   const tone =
-    finding.severity === "critical" || finding.severity === "high" ? "#33373C"
-  : finding.severity === "medium"                                  ? "#232629"
+    finding.severity === "critical" || finding.severity === "high" ? "#5B40D6"
+  : finding.severity === "medium"                                  ? "#4A35AC"
                                                                    : "#6B6862";
   return (
     <div className="rounded-lg px-2.5 py-2 flex items-start gap-2 bg-white"
@@ -312,12 +312,12 @@ function CompareBar({ verdict, loading }: { verdict: PreviewResult["decision"]; 
     <div className="grid grid-cols-2 gap-2 text-[10px]">
       <div className="rounded-lg p-2 flex flex-col bg-white"
            style={{ border: "1px solid rgba(20,20,20,0.08)" }}>
-        <span className="text-ink-400 uppercase tracking-wider font-bold">Without Baret</span>
+        <span className="text-ink-400 uppercase tracking-wider font-bold">Without Premon</span>
         <span className="text-ink-600 mt-0.5">{withoutMsg}</span>
       </div>
       <div className="rounded-lg p-2 flex flex-col"
-           style={{ background: "rgba(91, 97, 105,0.07)", border: "1px solid rgba(91, 97, 105,0.35)" }}>
-        <span className="text-brand-700 uppercase tracking-wider font-bold">With Baret</span>
+           style={{ background: "rgba(131, 110, 249,0.07)", border: "1px solid rgba(131, 110, 249,0.35)" }}>
+        <span className="text-brand-700 uppercase tracking-wider font-bold">With Premon</span>
         <span className="text-ink-900 font-semibold mt-0.5">{withMsg}</span>
       </div>
     </div>

@@ -98,16 +98,16 @@ describe("HTTP API", () => {
     const app = await build();
     const res = await app.inject({ method: "GET", url: "/mcp/tools" });
     expect(res.statusCode).toBe(200);
-    expect(res.json().tools.map((t: { name: string }) => t.name)).toContain("baret_analyze");
+    expect(res.json().tools.map((t: { name: string }) => t.name)).toContain("premon_analyze");
     await app.close();
   });
 
-  it("POST /mcp/call baret_list_profiles", async () => {
+  it("POST /mcp/call premon_list_profiles", async () => {
     const app = await build();
     const res = await app.inject({
       method: "POST",
       url: "/mcp/call",
-      payload: { name: "baret_list_profiles" },
+      payload: { name: "premon_list_profiles" },
     });
     expect(res.statusCode).toBe(200);
     expect(res.json().result.profiles).toHaveLength(3);

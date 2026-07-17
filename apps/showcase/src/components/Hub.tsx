@@ -1,6 +1,6 @@
 /**
- * Showcase hub — Baret light theme. The "inspection yard": six fake-but-real
- * dApps, each wired to a different attack pattern Baret catches live.
+ * Showcase hub — Premon light theme. The "inspection yard": six fake-but-real
+ * dApps, each wired to a different attack pattern Premon catches live.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -193,7 +193,7 @@ function Hero() {
           className="mt-7 text-lg text-ink-500 max-w-2xl leading-relaxed"
         >
           Each site below looks production-ready and behaves like the real thing.
-          Connect a wallet, push a button, and watch Baret intercept the
+          Connect a wallet, push a button, and watch Premon intercept the
           attack — in plain language, before your keys ever sign.
         </motion.p>
 
@@ -251,7 +251,7 @@ function ThreatTicker() {
   return (
     <div className="mt-10 inline-flex items-center gap-3 px-4 py-2.5 rounded-xl card text-sm text-ink-500">
       <Radar size={14} className="text-brand-500" />
-      <span>Right now Baret is watching for</span>
+      <span>Right now Premon is watching for</span>
       <span className="relative inline-block min-w-[170px] h-5 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.span
@@ -349,7 +349,7 @@ function ShowcaseSection() {
             </h2>
             <p className="mt-5 text-ink-500 leading-relaxed">
               Filter by the kind of attack you want to see. Each card opens a fully
-              functional demo with the threat armed; Baret catches it the moment
+              functional demo with the threat armed; Premon catches it the moment
               you press Sign.
             </p>
           </div>
@@ -427,7 +427,7 @@ function SiteCard({ site }: { site: SiteSpec }) {
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
           style={{
             opacity: over ? 1 : 0,
-            background: `radial-gradient(360px circle at ${pos.x}px ${pos.y}px, rgba(91, 97, 105,0.07), transparent 50%)`,
+            background: `radial-gradient(360px circle at ${pos.x}px ${pos.y}px, rgba(131, 110, 249,0.07), transparent 50%)`,
           }}
         />
 
@@ -487,9 +487,9 @@ function SiteCard({ site }: { site: SiteSpec }) {
 
 function HowItWorks() {
   const steps = [
-    { n: "01", title: "Connect wallet",    desc: "Pick Baret or any EVM wallet from the picker.",                                  icon: Wallet },
+    { n: "01", title: "Connect wallet",    desc: "Pick Premon or any EVM wallet from the picker.",                                  icon: Wallet },
     { n: "02", title: "Trigger an action", desc: "Press Swap, Mint, Stake, Claim, or Buy. The site builds the transaction.",        icon: Activity },
-    { n: "03", title: "Baret inspects",    desc: "Server-side simulation + 25 detectors + your local policy run on the unsigned tx.", icon: Radar },
+    { n: "03", title: "Premon inspects",    desc: "Server-side simulation + 25 detectors + your local policy run on the unsigned tx.", icon: Radar },
     { n: "04", title: "Safe or blocked",   desc: "You see plain-language findings and either Sign with eyes open, or Reject.",       icon: ShieldCheck },
   ];
 

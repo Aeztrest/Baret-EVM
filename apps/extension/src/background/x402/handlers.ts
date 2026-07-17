@@ -1,6 +1,6 @@
 /**
  * x402 review handler — runs when the inpage interceptor
- * catches a 402 response and asks Baret whether to pay.
+ * catches a 402 response and asks Premon whether to pay.
  *
  * Pipeline:
  *   1. Validate PaymentRequirements (network, asset 0x, payTo, amount).
@@ -16,7 +16,7 @@
  */
 
 import browser from "webextension-polyfill";
-import { BALANCED_POLICY, type GuardPolicy } from "@baret/guard";
+import { BALANCED_POLICY, type GuardPolicy } from "@premon/guard";
 
 import { useWallet, isUnlocked } from "../crypto/session";
 import { getSnapshot, dispatch } from "../state/store";
@@ -42,7 +42,7 @@ import {
 import { buildX402TransferTx, encodeX402Header } from "./build";
 import { appendHistory } from "../db/history";
 
-const POLICY_STORAGE_KEY = "baret.policy.v1";
+const POLICY_STORAGE_KEY = "premon.policy.v1";
 
 interface ReviewRequest {
   origin: string;
@@ -64,7 +64,7 @@ export async function x402Review(rawReq: unknown): Promise<Decision> {
   const { origin, requirements } = rawReq as ReviewRequest;
 
   if (!isUnlocked())
-    return { action: "decline", reason: "Baret wallet is locked." };
+    return { action: "decline", reason: "Premon wallet is locked." };
 
   // 1. Spec validation.
   const v = validateRequirements(requirements);
@@ -202,7 +202,7 @@ export async function x402Review(rawReq: unknown): Promise<Decision> {
     });
   } else {
     // Manual: route through the SAME approval + broadcast mechanism that the
-    // provider's eth_sendTransaction uses. The popup shows Baret analysis of
+    // provider's eth_sendTransaction uses. The popup shows Premon analysis of
     // the USDC transfer; on approve it broadcasts and returns the tx hash.
     const label = `x402 payment · ${amountUiStr} USDC → ${payTo.slice(0, 6)}…${payTo.slice(-4)}`;
     let result: SignSuccess;
@@ -252,7 +252,7 @@ function enqueueAndWait(
   label: string,
 ): Promise<SignSuccess> {
   // Reuse the eth_sendTransaction infra: a "transactionAndSend" sign request
-  // shows the standard approval popup (with Baret analysis), then broadcasts
+  // shows the standard approval popup (with Premon analysis), then broadcasts
   // and resolves with the on-chain tx hash.
   const tx = buildX402TransferTx(requirements);
   return new Promise<SignSuccess>((resolve, reject) => {

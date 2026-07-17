@@ -10,7 +10,7 @@
  */
 
 import browser from "webextension-polyfill";
-import { isEnvelope, PROTOCOL_TAG, type Envelope } from "@baret/ext-protocol";
+import { isEnvelope, PROTOCOL_TAG, type Envelope } from "@premon/ext-protocol";
 
 const PAGE_TAG = "__bx_ws" as const;
 
@@ -36,7 +36,7 @@ function isPageReq(d: unknown): d is PageReq {
     script.onload = () => script.remove();
     (document.head || document.documentElement).appendChild(script);
   } catch (err) {
-    console.error("[BARET] inpage injection failed:", err);
+    console.error("[PREMON] inpage injection failed:", err);
   }
 })();
 
@@ -94,7 +94,7 @@ x402Port.onMessage.addListener(onPortMessage);
 
 function onDisconnect(): void {
   for (const pageId of pending.values()) {
-    postPageErr(pageId, "BARET background disconnected");
+    postPageErr(pageId, "PREMON background disconnected");
   }
   pending.clear();
 }

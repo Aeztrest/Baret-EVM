@@ -1,9 +1,9 @@
 /**
- * /agents — protect a program / AI-agent wallet with Baret.
+ * /agents — protect a program / AI-agent wallet with Premon.
  *
- * Explains the agent-wallet use case, shows the @baret/agent-kit SDK + CLI,
+ * Explains the agent-wallet use case, shows the @premon/agent-kit SDK + CLI,
  * and provides a LIVE guard tester: pick an agent action + a policy, run it
- * through the deployed analyzer, and see whether Baret would allow or block —
+ * through the deployed analyzer, and see whether Premon would allow or block —
  * the exact decision `GuardedWallet.sendTransaction` makes before signing.
  */
 
@@ -18,9 +18,9 @@ import {
   LandingHeader,
   LandingFooter,
 } from "../components/LandingChrome";
-import { analyzeTransactionForPreview } from "../baret/analyze";
-import { buildScenario, type ScenarioId } from "../baret/transactions";
-import { STRICT_POLICY, BALANCED_POLICY, PERMISSIVE_POLICY, type GuardPolicy } from "@baret/guard";
+import { analyzeTransactionForPreview } from "../premon/analyze";
+import { buildScenario, type ScenarioId } from "../premon/transactions";
+import { STRICT_POLICY, BALANCED_POLICY, PERMISSIVE_POLICY, type GuardPolicy } from "@premon/guard";
 
 type Preview = Awaited<ReturnType<typeof analyzeTransactionForPreview>>;
 
@@ -41,28 +41,28 @@ const ACTIONS: { id: ScenarioId; label: string; sub: string }[] = [
   { id: "novaswap-safe", label: "Normal small transfer", sub: "a benign 0.0001 MON transfer" },
 ];
 
-const INSTALL = `pnpm add @baret/agent-kit`;
+const INSTALL = `pnpm add @premon/agent-kit`;
 
-const SDK_SNIPPET = `import { GuardedWallet, STRICT_POLICY } from "@baret/agent-kit";
+const SDK_SNIPPET = `import { GuardedWallet, STRICT_POLICY } from "@premon/agent-kit";
 
 const agent = new GuardedWallet({
   privateKey: process.env.AGENT_KEY!,            // your agent's key
   rpcUrl:     "https://testnet-rpc.monad.xyz",
-  analyzeUrl: "https://baret-api.onrender.com", // Baret firewall
+  analyzeUrl: "https://baret-api.onrender.com", // Premon firewall
   policy:     STRICT_POLICY,                      // your rules
 });
 
-// Baret simulates + policy-checks FIRST. If it blocks,
+// Premon simulates + policy-checks FIRST. If it blocks,
 // this throws GuardBlockedError and never signs.
 await agent.sendTransaction({ to: token, data: approveCalldata });`;
 
-const CLI_SNIPPET = `export BARET_PRIVATE_KEY=0xYOUR_AGENT_KEY
+const CLI_SNIPPET = `export PREMON_PRIVATE_KEY=0xYOUR_AGENT_KEY
 
 # dry-run: see the verdict, sign nothing
-baret analyze --to 0xToken --data 0x095ea7b3… --policy strict
+premon analyze --to 0xToken --data 0x095ea7b3… --policy strict
 
 # guarded send: signs + broadcasts only if the policy allows
-baret send    --to 0xToken --data 0x095ea7b3… --policy strict`;
+premon send    --to 0xToken --data 0x095ea7b3… --policy strict`;
 
 export default function AgentsPage() {
   const [policyName, setPolicyName] = useState<string>("strict");
@@ -102,7 +102,7 @@ export default function AgentsPage() {
           <p className="mt-4 text-ink-500 leading-relaxed">
             Agents sign transactions on their own — a poisoned prompt, a bad tool, or a
             malicious dependency shouldn't be able to drain them. Wrap the agent's signer
-            with Baret: every transaction is simulated and policy-checked <em>before</em> it's
+            with Premon: every transaction is simulated and policy-checked <em>before</em> it's
             signed, and anything that violates your rules is refused.
           </p>
         </motion.section>
@@ -111,7 +111,7 @@ export default function AgentsPage() {
         <section className="mt-14 grid sm:grid-cols-3 gap-3">
           {[
             { icon: KeyRound, t: "Wrap the key", b: "GuardedWallet takes your agent's private key + a policy." },
-            { icon: Cpu, t: "Analyze first", b: "Each send is simulated by Baret and checked against the policy." },
+            { icon: Cpu, t: "Analyze first", b: "Each send is simulated by Premon and checked against the policy." },
             { icon: ShieldCheck, t: "Refuse or sign", b: "Blocked → throws, never signs. Allowed → broadcast as usual." },
           ].map((s) => (
             <div key={s.t} className="card p-5">
@@ -128,7 +128,7 @@ export default function AgentsPage() {
             <CmdLine text={INSTALL} />
             <Code text={SDK_SNIPPET} />
           </CodeCard>
-          <CodeCard icon={Terminal} title="CLI — baret" sub="Guard from the shell / CI / cron">
+          <CodeCard icon={Terminal} title="CLI — premon" sub="Guard from the shell / CI / cron">
             <Code text={CLI_SNIPPET} />
           </CodeCard>
         </section>
@@ -137,7 +137,7 @@ export default function AgentsPage() {
         <section className="mt-14">
           <h2 className="font-display text-2xl font-bold tracking-tight">Try the guard, live</h2>
           <p className="text-ink-500 text-sm mt-1">
-            Pick what the agent tries to do and the policy it runs under, then ask Baret.
+            Pick what the agent tries to do and the policy it runs under, then ask Premon.
             This hits the same analyzer <code className="text-brand-700">GuardedWallet</code> calls.
           </p>
 
@@ -152,8 +152,8 @@ export default function AgentsPage() {
                       onClick={() => setAction(a.id)}
                       className="w-full text-left px-3 py-2.5 rounded-xl border transition-all"
                       style={{
-                        borderColor: action === a.id ? "rgba(91,97,105,0.5)" : "rgba(20,20,20,0.1)",
-                        background: action === a.id ? "rgba(91,97,105,0.06)" : "transparent",
+                        borderColor: action === a.id ? "rgba(131,110,249,0.5)" : "rgba(20,20,20,0.1)",
+                        background: action === a.id ? "rgba(131,110,249,0.06)" : "transparent",
                       }}
                     >
                       <p className="text-sm font-semibold text-ink-900">{a.label}</p>
@@ -172,9 +172,9 @@ export default function AgentsPage() {
                       onClick={() => setPolicyName(p)}
                       className="flex-1 px-3 py-2 rounded-xl text-sm font-semibold capitalize border transition-all"
                       style={{
-                        borderColor: policyName === p ? "rgba(91,97,105,0.5)" : "rgba(20,20,20,0.1)",
-                        background: policyName === p ? "rgba(91,97,105,0.06)" : "transparent",
-                        color: policyName === p ? "#33373C" : "rgba(20,20,20,0.6)",
+                        borderColor: policyName === p ? "rgba(131,110,249,0.5)" : "rgba(20,20,20,0.1)",
+                        background: policyName === p ? "rgba(131,110,249,0.06)" : "transparent",
+                        color: policyName === p ? "#5B40D6" : "rgba(20,20,20,0.6)",
                       }}
                     >
                       {p}
@@ -187,7 +187,7 @@ export default function AgentsPage() {
                   disabled={loading}
                   className="btn-primary w-full mt-4 disabled:opacity-60"
                 >
-                  {loading ? <><Loader2 size={14} className="animate-spin" /> Asking Baret…</> : <><Play size={14} /> Run guard</>}
+                  {loading ? <><Loader2 size={14} className="animate-spin" /> Asking Premon…</> : <><Play size={14} /> Run guard</>}
                 </button>
 
                 {result && <Verdict result={result} />}

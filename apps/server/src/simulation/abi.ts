@@ -1,7 +1,7 @@
 import { Interface, getAddress, isAddress } from "ethers";
 
 /**
- * Known calldata signatures Baret decodes to understand transaction intent —
+ * Known calldata signatures Premon decodes to understand transaction intent —
  * 4-byte selectors of the token / NFT / access
  * primitives that carry the bulk of EVM wallet-drain risk.
  */

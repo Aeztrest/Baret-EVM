@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { Lock, Eye, EyeOff } from "lucide-react";
-import { Mark } from "@baret/ui";
+import { Mark } from "@premon/ui";
 import { useRpc } from "../shared/state-context";
 
 export function LockedScreen() {
@@ -35,7 +35,7 @@ export function LockedScreen() {
         <Mark size={36} />
       </div>
       <div className="text-center space-y-1">
-        <h1 className="text-lg font-extrabold tracking-tight">Baret</h1>
+        <h1 className="text-lg font-extrabold tracking-tight">Premon</h1>
         <p className="text-text-faint text-xs">Enter your passphrase to unlock</p>
       </div>
 

@@ -13,8 +13,8 @@ export default defineManifest(({ mode }) => {
 
   return {
     manifest_version: 3,
-    name: "Baret",
-    short_name: "Baret",
+    name: "Premon",
+    short_name: "Premon",
     version: pkg.version,
     description:
       "Transaction foresight for EVM chains — every transaction simulated, explained, and blocked when dangerous.",
@@ -60,7 +60,7 @@ export default defineManifest(({ mode }) => {
     ],
 
     // `windows` is required for `browser.windows.create()` — opening the
-    // Baret popup as a focused window when a dApp queues a sign or connect
+    // Premon popup as a focused window when a dApp queues a sign or connect
     // request. MV3 disallows programmatic `chrome.action.openPopup()`.
     permissions: ["storage", "alarms", "notifications", "windows"],
 
@@ -71,7 +71,7 @@ export default defineManifest(({ mode }) => {
       // Default block explorers.
       "https://testnet.monadexplorer.com/*",
       "https://monadexplorer.com/*",
-      // Baret analyze server (dev + production placeholder).
+      // Premon analyze server (dev + production placeholder).
       "http://localhost:8080/*",
     ],
 
@@ -83,7 +83,7 @@ export default defineManifest(({ mode }) => {
       ? {
           browser_specific_settings: {
             gecko: {
-              id: "baret@baret.dev",
+              id: "premon@premon.dev",
               strict_min_version: "128.0",
               data_collection_permissions: { required: [] as never[] },
             },

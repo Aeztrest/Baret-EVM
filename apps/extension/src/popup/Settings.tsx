@@ -61,7 +61,7 @@ export function Settings() {
         </button>
       </Section>
 
-      <p className="text-[10px] text-text-faint text-center mt-auto pt-3">Baret · v0.1.0 · open source</p>
+      <p className="text-[10px] text-text-faint text-center mt-auto pt-3">Premon · v0.1.0 · open source</p>
     </div>
   );
 }

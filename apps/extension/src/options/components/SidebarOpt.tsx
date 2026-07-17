@@ -5,7 +5,7 @@
 
 import { NavLink } from "react-router-dom";
 import { Home as HomeIcon, Clock, Shield, FileCode, Globe, Settings as SettingsIcon, Lock } from "lucide-react";
-import { Mark } from "@baret/ui";
+import { Mark } from "@premon/ui";
 import { useRpc, useWalletState } from "../../shared/state-context";
 
 const NAV = [
@@ -38,7 +38,7 @@ export function SidebarOpt() {
             <Mark size={16} />
           </div>
           <div>
-            <p className="font-extrabold text-sm tracking-tight text-text">Baret</p>
+            <p className="font-extrabold text-sm tracking-tight text-text">Premon</p>
             <p className="text-[10px] text-text-faint leading-none mt-0.5 uppercase tracking-wider">
               {state?.network ?? "testnet"}
             </p>
@@ -87,7 +87,7 @@ export function SidebarOpt() {
           </button>
         )}
         <p className="text-[10px] text-text-faint px-3 py-2 leading-relaxed">
-          Every signature passes through Baret before your keys are touched.
+          Every signature passes through Premon before your keys are touched.
         </p>
       </div>
     </aside>

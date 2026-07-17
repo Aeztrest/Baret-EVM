@@ -9,18 +9,18 @@ export default {
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
-        // Graphite brand scale
+        // Safety-orange brand scale
         brand: {
-          50:  "#F4F5F6",
-          100: "#E8EAEC",
-          200: "#CFD3D8",
-          300: "#ABB1B9",
-          400: "#838A94",
-          500: "#5B6169",
-          600: "#454A50",
-          700: "#33373C",
-          800: "#232629",
-          900: "#151719",
+          50:  "#F1EEFE",
+          100: "#E4DEFD",
+          200: "#C9BCFB",
+          300: "#AE9BF9",
+          400: "#9A84F9",
+          500: "#836EF9",
+          600: "#6E54F2",
+          700: "#5B40D6",
+          800: "#4A35AC",
+          900: "#200052",
         },
         // Ink (warm black) scale for text + dark surfaces
         ink: {
@@ -41,7 +41,7 @@ export default {
       boxShadow: {
         card:  "0 1px 2px rgba(20,20,20,0.05), 0 4px 16px -4px rgba(20,20,20,0.06)",
         lift:  "0 2px 4px rgba(20,20,20,0.06), 0 16px 40px -12px rgba(20,20,20,0.14)",
-        brand: "0 4px 14px -2px rgba(91, 97, 105,0.35)",
+        brand: "0 4px 14px -2px rgba(131, 110, 249,0.35)",
       },
       animation: {
         "spin-slow": "spin 3s linear infinite",

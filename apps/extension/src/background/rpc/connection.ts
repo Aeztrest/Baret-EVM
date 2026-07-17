@@ -5,7 +5,7 @@
  */
 
 import { JsonRpcProvider, FallbackProvider, Network, type AbstractProvider } from "ethers";
-import type { EvmNetwork } from "@baret/ext-protocol";
+import type { EvmNetwork } from "@premon/ext-protocol";
 import { chainFor } from "../../shared/chain";
 import { getState } from "../state/store";
 

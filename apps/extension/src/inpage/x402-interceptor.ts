@@ -33,7 +33,7 @@ export function installX402Interceptor(): void {
 
   const origFetch = window.fetch.bind(window);
 
-  window.fetch = async function baretFetch(
+  window.fetch = async function premonFetch(
     input: RequestInfo | URL,
     init?: RequestInit,
   ) {
@@ -67,12 +67,12 @@ export function installX402Interceptor(): void {
       newInit.headers = headers;
       return await origFetch(input as RequestInfo, newInit);
     } catch (err) {
-      console.error("[BARET x402] interceptor error:", err);
+      console.error("[PREMON x402] interceptor error:", err);
       return res;
     }
   };
 
-  console.info("[BARET] x402 interceptor live");
+  console.info("[PREMON] x402 interceptor live");
 }
 
 async function parseRequirements(res: Response): Promise<PaymentRequirements | null> {

@@ -1,5 +1,5 @@
 /**
- * Baret guard policy.
+ * Premon guard policy.
  *
  * The server-side schema (apps/server/src/domain/policy.ts) carries the
  * pre-sign subset; client-only rules (x402 rolling caps, behavioral alerts)

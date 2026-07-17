@@ -1,12 +1,12 @@
 /**
  * Popup Allowances tab — active grants with rolling cap progress and one-tap
- * pause/revoke. The visual heart of the Baret wedge.
+ * pause/revoke. The visual heart of the Premon wedge.
  * Spec: docs/wallet-spec.md §5.
  */
 
 import { useEffect, useState } from "react";
 import { Pause, Play, X, Shield, Globe } from "lucide-react";
-import type { AllowanceSnapshot } from "@baret/ext-protocol";
+import type { AllowanceSnapshot } from "@premon/ext-protocol";
 import { useRpc } from "../shared/state-context";
 
 export function Allowances() {

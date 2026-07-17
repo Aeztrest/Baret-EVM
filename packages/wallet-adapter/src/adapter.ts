@@ -18,7 +18,7 @@ export class WalletAdapterError extends Error {
   }
 }
 
-export interface BaretAdapterOptions {
+export interface PremonAdapterOptions {
   /** Origin of the wallet, e.g. http://localhost:5180 */
   walletUrl: string;
   appName?: string;
@@ -39,18 +39,18 @@ const DEFAULT_FEATURES = "popup=yes,width=440,height=720,top=80,left=80";
 type Listener = (msg: PopupOutgoing) => void;
 
 /**
- * dApp-side adapter for the Baret wallet. Opens popups to the
+ * dApp-side adapter for the Premon wallet. Opens popups to the
  * wallet's /connect and /sign routes; handshakes via postMessage; returns
  * signed 0x-hex transactions.
  *
- * Every signature is gated by the wallet's policy — the wallet runs the Baret
+ * Every signature is gated by the wallet's policy — the wallet runs the Premon
  * analysis and shows it to the user before allowing the sign. This adapter
  * cannot bypass that, by design.
  */
-export class BaretAdapter {
+export class PremonAdapter {
   private account: ConnectedAccount | null = null;
 
-  constructor(private readonly opts: BaretAdapterOptions) {
+  constructor(private readonly opts: PremonAdapterOptions) {
     if (!opts.walletUrl)
       throw new WalletAdapterError("walletUrl is required", "INVALID_CONFIG");
   }
@@ -74,7 +74,7 @@ export class BaretAdapter {
 
   async connect(): Promise<ConnectedAccount> {
     const requestId = newRequestId();
-    const popup = this.openPopup(`${this.opts.walletUrl}/connect`, "baret-connect");
+    const popup = this.openPopup(`${this.opts.walletUrl}/connect`, "premon-connect");
 
     const result = await this.handshake(popup, requestId, () => {
       const req: ConnectRequestMessage = {
@@ -122,7 +122,7 @@ export class BaretAdapter {
 
   private async requestSign(transaction: TxRequest, mode: "sign" | "signAndSend") {
     const requestId = newRequestId();
-    const popup = this.openPopup(`${this.opts.walletUrl}/sign`, "baret-sign");
+    const popup = this.openPopup(`${this.opts.walletUrl}/sign`, "premon-sign");
 
     const result = await this.handshake(popup, requestId, () => {
       const req: SignRequestMessage = {
@@ -148,7 +148,7 @@ export class BaretAdapter {
     const popup = window.open(url, name, this.opts.popupFeatures ?? DEFAULT_FEATURES);
     if (!popup) {
       throw new WalletAdapterError(
-        "Popup blocked by browser. Allow popups for this site to use Baret.",
+        "Popup blocked by browser. Allow popups for this site to use Premon.",
         "POPUP_BLOCKED",
       );
     }

@@ -17,7 +17,7 @@ export type McpDeps = {
 
 const TOOLS: McpTool[] = [
   {
-    name: "baret_analyze",
+    name: "premon_analyze",
     description:
       "Analyze an EVM transaction before signing. Returns safe:true/false, risk findings, estimated balance + approval changes, and a human-readable summary.",
     inputSchema: {
@@ -34,12 +34,12 @@ const TOOLS: McpTool[] = [
     },
   },
   {
-    name: "baret_health",
-    description: "Returns Baret service status and the active network.",
+    name: "premon_health",
+    description: "Returns Premon service status and the active network.",
     inputSchema: { type: "object", properties: {} },
   },
   {
-    name: "baret_list_profiles",
+    name: "premon_list_profiles",
     description: "List the server-side policy profiles (strict / balanced / permissive).",
     inputSchema: { type: "object", properties: {} },
   },
@@ -54,22 +54,22 @@ export class McpServer {
 
   async call(name: string, args: unknown): Promise<unknown> {
     switch (name) {
-      case "baret_analyze": {
+      case "premon_analyze": {
         const parsed = analyzeRequestBodySchema.safeParse(args);
         if (!parsed.success) {
           throw new AnalyzeValidationError(
-            `Invalid baret_analyze args: ${JSON.stringify(parsed.error.flatten().fieldErrors)}`,
+            `Invalid premon_analyze args: ${JSON.stringify(parsed.error.flatten().fieldErrors)}`,
           );
         }
         return analyzeTransaction(parsed.data, this.deps);
       }
-      case "baret_health":
+      case "premon_health":
         return {
           status: "ok",
           network: this.deps.config.chain.network,
           chainId: this.deps.config.chain.chainId,
         };
-      case "baret_list_profiles":
+      case "premon_list_profiles":
         return { profiles: PROFILES };
       default:
         throw new AnalyzeValidationError(`Unknown MCP tool: ${name}`);

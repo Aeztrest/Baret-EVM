@@ -1,15 +1,15 @@
 /**
  * Showcase wallet context.
  *
- * Discovers EVM wallet providers reachable from the page — Baret (popup via
- * `@baret/wallet-adapter`) and any injected EIP-1193 wallet — and exposes
+ * Discovers EVM wallet providers reachable from the page — Premon (popup via
+ * `@premon/wallet-adapter`) and any injected EIP-1193 wallet — and exposes
  * the adapter shape the existing sites consume.
  *
  * Design rules:
  *  - `connect(provider)` ALWAYS requires an explicit provider. We never auto-
  *    pick from the list — that's how malicious wallets hijack the flow.
  *  - When a site action ("Swap", "Mint", etc.) needs a wallet, the site calls
- *    `openWalletModal()` — the user explicitly picks Baret from the picker.
+ *    `openWalletModal()` — the user explicitly picks Premon from the picker.
  *  - The wallet modal renders ONCE inside the provider so every route shares
  *    the same picker state.
  */

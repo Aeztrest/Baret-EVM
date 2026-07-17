@@ -1,7 +1,7 @@
 /**
  * Activity page — a plain-language feed of everything the wallet has done:
  * dApp connections, signatures, x402 payments, sends/receives, and alerts,
- * each with Baret's verdict and reason. Polls `history.list` so the feed
+ * each with Premon's verdict and reason. Polls `history.list` so the feed
  * updates itself while open. Lives at /activity in the Options HashRouter.
  */
 
@@ -11,7 +11,7 @@ import {
   Coins, ShieldAlert, Plug, CheckCircle2, XCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { HistoryEntry } from "@baret/ext-protocol";
+import type { HistoryEntry } from "@premon/ext-protocol";
 import { useRpc, useWalletState } from "../../shared/state-context";
 import { explorerTxUrl } from "../../shared/chain";
 

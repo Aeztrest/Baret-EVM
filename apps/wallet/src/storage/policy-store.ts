@@ -1,7 +1,7 @@
-import type { GuardPolicy } from "@baret/guard";
-import { BALANCED_POLICY } from "@baret/guard";
+import type { GuardPolicy } from "@premon/guard";
+import { BALANCED_POLICY } from "@premon/guard";
 
-const KEY = "baret.policy.v1";
+const KEY = "premon.policy.v1";
 
 export function readPolicy(): GuardPolicy {
   try {

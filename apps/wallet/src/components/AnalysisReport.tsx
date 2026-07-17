@@ -1,6 +1,6 @@
 import { ShieldCheck, ShieldX, AlertTriangle, Info } from "lucide-react";
 import { ethers } from "ethers";
-import type { AnalysisResult, RiskFinding, RiskSeverity } from "@baret/guard";
+import type { AnalysisResult, RiskFinding, RiskSeverity } from "@premon/guard";
 import { NATIVE_SYMBOL } from "../wallet/connection";
 
 const SEVERITY_STYLES: Record<RiskSeverity, { bg: string; border: string; color: string }> = {
@@ -59,8 +59,8 @@ export function AnalysisReport({ result }: { result: AnalysisResult }) {
           </p>
           <p className="text-xs text-ink-500 mt-0.5">
             {safe
-              ? "Baret's simulation found no policy violations."
-              : "Baret's simulation tripped one or more rules you set."}
+              ? "Premon's simulation found no policy violations."
+              : "Premon's simulation tripped one or more rules you set."}
           </p>
           {reasons.length > 0 && (
             <ul className="mt-3 space-y-1 text-xs text-ink-600">

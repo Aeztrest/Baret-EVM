@@ -1,5 +1,5 @@
 /**
- * Policies editor — production policy DSL UI for Baret.
+ * Policies editor — production policy DSL UI for Premon.
  *
  * Three modes:
  *  1. Risk profile — one-click Strict / Balanced / Permissive presets.
@@ -7,7 +7,7 @@
  *  3. Raw JSON     — copy-paste for power users.
  *
  * Every change writes through `policy.write`, which validates via the shared
- * `validatePolicy` from @baret/guard and persists to browser.storage.
+ * `validatePolicy` from @premon/guard and persists to browser.storage.
  * The popup's sign-time analyze pipeline reads policy.read on every signature,
  * so changes take effect immediately on the next signing request.
  */
@@ -20,7 +20,7 @@ import {
 import {
   BALANCED_POLICY, STRICT_POLICY, PERMISSIVE_POLICY, POLICY_TEMPLATES,
   type GuardPolicy,
-} from "@baret/guard";
+} from "@premon/guard";
 import { useRpc } from "../../shared/state-context";
 
 type Mode = "form" | "json";
@@ -99,7 +99,7 @@ export function PoliciesPage() {
       <div>
         <h1 className="text-3xl font-extrabold tracking-tight">Policies</h1>
         <p className="text-text-muted text-sm mt-1">
-          The firewall Baret runs on every signature. Changes apply on the next request.
+          The firewall Premon runs on every signature. Changes apply on the next request.
         </p>
       </div>
 

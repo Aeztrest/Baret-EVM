@@ -4,7 +4,7 @@ import type { RouteDeps } from "./types.js";
 /**
  * x402 demo paywall (Scrybe). Always issues the HTTP 402 challenge when no
  * `X-PAYMENT` header is present — independent of X402_ENABLED, since this is a
- * self-contained demo: the Baret browser extension's x402 layer pays by
+ * self-contained demo: the Premon browser extension's x402 layer pays by
  * broadcasting a real on-chain USDC transfer to `payTo` and replays the tx hash
  * in `X-PAYMENT`, then gets the answer.
  */

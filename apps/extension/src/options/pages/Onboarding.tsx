@@ -22,8 +22,8 @@ import {
   ArrowRight, Eye, EyeOff, KeyRound, ShieldCheck, Sparkles, Copy, Check,
   AlertTriangle, Loader2, Globe, Plus, Download,
 } from "lucide-react";
-import { POLICY_TEMPLATES, type PolicyTemplateId } from "@baret/guard";
-import { Mark } from "@baret/ui";
+import { POLICY_TEMPLATES, type PolicyTemplateId } from "@premon/guard";
+import { Mark } from "@premon/ui";
 import { useRpc, useWalletContext } from "../../shared/state-context";
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
@@ -108,7 +108,7 @@ export function Onboarding() {
       <div className="border-b border-line">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-3">
           <div className="text-accent-soft"><Mark size={20} /></div>
-          <span className="font-extrabold text-sm tracking-tight">Baret</span>
+          <span className="font-extrabold text-sm tracking-tight">Premon</span>
           <div className="flex-1" />
           <div className="flex gap-1.5">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -491,7 +491,7 @@ function StepPolicy({
         <Globe size={26} className="mx-auto text-accent-soft" />
         <h2 className="text-2xl font-extrabold tracking-tight">Pick your default policy</h2>
         <p className="text-text-muted text-sm max-w-md mx-auto">
-          Baret enforces these rules on every signature. Tweak any time in Policies.
+          Premon enforces these rules on every signature. Tweak any time in Policies.
         </p>
       </div>
 
@@ -504,7 +504,7 @@ function StepPolicy({
               onClick={() => onChoose(t.id)}
               className="w-full text-left p-4 rounded-card transition-colors"
               style={{
-                background: active ? "rgba(91, 97, 105,0.07)" : "rgba(20,20,20,0.03)",
+                background: active ? "rgba(131, 110, 249,0.07)" : "rgba(20,20,20,0.03)",
                 border: active ? "1px solid rgba(61,109,255,0.5)" : "1px solid var(--line)",
               }}
             >
@@ -535,7 +535,7 @@ function StepDone({ address, onEnter }: { address: string; onEnter: () => void }
       <div className="space-y-2">
         <h2 className="text-3xl font-extrabold tracking-tight">You're protected.</h2>
         <p className="text-text-muted max-w-md mx-auto">
-          Your wallet is live on testnet. Every signature from here on passes through Baret.
+          Your wallet is live on testnet. Every signature from here on passes through Premon.
         </p>
       </div>
 

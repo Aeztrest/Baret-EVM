@@ -1,8 +1,8 @@
 /**
- * Baret EIP-1193 provider (page MAIN world).
+ * Premon EIP-1193 provider (page MAIN world).
  *
  * Installs `window.ethereum` and announces via EIP-6963 so EVM dApps and
- * wallet pickers discover Baret automatically. State-changing methods are
+ * wallet pickers discover Premon automatically. State-changing methods are
  * forwarded to the background service worker through the content-script bridge;
  * read-only JSON-RPC is proxied directly to the configured RPC endpoint.
  */
@@ -26,15 +26,15 @@ type ProviderEvent =
 
 const ICON_DATA_URL = (() => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-    <rect width="24" height="24" rx="6" fill="#141414"/>
-    <ellipse cx="12" cy="15.2" rx="8.2" ry="1.7" fill="#5B6169"/>
-    <path d="M5.2,15 C5.2,9.7 8.1,7 12,7 C15.9,7 18.8,9.7 18.8,15 Z" fill="#FFFFFF"/>
+    <rect width="24" height="24" rx="6" fill="#836EF9"/>
+    <path d="M12 5L18 18H6Z" fill="#141414"/>
+    <rect x="4" y="19" width="16" height="1.6" rx="0.8" fill="#141414"/>
   </svg>`;
   return `data:image/svg+xml;base64,${btoa(svg)}`;
 })();
 
-class BaretProvider {
-  public readonly isBaret = true;
+class PremonProvider {
+  public readonly isPremon = true;
   /** Some dApps gate features on this flag; we are EIP-1193 compatible. */
   public readonly isMetaMask = false;
   private listeners = new Map<ProviderEvent, Set<(...args: unknown[]) => void>>();
@@ -155,7 +155,7 @@ async function rpcProxy(method: string, params: unknown[]): Promise<unknown> {
 }
 
 export function installEip1193Provider(): void {
-  const provider = new BaretProvider();
+  const provider = new PremonProvider();
 
   try {
     Object.defineProperty(window, "ethereum", {
@@ -169,10 +169,10 @@ export function installEip1193Provider(): void {
   }
 
   const info = {
-    uuid: "b5e1d4f0-baretbaret-4a2b-9c1d-baret0000001",
-    name: "Baret",
+    uuid: "b5e1d4f0-premonmon-4a2b-9c1d-premon0000001",
+    name: "Premon",
     icon: ICON_DATA_URL,
-    rdns: "dev.baret.wallet",
+    rdns: "dev.premon.wallet",
   };
 
   const announce = () => {

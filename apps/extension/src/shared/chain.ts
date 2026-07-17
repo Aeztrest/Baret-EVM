@@ -7,7 +7,7 @@
  * may rotate.
  */
 
-import type { EvmNetwork } from "@baret/ext-protocol";
+import type { EvmNetwork } from "@premon/ext-protocol";
 
 export interface ChainConfig {
   network: EvmNetwork;

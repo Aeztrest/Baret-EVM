@@ -1,6 +1,6 @@
 /**
  * Compact AnalysisReport for the popup.
- * Renders an AnalyzeResponse — the Baret simulation verdict + findings
+ * Renders an AnalyzeResponse — the Premon simulation verdict + findings
  * + balance changes — into a 360-wide column.
  */
 
@@ -17,7 +17,7 @@ import { formatEther } from "ethers";
 import type {
   AnalyzeResponse,
   RiskFindingPayload,
-} from "@baret/ext-protocol";
+} from "@premon/ext-protocol";
 
 const SEVERITY_TONE: Record<
   RiskFindingPayload["severity"],

@@ -17,7 +17,7 @@ import {
   type ExtRpcMethod,
   type ExtRpcRequest,
   type ExtRpcResponse,
-} from "@baret/ext-protocol";
+} from "@premon/ext-protocol";
 
 type Pending = { resolve: (v: unknown) => void; reject: (e: Error) => void };
 type EventListener<E extends ExtEventName> = (payload: ExtEvents[E]) => void;
@@ -58,7 +58,7 @@ export class ExtRpcClient {
         if (!set) return;
         for (const fn of set) {
           try { fn(raw.payload); }
-          catch (err) { console.error("[BARET] event listener threw:", err); }
+          catch (err) { console.error("[PREMON] event listener threw:", err); }
         }
       }
     });

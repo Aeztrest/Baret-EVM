@@ -14,14 +14,14 @@ import {
   type AnalysisResult,
   type RiskFinding,
   type TransactionInput,
-} from "@baret/guard";
+} from "@premon/guard";
 
 export interface GuardedWalletConfig {
   /** Agent private key (0x…). Keep it in an env var / secret manager. */
   privateKey: string;
   /** EVM JSON-RPC endpoint. */
   rpcUrl: string;
-  /** Baret analyzer base URL (e.g. https://baret-api.onrender.com or .../api). */
+  /** Premon analyzer base URL (e.g. https://baret-api.onrender.com or .../api). */
   analyzeUrl: string;
   /** Bearer key for the analyzer, if it requires one. */
   apiKey?: string;
@@ -42,7 +42,7 @@ export interface GuardOutcome {
 
 /**
  * A drop-in ethers wallet for agents / programs that routes every transaction
- * through Baret's pre-sign firewall. If the active policy blocks the tx, it
+ * through Premon's pre-sign firewall. If the active policy blocks the tx, it
  * throws `GuardBlockedError` and **never signs** — so a compromised prompt,
  * tool, or dependency can't drain the agent's wallet.
  *
@@ -76,7 +76,7 @@ export class GuardedWallet {
     });
   }
 
-  /** Run Baret analysis + policy on a tx WITHOUT signing (dry run). */
+  /** Run Premon analysis + policy on a tx WITHOUT signing (dry run). */
   async evaluate(tx: TransactionRequest): Promise<GuardOutcome> {
     const ev = await this.guard.evaluate({
       transaction: toGuardTx(tx, this.address),
@@ -99,7 +99,7 @@ export class GuardedWallet {
     const outcome = await this.evaluate(tx);
     if (outcome.decision === "block") {
       throw new GuardBlockedError(
-        outcome.blockingReasons[0] ?? "Baret policy blocked this transaction",
+        outcome.blockingReasons[0] ?? "Premon policy blocked this transaction",
         outcome.analysis,
         outcome.blockingReasons,
       );

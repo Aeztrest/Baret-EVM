@@ -1,7 +1,7 @@
 /**
  * Showcase demo transaction builders.
  *
- * Each scenario produces a different EVM tx-request shape so Baret's policy
+ * Each scenario produces a different EVM tx-request shape so Premon's policy
  * gate has something distinct to evaluate. Safe scenarios use plain native
  * (MON) transfers or ordinary contract calls; danger scenarios reach for the
  * common EVM attack primitives — unlimited ERC-20 `approve`, NFT
@@ -9,7 +9,7 @@
  * calls that revert in simulation.
  *
  * The returned tx-request is unsigned; the demo wallet signs + submits (or,
- * when `Sign with Baret` is chosen, the wallet popup signs after running the
+ * when `Sign with Premon` is chosen, the wallet popup signs after running the
  * same analyze pipeline a second time as the authoritative gatekeeper).
  *
  * Token/contract addresses are plausible 0x placeholders — recognizable as
@@ -17,7 +17,7 @@
  */
 
 import { Interface, MaxUint256, parseEther, parseUnits } from "ethers";
-import type { TxRequest } from "@baret/wallet-adapter";
+import type { TxRequest } from "@premon/wallet-adapter";
 
 export type ScenarioId =
   | "novaswap-safe"

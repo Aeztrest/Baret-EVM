@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GuardedWallet } from "./guarded-wallet.js";
-import { GuardBlockedError, STRICT_POLICY, type AnalysisResult } from "@baret/guard";
+import { GuardBlockedError, STRICT_POLICY, type AnalysisResult } from "@premon/guard";
 
 // Hardhat account #0 — test key only.
 const TEST_PK = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";

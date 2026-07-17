@@ -1,18 +1,18 @@
-# @baret/agent-kit
+# @premon/agent-kit
 
-Guard your **agent / program wallet** with [Baret](https://baret.example).
-A drop-in `ethers` signer + CLI that runs every transaction through Baret's
+Guard your **agent / program wallet** with [Premon](https://premon.example).
+A drop-in `ethers` signer + CLI that runs every transaction through Premon's
 pre-sign firewall and **refuses to sign** anything your policy blocks — so a
 poisoned prompt, a bad tool, or a malicious dependency can't drain the wallet.
 
 ```bash
-pnpm add @baret/agent-kit
+pnpm add @premon/agent-kit
 ```
 
 ## SDK — `GuardedWallet`
 
 ```ts
-import { GuardedWallet, STRICT_POLICY } from "@baret/agent-kit";
+import { GuardedWallet, STRICT_POLICY } from "@premon/agent-kit";
 
 const agent = new GuardedWallet({
   privateKey: process.env.AGENT_KEY!,
@@ -21,7 +21,7 @@ const agent = new GuardedWallet({
   policy:     STRICT_POLICY,
 });
 
-// Baret simulates + policy-checks FIRST. On a block this throws
+// Premon simulates + policy-checks FIRST. On a block this throws
 // GuardBlockedError and never signs.
 await agent.sendTransaction({ to: token, data: approveCalldata });
 
@@ -29,20 +29,20 @@ await agent.sendTransaction({ to: token, data: approveCalldata });
 const { decision, blockingReasons } = await agent.evaluate({ to, data });
 ```
 
-## CLI — `baret`
+## CLI — `premon`
 
 ```bash
-export BARET_PRIVATE_KEY=0xYOUR_AGENT_KEY
+export PREMON_PRIVATE_KEY=0xYOUR_AGENT_KEY
 
-baret address                                   # show the agent address
-baret analyze --to 0xToken --data 0x.. --policy strict   # dry-run verdict
-baret send    --to 0xToken --data 0x.. --policy strict   # guarded send
-baret policy strict                             # print a policy as JSON
+premon address                                   # show the agent address
+premon analyze --to 0xToken --data 0x.. --policy strict   # dry-run verdict
+premon send    --to 0xToken --data 0x.. --policy strict   # guarded send
+premon policy strict                             # print a policy as JSON
 ```
 
-Env: `BARET_PRIVATE_KEY`, `BARET_RPC_URL`, `BARET_ANALYZE_URL`,
-`BARET_API_KEY`, `BARET_NETWORK`, `BARET_POLICY`.
+Env: `PREMON_PRIVATE_KEY`, `PREMON_RPC_URL`, `PREMON_ANALYZE_URL`,
+`PREMON_API_KEY`, `PREMON_NETWORK`, `PREMON_POLICY`.
 
 Policies: `STRICT_POLICY`, `BALANCED_POLICY`, `PERMISSIVE_POLICY` (or `--policy strict|balanced|permissive`).
 
-MIT · https://baret.example/agents
+MIT · https://premon.example/agents

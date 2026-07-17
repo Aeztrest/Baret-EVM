@@ -30,7 +30,7 @@ export function Settings() {
         <Row label="Network" value={ACTIVE_NETWORK} />
         <Row label="Chain ID" value={String(CHAIN_ID)} mono />
         <Row label="RPC endpoint" value={RPC_URL} mono />
-        <Row label="Wallet protocol" value="Baret EOA (EVM)" />
+        <Row label="Wallet protocol" value="Premon EOA (EVM)" />
         <Row label="Created at" value={new Date(identity.createdAt).toLocaleString()} />
       </Section>
 

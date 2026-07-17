@@ -2,7 +2,7 @@
  * Alerts store — drift / verify-orphan / no-delivery / cap-hit incidents.
  */
 
-import type { AlertEntry } from "@baret/ext-protocol";
+import type { AlertEntry } from "@premon/ext-protocol";
 import { asPromise, tx } from "./index";
 
 export function makeAlertId(): string {

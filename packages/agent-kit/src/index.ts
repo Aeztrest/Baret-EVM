@@ -14,4 +14,4 @@ export {
   type AnalysisResult,
   type RiskFinding,
   type RiskSeverity,
-} from "@baret/guard";
+} from "@premon/guard";

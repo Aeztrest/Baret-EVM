@@ -1,19 +1,19 @@
-/** Docs index — Baret light theme. */
+/** Docs index — Premon light theme. */
 
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, ArrowUpRight, BookOpen, Shield, FileText, Zap, Layers, Globe,
 } from "lucide-react";
-import { BaretMark, Wordmark, LandingFooter } from "../components/LandingChrome";
+import { PremonMark, Wordmark, LandingFooter } from "../components/LandingChrome";
 
 const DOCS = [
   { title: "Vision",                 desc: "Why a transaction firewall belongs in the wallet, not the dApp.",      file: "vision.md",                 icon: BookOpen },
   { title: "Wallet Spec",            desc: "Smart wallet primitives, key handling, session model.",                file: "wallet-spec.md",            icon: Shield },
   { title: "Extension Architecture", desc: "MV3 background, popup, options, inpage and content-script split.",     file: "extension-architecture.md", icon: Layers },
   { title: "Policy DSL",             desc: "The TypeScript policy schema and templates enforced at sign-time.",    file: "policy-dsl.md",             icon: FileText },
-  { title: "x402 Defense",           desc: "The attack matrix and Baret's response for the x402 era.",             file: "x402-defense.md",           icon: Zap },
-  { title: "Brand",                  desc: "Tokens, typography, and the way Baret talks to users.",                file: "brand.md",                  icon: Globe },
+  { title: "x402 Defense",           desc: "The attack matrix and Premon's response for the x402 era.",             file: "x402-defense.md",           icon: Zap },
+  { title: "Brand",                  desc: "Tokens, typography, and the way Premon talks to users.",                file: "brand.md",                  icon: Globe },
   { title: "Showcase Briefs",        desc: "How each fake-but-real demo dApp is wired and what it teaches.",       file: "showcase-briefs.md",        icon: BookOpen },
   { title: "Demo Script",            desc: "The end-to-end walkthrough used for live demos.",                      file: "demo-script.md",            icon: FileText },
 ];
@@ -25,7 +25,7 @@ export default function DocsPage() {
       <header className="fixed top-0 inset-x-0 z-50 border-b border-ink-900/8 bg-white/85 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/home" className="flex items-center gap-2.5 group">
-            <BaretMark />
+            <PremonMark />
             <Wordmark className="text-sm" />
             <span className="hidden sm:inline text-ink-400 text-xs">/ Docs</span>
           </Link>
@@ -45,7 +45,7 @@ export default function DocsPage() {
             Documentation
           </p>
           <h1 className="mt-4 font-display text-5xl md:text-6xl font-bold tracking-tight leading-[1.04]">
-            How Baret<br />works, in detail.
+            How Premon<br />works, in detail.
           </h1>
           <p className="mt-6 text-ink-500 leading-relaxed max-w-2xl">
             Specs, protocols, and design notes that back every claim on the home page.
@@ -60,7 +60,7 @@ export default function DocsPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              href={`https://github.com/your-org/baret/blob/main/docs/${d.file}`}
+              href={`https://github.com/your-org/premon/blob/main/docs/${d.file}`}
               target="_blank"
               rel="noreferrer"
               className="group card-hover block p-5"

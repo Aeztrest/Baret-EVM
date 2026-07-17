@@ -1,6 +1,6 @@
 /**
  * Showcase-side analyze client. Lets a demo site call
- * Baret's `/v1/analyze` endpoint through the `@baret/guard` SDK — the
+ * Premon's `/v1/analyze` endpoint through the `@premon/guard` SDK — the
  * same pipeline the wallet's sign popup runs, rendered on the site itself so
  * visitors see what the firewall WOULD say before clicking "Sign".
  *
@@ -16,7 +16,7 @@ import {
   type GuardPolicy,
   type TransactionInput,
   type EstimatedChanges,
-} from "@baret/guard";
+} from "@premon/guard";
 
 export type { AnalysisResult, RiskFinding, GuardPolicy, EstimatedChanges };
 
@@ -80,7 +80,7 @@ function offlineResult(reason: string): PreviewResult {
     offline: true,
     analysis: {
       safe: false,
-      reasons: [`Couldn't reach BARET: ${reason}`],
+      reasons: [`Couldn't reach PREMON: ${reason}`],
       riskFindings: [
         {
           code: "ANALYZE_UNREACHABLE",

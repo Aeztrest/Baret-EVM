@@ -37,7 +37,7 @@ export function SettingsOpt() {
       <Section icon={Cpu} title="Network">
         <Row label="Network" value={state.network} />
         <Row label="RPC" value={chainFor(state.network).rpcUrl} mono />
-        <Row label="Wallet type" value="Baret EOA (EVM)" />
+        <Row label="Wallet type" value="Premon EOA (EVM)" />
       </Section>
 
       <Section icon={KeyRound} title="Wallet">
@@ -59,7 +59,7 @@ export function SettingsOpt() {
         </button>
       </Section>
 
-      <p className="text-[10px] text-text-faint text-center">Baret · v0.1.0 · open source · MIT</p>
+      <p className="text-[10px] text-text-faint text-center">Premon · v0.1.0 · open source · MIT</p>
     </div>
   );
 }

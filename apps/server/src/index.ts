@@ -13,7 +13,7 @@ async function main(): Promise<void> {
       authMode: config.authMode,
       x402: config.x402.enabled,
     },
-    "Baret starting",
+    "Premon starting",
   );
 
   try {

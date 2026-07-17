@@ -1,5 +1,5 @@
 /**
- * Baret analyze HTTP client (background-side).
+ * Premon analyze HTTP client (background-side).
  *
  * Talks to the apps/server `/v1/analyze` endpoint to get a structured verdict
  * on a candidate EVM transaction. The wallet decides everything client-side
@@ -7,11 +7,11 @@
  * among many, not the trust boundary.
  */
 
-import type { GuardPolicy, EvmNetwork, TransactionInput } from "@baret/guard";
+import type { GuardPolicy, EvmNetwork, TransactionInput } from "@premon/guard";
 import type {
   AnalyzeResponse,
   RiskFindingPayload,
-} from "@baret/ext-protocol";
+} from "@premon/ext-protocol";
 
 const DEFAULT_BASE_URL = "http://localhost:8080";
 const ANALYZE_TIMEOUT_MS = 12_000;
@@ -141,14 +141,14 @@ function offlineResponse(message: string): AnalyzeResponse {
     decision: "advisory",
     safe: false,
     blockingReasons: [],
-    advisoryReasons: [`Could not reach Baret: ${message}`],
-    reasons: [`Could not reach Baret: ${message}`],
+    advisoryReasons: [`Could not reach Premon: ${message}`],
+    reasons: [`Could not reach Premon: ${message}`],
     riskFindings: [
       {
         code: "ANALYZE_UNREACHABLE",
         severity: "medium",
         message:
-          "Baret's analyze server didn't respond. Sign only if you trust this dApp.",
+          "Premon's analyze server didn't respond. Sign only if you trust this dApp.",
       },
     ],
     estimatedChanges: EMPTY_CHANGES,

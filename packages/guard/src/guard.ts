@@ -23,7 +23,7 @@ export interface EvaluateRequest {
   /**
    * The transaction to evaluate: a raw 0x-hex serialized tx or a tx-request
    * object. The guard does not build it — wallet/account-abstraction wrapping
-   * varies. The guard's job is to run it through Baret's analyzer and apply the
+   * varies. The guard's job is to run it through Premon's analyzer and apply the
    * user's policy. Never signs, never submits.
    */
   transaction: TransactionInput;
@@ -46,7 +46,7 @@ export class TransactionGuard {
   constructor(private readonly cfg: GuardConfig) {}
 
   /**
-   * Ship the tx to Baret /v1/analyze, evaluate against the policy, return a
+   * Ship the tx to Premon /v1/analyze, evaluate against the policy, return a
    * structured GuardEvaluation. Never signs, never submits, never throws on a
    * policy violation — returns `decision: "block"` so the caller renders denial.
    */
@@ -84,7 +84,7 @@ export class TransactionGuard {
     const ev = await this.evaluate(req);
     if (ev.decision === "block") {
       throw new GuardBlockedError(
-        ev.blockingReasons[0] ?? "Baret policy blocked this transaction",
+        ev.blockingReasons[0] ?? "Premon policy blocked this transaction",
         ev.analysis,
         ev.blockingReasons,
       );

@@ -1,8 +1,8 @@
-# Baret PaymentGuard
+# Premon PaymentGuard
 
 On-chain spending-limit vault for x402 / agentic micropayments.
 
-The off-chain firewall (Baret analyzer + `@baret/guard`) screens a tx
+The off-chain firewall (Premon analyzer + `@premon/guard`) screens a tx
 before a human signs it. This contract is the on-chain counterpart: the owner
 deposits a token (e.g. USDC), grants each merchant a per-transaction cap plus a
 rolling 24-hour cap, and an agent calls `pay()` to settle micropayments **without

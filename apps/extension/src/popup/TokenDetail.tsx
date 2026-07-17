@@ -9,7 +9,7 @@
 import { useEffect, useState } from "react";
 import { X, Copy, Check, ExternalLink } from "lucide-react";
 import QRCode from "qrcode";
-import type { EvmNetwork } from "@baret/ext-protocol";
+import type { EvmNetwork } from "@premon/ext-protocol";
 import { chainFor } from "../shared/chain";
 
 interface Props {
