@@ -23,6 +23,9 @@ function capitalize(s: string): string {
 }
 
 export function TopStrip({ state, onOpenAccount, onOpenSettings }: Props) {
+  const activeAccount = state.accounts.find((a) => a.index === state.activeAccountIndex);
+  const label = activeAccount?.label ?? capitalize(state.network);
+
   return (
     <div className="h-14 px-4 flex items-center justify-between border-b border-line shrink-0">
       <button onClick={onOpenAccount} className="flex items-center gap-2 text-left hover:bg-black/[0.04] px-2 py-1 rounded-input">
@@ -30,7 +33,7 @@ export function TopStrip({ state, onOpenAccount, onOpenSettings }: Props) {
           <Mark size={14} />
         </div>
         <div>
-          <p className="text-[11px] text-text-faint leading-tight">{capitalize(state.network)}</p>
+          <p className="text-[11px] text-text-faint leading-tight">{label}</p>
           <p className="text-xs font-mono text-text leading-tight">{shortAddr(state.address)}</p>
         </div>
         <ChevronDown size={11} className="text-text-faint" />

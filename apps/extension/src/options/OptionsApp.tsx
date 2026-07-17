@@ -3,6 +3,7 @@
  * Spec: docs/wallet-spec.md §7.
  */
 
+import { useRef } from "react";
 import { HashRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useWalletContext } from "../shared/state-context";
@@ -21,6 +22,18 @@ const POPUP_LIKE = new Set(["/onboarding"]);
 function Guard({ children }: { children: React.ReactNode }) {
   const { state, loading, error } = useWalletContext();
   const loc = useLocation();
+
+  // Wallet.create/import flips phase to "ready" the instant the keystore is
+  // written — mid-wizard, before the recovery-phrase backup or policy-pick
+  // steps render. Once we've seen this tab genuinely start from
+  // uninitialized on /onboarding, stop auto-redirecting away from it: the
+  // wizard itself (StepDone's onEnter) navigates to "/" when the user
+  // actually finishes, so this only guards direct/stale navigation to
+  // /onboarding by an already-registered user.
+  const onboardingStarted = useRef(false);
+  if (loc.pathname === "/onboarding" && state?.phase === "uninitialized") {
+    onboardingStarted.current = true;
+  }
 
   if (loading) {
     return (
@@ -45,7 +58,7 @@ function Guard({ children }: { children: React.ReactNode }) {
   if (state.phase === "uninitialized" && loc.pathname !== "/onboarding") {
     return <Navigate to="/onboarding" replace />;
   }
-  if (state.phase !== "uninitialized" && loc.pathname === "/onboarding") {
+  if (state.phase !== "uninitialized" && loc.pathname === "/onboarding" && !onboardingStarted.current) {
     return <Navigate to="/" replace />;
   }
 

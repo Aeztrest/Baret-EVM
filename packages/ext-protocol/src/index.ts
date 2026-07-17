@@ -24,12 +24,22 @@ export type EvmNetwork = "testnet" | "mainnet";
 
 export type WalletPhase = "uninitialized" | "locked" | "ready" | "signing" | "alert";
 
+/** One BIP-44-derived account under the wallet's mnemonic (or the sole account of a private-key import). */
+export interface WalletAccount {
+  /** BIP-44 address_index (m/44'/60'/0'/0/index). Always 0 for private-key imports. */
+  index: number;
+  address: string;
+  label: string;
+}
+
 export interface WalletStateSnapshot {
   phase: WalletPhase;
   network: EvmNetwork;
   chainId: number;
-  /** Connected EOA address (0x). */
+  /** Active EOA address (0x) — equals accounts[activeAccountIndex].address. */
   address: string | null;
+  accounts: WalletAccount[];
+  activeAccountIndex: number;
   alertsUnread: number;
   watchedAddresses: string[];
 }
@@ -146,6 +156,13 @@ export interface ExtRpc {
   "wallet.balance": { req: { address?: string }; rsp: { wei: string | null; usdc: string | null } };
   /** User-initiated native MON transfer: builds + signs + broadcasts locally. */
   "wallet.transferNative": { req: { to: string; amountEth: string }; rsp: { txHash: string } };
+
+  /* Accounts (multi-account, BIP-44-derived from the wallet's mnemonic) */
+  "account.list": { req: void; rsp: WalletAccount[] };
+  /** Derives the next BIP-44 index. Mnemonic wallets only — throws for private-key imports. */
+  "account.create": { req: { label?: string }; rsp: WalletAccount };
+  "account.switch": { req: { index: number }; rsp: { address: string } };
+  "account.rename": { req: { index: number; label: string }; rsp: { ok: true } };
 
   /* Sign + tx */
   "tx.sign": { req: { requestId: string; accept: boolean; remember?: boolean }; rsp: { signed?: string; txHash?: string; rejection?: string; ok?: true } };

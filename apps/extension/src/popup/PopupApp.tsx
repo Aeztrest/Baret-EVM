@@ -10,6 +10,7 @@ import { useRpc, useWalletContext } from "../shared/state-context";
 import { LockedScreen } from "./LockedScreen";
 import { UninitializedScreen } from "./UninitializedScreen";
 import { TopStrip } from "./TopStrip";
+import { AccountSheet } from "./AccountSheet";
 import { TabBar, type PopupTab } from "./TabBar";
 import { Home } from "./Home";
 import { Activity } from "./Activity";
@@ -23,6 +24,7 @@ export function PopupApp() {
   const rpc = useRpc();
   const [tab, setTab] = useState<PopupTab>("home");
   const [pendingKind, setPendingKind] = useState<string | null>(null);
+  const [showAccounts, setShowAccounts] = useState(false);
 
   // When phase=signing, the head of the queue may be a transaction OR a
   // connect-approval. Poll the queue head so the popup routes to the right
@@ -68,10 +70,10 @@ export function PopupApp() {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col relative">
       <TopStrip
         state={state}
-        onOpenAccount={() => { /* T22: account picker sheet */ }}
+        onOpenAccount={() => setShowAccounts(true)}
         onOpenSettings={() => setTab("settings")}
       />
 
@@ -83,6 +85,8 @@ export function PopupApp() {
       </div>
 
       <TabBar active={tab} onChange={setTab} alertCount={state.alertsUnread} />
+
+      {showAccounts && <AccountSheet onClose={() => setShowAccounts(false)} />}
     </div>
   );
 }

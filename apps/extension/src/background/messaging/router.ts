@@ -21,7 +21,7 @@ import {
   x402_handlers,
   type ProviderHandler,
 } from "../provider/handlers";
-import { subscribe } from "../state/store";
+import { subscribe, ready } from "../state/store";
 
 type HandlerMap = Record<string, ProviderHandler>;
 
@@ -67,6 +67,11 @@ export function startRouter(): void {
       }
 
       try {
+        // Cold service-worker wakes race an async bootstrap() against the
+        // first popup message; wait for rehydration so we never answer with
+        // the synchronous "uninitialized" default for an already-registered
+        // wallet. Resolved once per worker lifetime, so this is a no-op after.
+        await ready;
         const result = await handler(raw.payload);
         port.postMessage({
           __bx: PROTOCOL_TAG, id: raw.id, kind: "rsp", method: raw.method, payload: result,

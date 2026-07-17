@@ -11,6 +11,7 @@ import { X, Copy, Check, ExternalLink } from "lucide-react";
 import QRCode from "qrcode";
 import type { EvmNetwork } from "@premon/ext-protocol";
 import { chainFor } from "../shared/chain";
+import { TokenIcon } from "./icons/TokenIcon";
 
 interface Props {
   symbol: string;
@@ -52,14 +53,17 @@ export function TokenDetail({ symbol, tokenAddress, balance, network, onClose }:
   return (
     <div className="absolute inset-0 z-30 flex flex-col" style={{ background: "var(--bg)" }}>
       <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: "var(--line)" }}>
-        <p className="font-semibold text-sm">{symbol}</p>
+        <p className="font-semibold text-sm flex items-center gap-2">
+          <TokenIcon symbol={symbol} size={18} /> {symbol}
+        </p>
         <button onClick={onClose} className="p-1.5 rounded-input hover:bg-black/5">
           <X size={16} />
         </button>
       </div>
 
       <div className="flex-1 px-5 py-6 flex flex-col items-center gap-5 overflow-y-auto">
-        <div className="text-center">
+        <TokenIcon symbol={symbol} size={44} />
+        <div className="text-center -mt-2">
           <p className="text-3xl font-extrabold font-mono tracking-tight">{balance}</p>
           <p className="text-text-faint text-[11px] mt-1">{symbol} balance on {network}</p>
         </div>

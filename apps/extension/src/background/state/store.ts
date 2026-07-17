@@ -13,6 +13,26 @@ type Listener = (s: WalletStateSnapshot, prev: WalletStateSnapshot) => void;
 let current: WalletState = { ...INITIAL_STATE };
 const listeners = new Set<Listener>();
 
+/**
+ * Resolves once cold-boot rehydration has run. The module-level `current`
+ * above defaults to phase "uninitialized" synchronously, but the real
+ * keystore check in background/index.ts's bootstrap() is async — callers
+ * (the message router) must await this before trusting `current`, or a
+ * request that arrives right after a service-worker cold start can observe
+ * the stale default and show the setup screen to an already-registered user.
+ */
+let readyResolve: (() => void) | undefined;
+export const ready: Promise<void> = new Promise((resolve) => {
+  readyResolve = resolve;
+});
+
+export function markReady(): void {
+  if (readyResolve) {
+    readyResolve();
+    readyResolve = undefined;
+  }
+}
+
 export function getState(): WalletState {
   return current;
 }

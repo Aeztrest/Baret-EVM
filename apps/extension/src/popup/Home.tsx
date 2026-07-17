@@ -13,6 +13,7 @@ import { chainFor } from "../shared/chain";
 import { ReceiveScreen } from "./ReceiveScreen";
 import { SendScreen } from "./SendScreen";
 import { TokenDetail } from "./TokenDetail";
+import { TokenIcon } from "./icons/TokenIcon";
 
 export function Home() {
   const state = useWalletState();
@@ -152,12 +153,15 @@ function BalanceRow({
 }) {
   const inner = (
     <>
-      <div className="flex flex-col items-start">
-        <span className="text-sm font-bold leading-none flex items-center gap-1">
-          {asset}
-          {onClick && <ChevronRight size={12} className="text-text-faint" />}
-        </span>
-        <span className="text-text-faint text-[10px] mt-1">{hint}</span>
+      <div className="flex items-center gap-2.5">
+        <TokenIcon symbol={asset} size={26} />
+        <div className="flex flex-col items-start">
+          <span className="text-sm font-bold leading-none flex items-center gap-1">
+            {asset}
+            {onClick && <ChevronRight size={12} className="text-text-faint" />}
+          </span>
+          <span className="text-text-faint text-[10px] mt-1">{hint}</span>
+        </div>
       </div>
       <span
         className="text-2xl font-extrabold font-mono tracking-tight leading-none"

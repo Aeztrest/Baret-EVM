@@ -8,39 +8,42 @@
 
 import browser from "webextension-polyfill";
 import { startRouter } from "./messaging/router";
-import { rehydrate, subscribe } from "./state/store";
+import { rehydrate, subscribe, markReady } from "./state/store";
 import { INITIAL_STATE } from "./state/machine";
-import { hasKeystore, readKeystore } from "./db/keystore";
+import { readKeystore } from "./db/keystore";
 import { startMonitorLifecycle } from "./rpc/monitor";
 import { countUnread } from "./db/alerts";
 import { openPopupWindow } from "./popup-window";
 
 async function bootstrap(): Promise<void> {
-  const exists = await hasKeystore();
-  if (!exists) {
-    rehydrate({ ...INITIAL_STATE, phase: "uninitialized" });
-    return;
-  }
-
-  const row = await readKeystore();
-  if (!row) {
-    rehydrate({ ...INITIAL_STATE, phase: "uninitialized" });
-    return;
-  }
-
-  let alertsUnread = 0;
   try {
-    alertsUnread = await countUnread();
-  } catch {
-    /* IndexedDB might not be open yet */
-  }
+    const row = await readKeystore();
+    if (!row) {
+      rehydrate({ ...INITIAL_STATE, phase: "uninitialized" });
+      return;
+    }
 
-  rehydrate({
-    ...INITIAL_STATE,
-    phase: "locked",
-    address: row.address,
-    alertsUnread,
-  });
+    let alertsUnread = 0;
+    try {
+      alertsUnread = await countUnread();
+    } catch {
+      /* IndexedDB might not be open yet */
+    }
+
+    rehydrate({
+      ...INITIAL_STATE,
+      phase: "locked",
+      address: row.address,
+      accounts: row.accounts,
+      activeAccountIndex: row.activeIndex,
+      alertsUnread,
+    });
+  } finally {
+    // Unblock any RPC calls the router queued up while bootstrap was in
+    // flight — must run on every path (found/not-found/threw), or a
+    // cold-start failure would wedge every popup open forever.
+    markReady();
+  }
 }
 
 browser.runtime.onInstalled.addListener(({ reason }) => {

@@ -15,14 +15,17 @@ import type {
   ExtRpcMethod,
   ExtRpcRequest,
   ExtRpcResponse,
+  WalletAccount,
 } from "@premon/ext-protocol";
 import { BALANCED_POLICY, type GuardPolicy } from "@premon/guard";
 
 import { dispatch, getSnapshot } from "../state/store";
 import { encryptWithPassphrase, decryptWithPassphrase } from "../crypto/kdf";
 import {
+  deriveAddressAt,
   isUnlocked,
   lock,
+  setActiveIndex,
   unlockWith,
   useWallet,
   walletFromSecret,
@@ -87,6 +90,7 @@ const createHandler: Handler<"wallet.create"> = async ({ passphrase, network }) 
 
   const mnemonic = generateMnemonic(128); // 12-word BIP-39 phrase
   const wallet = walletFromSecret(mnemonic);
+  const accounts: WalletAccount[] = [{ index: 0, address: wallet.address, label: "Account 1" }];
 
   const blob = await encryptWithPassphrase(enc.encode(mnemonic), passphrase);
   await writeKeystore({
@@ -95,11 +99,13 @@ const createHandler: Handler<"wallet.create"> = async ({ passphrase, network }) 
     address: wallet.address,
     secretType: "mnemonic",
     createdAt: Date.now(),
+    accounts,
+    activeIndex: 0,
   });
 
-  unlockWith(mnemonic);
+  unlockWith(mnemonic, 0);
   dispatch({ type: "network.set", network });
-  dispatch({ type: "wallet.created", address: wallet.address });
+  dispatch({ type: "wallet.created", address: wallet.address, accounts });
 
   return { address: wallet.address };
 };
@@ -115,6 +121,7 @@ const importHandler: Handler<"wallet.import"> = async ({ passphrase, secret }) =
   const secretType: "mnemonic" | "privateKey" = trimmed.includes(" ") ? "mnemonic" : "privateKey";
   // Throws if the secret is malformed.
   const wallet = walletFromSecret(trimmed);
+  const accounts: WalletAccount[] = [{ index: 0, address: wallet.address, label: "Account 1" }];
 
   const blob = await encryptWithPassphrase(enc.encode(trimmed), passphrase);
   await writeKeystore({
@@ -123,10 +130,12 @@ const importHandler: Handler<"wallet.import"> = async ({ passphrase, secret }) =
     address: wallet.address,
     secretType,
     createdAt: Date.now(),
+    accounts,
+    activeIndex: 0,
   });
 
-  unlockWith(trimmed);
-  dispatch({ type: "wallet.created", address: wallet.address });
+  unlockWith(trimmed, 0);
+  dispatch({ type: "wallet.created", address: wallet.address, accounts });
 
   return { address: wallet.address };
 };
@@ -138,8 +147,8 @@ const unlockHandler: Handler<"wallet.unlock"> = async ({ passphrase }) => {
   const secret = dec.decode(secretBytes);
   secretBytes.fill(0);
 
-  const address = unlockWith(secret);
-  dispatch({ type: "wallet.unlocked", address });
+  const address = unlockWith(secret, row.activeIndex);
+  dispatch({ type: "wallet.unlocked", address, accounts: row.accounts, activeAccountIndex: row.activeIndex });
   return { ok: true };
 };
 
@@ -174,6 +183,64 @@ const exportSecretHandler: Handler<"wallet.exportSecret"> = async ({ passphrase,
   // privateKey
   const wallet = walletFromSecret(secret);
   return { secret: wallet.privateKey };
+};
+
+/* ────────────── Accounts (multi-account) ────────────── */
+
+const accountListHandler: Handler<"account.list"> = async () => {
+  const row = await readKeystore();
+  return row ? row.accounts : [];
+};
+
+const accountCreateHandler: Handler<"account.create"> = async ({ label }) => {
+  if (!isUnlocked()) throw new Error("Unlock the wallet first.");
+  const row = await readKeystore();
+  if (!row) throw new Error("No wallet found.");
+  if (row.secretType !== "mnemonic") {
+    throw new Error("Only recovery-phrase wallets support multiple accounts.");
+  }
+
+  const nextIndex = Math.max(...row.accounts.map((a) => a.index)) + 1;
+  const address = deriveAddressAt(nextIndex);
+  const account: WalletAccount = {
+    index: nextIndex,
+    address,
+    label: label?.trim() || `Account ${row.accounts.length + 1}`,
+  };
+  const accounts = [...row.accounts, account];
+
+  await writeKeystore({ ...row, accounts });
+  dispatch({ type: "accounts.updated", accounts });
+  return account;
+};
+
+const accountSwitchHandler: Handler<"account.switch"> = async ({ index }) => {
+  if (!isUnlocked()) throw new Error("Unlock the wallet first.");
+  const row = await readKeystore();
+  if (!row) throw new Error("No wallet found.");
+  if (!row.accounts.some((a) => a.index === index)) {
+    throw new Error("Unknown account index.");
+  }
+
+  const address = setActiveIndex(index);
+  await writeKeystore({ ...row, address, activeIndex: index });
+  dispatch({ type: "account.switched", address, activeAccountIndex: index });
+  return { address };
+};
+
+const accountRenameHandler: Handler<"account.rename"> = async ({ index, label }) => {
+  const row = await readKeystore();
+  if (!row) throw new Error("No wallet found.");
+  const trimmed = label.trim();
+  if (!trimmed) throw new Error("Label cannot be empty.");
+  if (!row.accounts.some((a) => a.index === index)) {
+    throw new Error("Unknown account index.");
+  }
+
+  const accounts = row.accounts.map((a) => (a.index === index ? { ...a, label: trimmed } : a));
+  await writeKeystore({ ...row, accounts });
+  dispatch({ type: "accounts.updated", accounts });
+  return { ok: true };
 };
 
 /* ────────────── Balance + transfer ────────────── */
@@ -502,6 +569,11 @@ export const handlers: { [M in ExtRpcMethod]: Handler<M> } = {
   "wallet.exportSecret": exportSecretHandler,
   "wallet.balance": balanceHandler,
   "wallet.transferNative": transferNativeHandler,
+
+  "account.list": accountListHandler,
+  "account.create": accountCreateHandler,
+  "account.switch": accountSwitchHandler,
+  "account.rename": accountRenameHandler,
 
   "network.set": networkSet,
 

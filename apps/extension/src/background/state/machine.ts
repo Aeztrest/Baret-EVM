@@ -5,7 +5,7 @@
  * reads from here via the message router.
  */
 
-import type { EvmNetwork, WalletStateSnapshot } from "@premon/ext-protocol";
+import type { EvmNetwork, WalletAccount, WalletStateSnapshot } from "@premon/ext-protocol";
 import { chainFor } from "../../shared/chain";
 
 export type WalletPhase =
@@ -18,8 +18,10 @@ export type WalletPhase =
 export interface WalletState {
   phase: WalletPhase;
   network: EvmNetwork;
-  /** Connected EOA address (0x). */
+  /** Active EOA address (0x). */
   address: string | null;
+  accounts: WalletAccount[];
+  activeAccountIndex: number;
   alertsUnread: number;
   watchedAddresses: string[];
   /** Idle timeout in ms (default 15 min). */
@@ -32,6 +34,8 @@ export const INITIAL_STATE: WalletState = {
   phase: "uninitialized",
   network: "testnet",
   address: null,
+  accounts: [],
+  activeAccountIndex: 0,
   alertsUnread: 0,
   watchedAddresses: [],
   idleTimeoutMs: 15 * 60 * 1000,
@@ -41,8 +45,8 @@ export const INITIAL_STATE: WalletState = {
 /* ────────────── Actions (the only way to mutate state) ────────────── */
 
 export type Action =
-  | { type: "wallet.created"; address: string }
-  | { type: "wallet.unlocked"; address: string }
+  | { type: "wallet.created"; address: string; accounts: WalletAccount[] }
+  | { type: "wallet.unlocked"; address: string; accounts: WalletAccount[]; activeAccountIndex: number }
   | { type: "wallet.locked" }
   | { type: "wallet.reset" }
   | { type: "network.set"; network: EvmNetwork }
@@ -52,16 +56,29 @@ export type Action =
   | { type: "alerts.increment" }
   | { type: "watch.add"; address: string }
   | { type: "watch.remove"; address: string }
-  | { type: "activity.touch" };
+  | { type: "activity.touch" }
+  | { type: "account.switched"; address: string; activeAccountIndex: number }
+  | { type: "accounts.updated"; accounts: WalletAccount[] };
 
 export function reduce(state: WalletState, action: Action): WalletState {
   switch (action.type) {
     case "wallet.created":
+      return {
+        ...state,
+        phase: "ready",
+        address: action.address,
+        accounts: action.accounts,
+        activeAccountIndex: 0,
+        lastActivityAt: Date.now(),
+      };
+
     case "wallet.unlocked":
       return {
         ...state,
         phase: "ready",
         address: action.address,
+        accounts: action.accounts,
+        activeAccountIndex: action.activeAccountIndex,
         lastActivityAt: Date.now(),
       };
 
@@ -70,6 +87,17 @@ export function reduce(state: WalletState, action: Action): WalletState {
 
     case "wallet.reset":
       return { ...INITIAL_STATE, network: state.network };
+
+    case "account.switched":
+      return {
+        ...state,
+        address: action.address,
+        activeAccountIndex: action.activeAccountIndex,
+        lastActivityAt: Date.now(),
+      };
+
+    case "accounts.updated":
+      return { ...state, accounts: action.accounts };
 
     case "network.set":
       return { ...state, network: action.network };
@@ -107,6 +135,8 @@ export function snapshot(s: WalletState): WalletStateSnapshot {
     network: s.network,
     chainId: chainFor(s.network).chainId,
     address: s.address,
+    accounts: s.accounts,
+    activeAccountIndex: s.activeAccountIndex,
     alertsUnread: s.alertsUnread,
     watchedAddresses: s.watchedAddresses,
   };

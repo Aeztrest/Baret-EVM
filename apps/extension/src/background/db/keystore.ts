@@ -15,17 +15,31 @@
 import browser from "webextension-polyfill";
 import { asPromise, tx } from "./index";
 import type { EncryptedBlob } from "../crypto/kdf";
+import type { WalletAccount } from "@premon/ext-protocol";
 
 const BACKUP_KEY = "premon.keystore.backup.v1";
 
 export interface KeystoreRow {
   id: "primary";
   blob: EncryptedBlob;
-  /** EOA address (0x). Shown by the wallet UI while locked. */
+  /** Active EOA address (0x) — mirrors accounts[activeIndex].address. Shown by the wallet UI while locked. */
   address: string;
   /** What the encrypted blob holds, so export can label it correctly. */
   secretType: "mnemonic" | "privateKey";
   createdAt: number;
+  /** BIP-44-derived accounts under this wallet's mnemonic (single entry for private-key imports). */
+  accounts: WalletAccount[];
+  activeIndex: number;
+}
+
+/** Back-fills accounts/activeIndex for rows written before multi-account support existed. */
+function normalize(row: KeystoreRow): KeystoreRow {
+  if (row.accounts && row.accounts.length > 0) return row;
+  return {
+    ...row,
+    accounts: [{ index: 0, address: row.address, label: "Account 1" }],
+    activeIndex: 0,
+  };
 }
 
 export async function readKeystore(): Promise<KeystoreRow | null> {
@@ -34,16 +48,17 @@ export async function readKeystore(): Promise<KeystoreRow | null> {
     const row = await asPromise(store.get("primary"));
     return (row ?? null) as KeystoreRow | null;
   });
-  if (fromIdb) return fromIdb;
+  if (fromIdb) return normalize(fromIdb);
 
   try {
     const all = await browser.storage.local.get(BACKUP_KEY);
     const backup = all[BACKUP_KEY] as KeystoreRow | undefined;
     if (backup && backup.id === "primary") {
+      const normalized = normalize(backup);
       await tx("keystore", "readwrite", async (t) => {
-        await asPromise(t.objectStore("keystore").put(backup));
+        await asPromise(t.objectStore("keystore").put(normalized));
       });
-      return backup;
+      return normalized;
     }
   } catch (err) {
     console.warn("[PREMON] storage.local keystore read failed:", err);
