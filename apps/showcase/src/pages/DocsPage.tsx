@@ -8,14 +8,13 @@ import {
 import { PremonMark, Wordmark, LandingFooter } from "../components/LandingChrome";
 
 const DOCS = [
-  { title: "Vision",                 desc: "Why a transaction firewall belongs in the wallet, not the dApp.",      file: "vision.md",                 icon: BookOpen },
-  { title: "Wallet Spec",            desc: "Smart wallet primitives, key handling, session model.",                file: "wallet-spec.md",            icon: Shield },
-  { title: "Extension Architecture", desc: "MV3 background, popup, options, inpage and content-script split.",     file: "extension-architecture.md", icon: Layers },
-  { title: "Policy DSL",             desc: "The TypeScript policy schema and templates enforced at sign-time.",    file: "policy-dsl.md",             icon: FileText },
-  { title: "x402 Defense",           desc: "The attack matrix and Premon's response for the x402 era.",             file: "x402-defense.md",           icon: Zap },
-  { title: "Brand",                  desc: "Tokens, typography, and the way Premon talks to users.",                file: "brand.md",                  icon: Globe },
-  { title: "Showcase Briefs",        desc: "How each fake-but-real demo dApp is wired and what it teaches.",       file: "showcase-briefs.md",        icon: BookOpen },
-  { title: "Demo Script",            desc: "The end-to-end walkthrough used for live demos.",                      file: "demo-script.md",            icon: FileText },
+  { title: "Overview",         desc: "What Premon catches, the repo layout, and how to run the full stack.",        path: "README.md",                    icon: BookOpen },
+  { title: "Architecture",     desc: "The /v1/analyze request lifecycle, module map, and confidence model.",        path: "docs/ARCHITECTURE.md",         icon: Layers },
+  { title: "Guard SDK",        desc: "@premon/guard — evaluate a transaction against a policy before signing.",      path: "packages/guard/README.md",     icon: Shield },
+  { title: "Agent Kit",        desc: "@premon/agent-kit — a guarded ethers signer + CLI for agents and scripts.",    path: "packages/agent-kit/README.md", icon: FileText },
+  { title: "PaymentGuard",     desc: "The on-chain spending-limit vault behind agentic x402 micropayments.",         path: "contracts/README.md",          icon: Zap },
+  { title: "Brand",            desc: "The mark, palette, and typography Premon ships with.",                        path: "brand/README.md",              icon: Globe },
+  { title: "Deploying Premon", desc: "Render + Vercel setup for the analyzer, wallet, and showcase, free tier.",     path: "DEPLOY.md",                    icon: BookOpen },
 ];
 
 export default function DocsPage() {
@@ -49,18 +48,18 @@ export default function DocsPage() {
           </h1>
           <p className="mt-6 text-ink-500 leading-relaxed max-w-2xl">
             Specs, protocols, and design notes that back every claim on the home page.
-            Each entry below maps to a file in the project's <code className="font-mono text-ink-700 bg-ink-900/5 px-1.5 py-0.5 rounded">docs/</code> tree.
+            Each entry below links straight to the real file in the repo.
           </p>
         </motion.div>
 
         <div className="mt-12 grid sm:grid-cols-2 gap-3">
           {DOCS.map((d, i) => (
             <motion.a
-              key={d.file}
+              key={d.path}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              href={`https://github.com/your-org/premon/blob/main/docs/${d.file}`}
+              href={`https://github.com/Aeztrest/Baret-EVM/blob/main/${d.path}`}
               target="_blank"
               rel="noreferrer"
               className="group card-hover block p-5"
@@ -72,7 +71,7 @@ export default function DocsPage() {
                   </span>
                   <div>
                     <p className="font-display font-bold">{d.title}</p>
-                    <p className="text-[11px] font-mono text-ink-400 mt-0.5">docs/{d.file}</p>
+                    <p className="text-[11px] font-mono text-ink-400 mt-0.5">{d.path}</p>
                   </div>
                 </div>
                 <ArrowUpRight size={16} className="text-ink-300 group-hover:text-brand-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />

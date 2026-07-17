@@ -11,7 +11,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, Github, Menu, X as XIcon } from "lucide-react";
 import { cn } from "@premon/showcase-ui";
 
-export const SOCIAL_GITHUB = "https://github.com/your-org/premon";
+export const SOCIAL_GITHUB = "https://github.com/Aeztrest/Baret-EVM";
 export const SOCIAL_X = "https://x.com/premonxyz";
 
 const NAV_LINKS = [
