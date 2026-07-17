@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@premon/showcase-ui": "workspace:*",
+    "@premon/ui": "workspace:*",
     "@premon/wallet-adapter": "workspace:*",
     "@premon/guard": "workspace:*",
     "ethers": "^6.13.4",

@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{ts,tsx}",
+    "../../packages/showcase-ui/src/**/*.{ts,tsx}",
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -42,6 +46,16 @@ export default {
         card:  "0 1px 2px rgba(20,20,20,0.05), 0 4px 16px -4px rgba(20,20,20,0.06)",
         lift:  "0 2px 4px rgba(20,20,20,0.06), 0 16px 40px -12px rgba(20,20,20,0.14)",
         brand: "0 4px 14px -2px rgba(131, 110, 249,0.35)",
+      },
+      borderRadius: {
+        pill:  "var(--r-pill)",
+        input: "var(--r-input)",
+        card:  "var(--r-card)",
+        modal: "var(--r-modal)",
+      },
+      textColor: {
+        "text-faint": "var(--text-faint)",
+        "text-muted": "var(--text-muted)",
       },
       animation: {
         "spin-slow": "spin 3s linear infinite",
