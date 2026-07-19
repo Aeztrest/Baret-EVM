@@ -14,7 +14,6 @@ import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
 import { buildScenario } from "../../premon/transactions";
 import { useWallet } from "../../wallet/context";
 import { useTokenBalances } from "../../wallet/useBalances";
-import { useTokenPrices } from "../../wallet/usePrices";
 
 const THEME = {
   primary: "#FF6B00",
@@ -28,13 +27,15 @@ const THEME = {
   ),
 };
 
-// Only MON/USDC: both have a real balance (on-chain) and a real price
-// (live from CoinGecko — see useTokenPrices). AQUA/yMON were removed —
-// they were fictional tokens with no real data source and no way to
-// actually select them (the selector buttons don't open a picker).
+// Only MON/USDC: both have a real balance, read on-chain (see
+// useTokenBalances). AQUA/yMON were removed — they were fictional tokens
+// with no real data source and no way to actually select them (the
+// selector buttons don't open a picker). The price below is a fixed,
+// human-friendly demo rate (live market data swings too much to test
+// against reliably) — not a real feed.
 const TOKENS = [
-  { symbol: "MON", name: "Native Token", logo: "/tokens/monad.webp" },
-  { symbol: "USDC", name: "USD Coin", logo: "/tokens/usdc.webp" },
+  { symbol: "MON", name: "Native Token", price: 4, logo: "/tokens/monad.webp" },
+  { symbol: "USDC", name: "USD Coin", price: 1, logo: "/tokens/usdc.webp" },
 ];
 
 function TokenIcon({ token }: { token: (typeof TOKENS)[number] }) {
@@ -57,20 +58,8 @@ export default function NovaSwap() {
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const { mon: monBalance, usdc: usdcBalance } = useTokenBalances(walletAddress ?? null);
-  const { mon: monPrice, usdc: usdcPrice } = useTokenPrices();
 
-  function priceFor(symbol: string): number | null {
-    if (symbol === "MON") return monPrice;
-    if (symbol === "USDC") return usdcPrice;
-    return null;
-  }
-
-  const fromPrice = priceFor(fromToken.symbol);
-  const toPrice = priceFor(toToken.symbol);
-  const outputAmount =
-    fromPrice !== null && toPrice
-      ? (fromPrice * parseFloat(amount || "0")) / toPrice
-      : NaN;
+  const outputAmount = (fromToken.price * parseFloat(amount || "0")) / toToken.price;
   const success = signature !== null;
 
   function balanceFor(symbol: string): string {
@@ -200,9 +189,7 @@ export default function NovaSwap() {
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-xs text-ink-400">
-                    {fromPrice === null ? "…" : `≈ $${(fromPrice * parseFloat(amount || "0")).toFixed(2)}`}
-                  </p>
+                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(fromToken.price * parseFloat(amount || "0")).toFixed(2)}</p>
                 </div>
 
                 {/* Flip */}
@@ -232,9 +219,7 @@ export default function NovaSwap() {
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-xs text-ink-400">
-                    {toPrice === null || isNaN(outputAmount) ? "…" : `≈ $${(outputAmount * toPrice).toFixed(2)}`}
-                  </p>
+                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(outputAmount * toToken.price).toFixed(2)}</p>
                 </div>
 
                 {/* Route info */}
@@ -243,13 +228,15 @@ export default function NovaSwap() {
                   <span className="flex items-center gap-1">0.3% fee <Info size={11} /></span>
                 </div>
 
-                {/* Honest disclaimer: real prices, but no real DEX liquidity behind
-                    NovaSwap on testnet, so the tx below doesn't deliver {toToken}. */}
+                {/* Honest disclaimer: fixed demo rate, and no real DEX liquidity
+                    behind NovaSwap on testnet, so the tx below doesn't deliver
+                    {toToken}. */}
                 <p className="flex items-start gap-1.5 rounded-lg px-2.5 py-2 text-[10.5px] leading-relaxed text-ink-400" style={{ background: "rgba(255,107,0,0.06)" }}>
                   <Info size={11} className="mt-0.5 shrink-0" style={{ color: "#C24E02" }} />
-                  Demo quote — priced from live MON/USDC market rates, but this testnet
-                  has no real NovaSwap liquidity yet. The transaction sent below moves
-                  your {fromToken.symbol} for Premon to analyze; it won't deliver {toToken.symbol}.
+                  Demo quote — uses a fixed 1 MON = 4 USDC rate, not a live feed. This
+                  testnet also has no real NovaSwap liquidity, so the transaction sent
+                  below moves your {fromToken.symbol} for Premon to analyze; it won't
+                  deliver {toToken.symbol}.
                 </p>
 
                 {/* Swap button */}
