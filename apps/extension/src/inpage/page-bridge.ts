@@ -5,11 +5,16 @@
  * tag so we can ignore unrelated traffic on the page.
  */
 
-const TAG = "__bx_ws" as const;
+// Must match content/index.ts's PAGE_TAG exactly — namespaced (not the
+// generic "__bx_ws" this evolved from) so a sibling project's extension
+// installed in the same browser can't pick up our postMessage traffic (or
+// vice versa). window.postMessage broadcasts to every listener on the page
+// regardless of which extension registered it.
+const TAG = "__premon_bx" as const;
 
-type ReqEnvelope = { __bx_ws: 1; kind: "req"; id: string; method: string; payload: unknown };
-type RspEnvelope = { __bx_ws: 1; kind: "rsp"; id: string; payload: unknown };
-type ErrEnvelope = { __bx_ws: 1; kind: "err"; id: string; error: string };
+type ReqEnvelope = { __premon_bx: 1; kind: "req"; id: string; method: string; payload: unknown };
+type RspEnvelope = { __premon_bx: 1; kind: "rsp"; id: string; payload: unknown };
+type ErrEnvelope = { __premon_bx: 1; kind: "err"; id: string; error: string };
 type Envelope = ReqEnvelope | RspEnvelope | ErrEnvelope;
 
 function isEnvelope(data: unknown): data is Envelope {
@@ -47,7 +52,7 @@ export function callPageBridge<T>(method: string, payload: unknown, timeoutMs = 
       resolve: (v) => { clearTimeout(timer); resolve(v as T); },
       reject:  (e) => { clearTimeout(timer); reject(e); },
     });
-    const env: ReqEnvelope = { __bx_ws: 1, kind: "req", id, method, payload };
+    const env: ReqEnvelope = { __premon_bx: 1, kind: "req", id, method, payload };
     window.postMessage(env, window.location.origin);
   });
 }

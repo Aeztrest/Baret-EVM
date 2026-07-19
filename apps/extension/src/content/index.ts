@@ -12,11 +12,18 @@
 import browser from "webextension-polyfill";
 import { isEnvelope, PROTOCOL_TAG, type Envelope } from "@premon/ext-protocol";
 
-const PAGE_TAG = "__bx_ws" as const;
+// Namespaced (not the generic "__bx_ws" this evolved from) — that tag
+// collided with a sibling project's extension: window.postMessage broadcasts
+// to every listener on the page regardless of which extension registered it,
+// so with both installed, both content scripts picked up the same request
+// and whichever extension's background answered first won, sometimes
+// surfacing the OTHER extension's "unknown method" error instead of Premon's
+// own response.
+const PAGE_TAG = "__premon_bx" as const;
 
-interface PageReq { __bx_ws: 1; kind: "req"; id: string; method: string; payload: unknown }
-interface PageRsp { __bx_ws: 1; kind: "rsp"; id: string; payload: unknown }
-interface PageErr { __bx_ws: 1; kind: "err"; id: string; error: string }
+interface PageReq { __premon_bx: 1; kind: "req"; id: string; method: string; payload: unknown }
+interface PageRsp { __premon_bx: 1; kind: "rsp"; id: string; payload: unknown }
+interface PageErr { __premon_bx: 1; kind: "err"; id: string; error: string }
 
 function isPageReq(d: unknown): d is PageReq {
   if (!d || typeof d !== "object") return false;
@@ -102,12 +109,12 @@ providerPort.onDisconnect.addListener(onDisconnect);
 x402Port.onDisconnect.addListener(onDisconnect);
 
 function postPageRsp(id: string, payload: unknown) {
-  const env: PageRsp = { __bx_ws: 1, kind: "rsp", id, payload };
+  const env: PageRsp = { __premon_bx: 1, kind: "rsp", id, payload };
   window.postMessage(env, window.location.origin);
 }
 
 function postPageErr(id: string, error: string) {
-  const env: PageErr = { __bx_ws: 1, kind: "err", id, error };
+  const env: PageErr = { __premon_bx: 1, kind: "err", id, error };
   window.postMessage(env, window.location.origin);
 }
 
