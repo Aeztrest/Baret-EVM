@@ -182,7 +182,7 @@ export async function x402Review(rawReq: unknown): Promise<Decision> {
   if (policy.x402AutoApprove !== false) {
     try {
       const signer = useWallet().connect(getProvider());
-      const resp = await signer.sendTransaction(buildX402TransferTx(requirements));
+      const resp = await signer.sendTransaction(buildX402TransferTx(requirements, snap.address));
       txHash = resp.hash;
     } catch (err) {
       return {
@@ -207,7 +207,7 @@ export async function x402Review(rawReq: unknown): Promise<Decision> {
     const label = `x402 payment · ${amountUiStr} USDC → ${payTo.slice(0, 6)}…${payTo.slice(-4)}`;
     let result: SignSuccess;
     try {
-      result = await enqueueAndWait(origin, requirements, label);
+      result = await enqueueAndWait(origin, requirements, label, snap.address);
     } catch (err) {
       return {
         action: "decline",
@@ -250,11 +250,12 @@ function enqueueAndWait(
   origin: string,
   requirements: PaymentRequirements,
   label: string,
+  from: string,
 ): Promise<SignSuccess> {
   // Reuse the eth_sendTransaction infra: a "transactionAndSend" sign request
   // shows the standard approval popup (with Premon analysis), then broadcasts
   // and resolves with the on-chain tx hash.
-  const tx = buildX402TransferTx(requirements);
+  const tx = buildX402TransferTx(requirements, from);
   return new Promise<SignSuccess>((resolve, reject) => {
     const requestId = newRequestId();
     enqueue({

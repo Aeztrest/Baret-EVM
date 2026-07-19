@@ -17,7 +17,7 @@ import {
 } from "ethers";
 import type { ExtProviderMethods } from "@premon/ext-protocol";
 
-import { dispatch, getState } from "../state/store";
+import { dispatch, getState, subscribe } from "../state/store";
 import { isUnlocked, useWallet } from "../crypto/session";
 import { getProvider } from "../rpc/connection";
 import { chainFor, chainForId } from "../../shared/chain";
@@ -31,6 +31,7 @@ import { appendHistory, listHistory } from "../db/history";
 import { readSitePermission, writeSitePermission } from "../db/site-permissions";
 import { signX402Payment, type BuiltX402Payment } from "../x402/build";
 import { x402Review } from "../x402/handlers";
+import { openPopupWindow } from "../popup-window";
 
 export type ProviderHandler = (payload: unknown) => Promise<unknown>;
 
@@ -39,22 +40,52 @@ type Rsp<M extends keyof ExtProviderMethods> = ExtProviderMethods[M]["rsp"];
 
 /* ────────────── Connect ────────────── */
 
-function ensureReady(): string {
+/**
+ * A locked wallet used to just throw here — the dApp got a console-only
+ * error and nothing else happened, because the popup was never opened. A
+ * cold service-worker wake (browser restart, or the SW idling out between
+ * uses) always starts locked, so this hit on effectively every "first
+ * connect of the session" and looked exactly like a dead click. Now it
+ * opens the popup so the user can unlock, then continues automatically.
+ */
+function waitForUnlock(timeoutMs = 5 * 60_000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (getState().phase !== "locked") {
+      resolve();
+      return;
+    }
+    const timer = setTimeout(() => {
+      unsub();
+      reject(new Error("Unlock timed out — open the wallet, enter your passphrase, then try again."));
+    }, timeoutMs);
+    const unsub = subscribe((next) => {
+      if (next.phase !== "locked") {
+        clearTimeout(timer);
+        unsub();
+        resolve();
+      }
+    });
+  });
+}
+
+async function ensureReady(): Promise<string> {
   const s = getState();
   if (s.phase === "uninitialized") {
     throw new Error("Premon wallet not initialized — open the wallet to set it up first.");
   }
   if (s.phase === "locked") {
-    throw new Error("Premon wallet is locked — open the wallet to unlock it first.");
+    void openPopupWindow();
+    await waitForUnlock();
   }
-  if (!s.address) throw new Error("Wallet not ready.");
-  return s.address;
+  const after = getState();
+  if (!after.address) throw new Error("Wallet not ready.");
+  return after.address;
 }
 
 const ethRequestAccounts: ProviderHandler = async (raw) => {
   const { origin } = raw as Req<"eth_requestAccounts">;
   if (!origin) throw new Error("Origin required");
-  const address = ensureReady();
+  const address = await ensureReady();
 
   const perm = await readSitePermission(origin);
   if (perm?.status === "denied" && perm.remembered) {
@@ -123,9 +154,13 @@ const walletSwitchEthereumChain: ProviderHandler = async (raw) => {
 
 /* ────────────── Sign methods ────────────── */
 
-function queueAndWait(kind: SignKind, origin: string, payload: string): Promise<SignSuccess> {
+async function queueAndWait(kind: SignKind, origin: string, payload: string): Promise<SignSuccess> {
   if (!isUnlocked()) {
-    return Promise.reject(new Error("Premon wallet is locked."));
+    // Same cold-start case as ensureReady(): open the popup to unlock instead
+    // of failing silently.
+    void openPopupWindow();
+    await waitForUnlock();
+    if (!isUnlocked()) throw new Error("Premon wallet is locked.");
   }
   return new Promise<SignSuccess>((resolve, reject) => {
     const requestId = newRequestId();

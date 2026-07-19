@@ -137,18 +137,32 @@ const ERC20_TRANSFER_IFACE = new Interface([
  *
  * Returns only JSON-serializable fields (no bigint) so the request can be
  * round-tripped through the sign queue payload for the manual-approval popup.
+ *
+ * `from` is required even though ethers' signer.sendTransaction() would fill
+ * it in automatically for the actual on-chain send: the manual-approval path
+ * sends this same object to the analyze server for pre-sign simulation
+ * *before* the wallet ever signs it, and without `from` the server's eth_call
+ * defaults to the zero address — which always reverts with "ERC20: transfer
+ * from the zero address", regardless of the real wallet's balance.
  */
 export function buildX402TransferTx(
   requirements: PaymentRequirements,
+  from: string,
 ): TransactionRequest {
   const data = ERC20_TRANSFER_IFACE.encodeFunctionData("transfer", [
     getAddress(requirements.payTo),
     requirements.amount,
   ]);
   return {
+    from,
     to: getAddress(requirements.asset),
     data,
-    value: 0,
+    // String, not number: the analyze server's schema requires `value` to be
+    // a string (`z.string().optional()`) — a numeric 0 here fails validation
+    // with HTTP 400, which is exactly what silently broke the manual x402
+    // approval popup's simulation step (auto-approve never hits the analyze
+    // server for this transaction, so it never surfaced there).
+    value: "0",
   };
 }
 

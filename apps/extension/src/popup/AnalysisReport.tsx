@@ -13,7 +13,7 @@ import {
   Info,
   ArrowRight,
 } from "lucide-react";
-import { formatEther } from "ethers";
+import { formatEther, formatUnits } from "ethers";
 import type {
   AnalyzeResponse,
   RiskFindingPayload,
@@ -81,7 +81,7 @@ export function AnalysisReport({ result }: { result: AnalyzeResponse }) {
               <DeltaRow
                 key={`asset-${i}`}
                 label={a.assetCode || shortAddr(a.asset)}
-                value={a.delta}
+                value={formatAssetDelta(a.delta, a.decimals)}
                 negative={a.delta.startsWith("-")}
               />
             ))}
@@ -297,6 +297,22 @@ function formatWeiAsMon(weiStr: string): string {
     return `${negative ? "-" : "+"}${mon.toFixed(4)} MON`;
   } catch {
     return `${negative ? "-" : "+"}${abs} wei`;
+  }
+}
+
+/** Same shape of bug as formatWeiAsMon's raison d'être: `delta` is a raw
+ * atomic-unit string (e.g. "1000" for 0.001 USDC at 6 decimals) — displaying
+ * it directly instead of applying `decimals` shows numbers 10^decimals too
+ * large. No unit suffix here (unlike formatWeiAsMon) since the row's own
+ * label already names the asset. */
+function formatAssetDelta(delta: string, decimals: number): string {
+  const negative = delta.startsWith("-");
+  const abs = negative ? delta.slice(1) : delta;
+  try {
+    const amount = Number(formatUnits(abs, decimals));
+    return `${negative ? "-" : "+"}${amount.toFixed(Math.min(decimals, 6))}`;
+  } catch {
+    return `${negative ? "-" : "+"}${abs}`;
   }
 }
 
