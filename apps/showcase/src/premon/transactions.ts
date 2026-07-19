@@ -96,7 +96,7 @@ export interface BuiltScenario {
 export async function buildScenario(
   scenario: ScenarioId,
   userWallet: string,
-  opts?: { amount?: string; tokenSymbol?: string },
+  opts?: { amount?: string; tokenSymbol?: string; recipient?: string },
 ): Promise<BuiltScenario> {
   const from = userWallet;
 
@@ -104,25 +104,29 @@ export async function buildScenario(
     /* ── NovaSwap ── */
     case "novaswap-safe": {
       // Reflect what the user actually entered on the swap card — falls back
-      // to a token dust amount only if the field is empty/invalid.
+      // to a token dust amount only if the field is empty/invalid. Sends to
+      // the NovaSwap demo vault when one is configured (see useVaultConfig /
+      // apps/server's novaswap routes), otherwise falls back to a
+      // self-transfer so the demo still works with no vault deployed.
       const n = Number(opts?.amount);
       const amount = Number.isFinite(n) && n > 0 ? opts!.amount! : "0.0001";
+      const recipient = opts?.recipient ?? userWallet;
       if (opts?.tokenSymbol === "USDC") {
         return {
           transaction: call(
             from,
             USDC_TOKEN,
             ERC20.encodeFunctionData("transfer", [
-              userWallet,
+              recipient,
               parseUnits(amount, USDC_DECIMALS),
             ]),
           ),
-          label: `NovaSwap: ${amount} USDC self-transfer quote`,
+          label: `NovaSwap: ${amount} USDC → ${recipient === userWallet ? "self (no vault)" : "vault"}`,
         };
       }
       return {
-        transaction: tx(from, userWallet, parseEther(amount)),
-        label: `NovaSwap: ${amount} MON self-transfer quote`,
+        transaction: tx(from, recipient, parseEther(amount)),
+        label: `NovaSwap: ${amount} MON → ${recipient === userWallet ? "self (no vault)" : "vault"}`,
       };
     }
     case "novaswap-danger":

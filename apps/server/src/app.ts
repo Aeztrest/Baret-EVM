@@ -11,6 +11,7 @@ import { registerReplayRoute } from "./api/routes/replay.js";
 import { registerAuditRoutes } from "./api/routes/audit.js";
 import { registerMcpRoutes } from "./api/routes/mcp.js";
 import { registerDemoPaywallRoute } from "./api/routes/demo-paywall.js";
+import { registerNovaSwapRoutes } from "./api/routes/novaswap.js";
 
 export type BuildAppOptions = {
   /** Override the RPC factory (tests inject a mock). */
@@ -77,6 +78,7 @@ export async function buildApp(
   registerAuditRoutes(app, deps);
   registerMcpRoutes(app, deps);
   registerDemoPaywallRoute(app, deps);
+  registerNovaSwapRoutes(app, deps);
 
   return app;
 }

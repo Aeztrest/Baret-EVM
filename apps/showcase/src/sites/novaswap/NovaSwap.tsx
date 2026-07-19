@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { formatEther, formatUnits } from "ethers";
 import {
   ArrowUpDown,
   ChevronDown,
   Settings,
   Info,
+  Loader2,
   Zap,
   Route,
 } from "lucide-react";
@@ -14,6 +16,10 @@ import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
 import { buildScenario } from "../../premon/transactions";
 import { useWallet } from "../../wallet/context";
 import { useTokenBalances } from "../../wallet/useBalances";
+import { useVaultConfig, fulfillSwap } from "./vault";
+
+const USDC_DECIMALS = 6;
+type PayoutState = "idle" | "pending" | "done" | "failed";
 
 const THEME = {
   primary: "#FF6B00",
@@ -30,12 +36,12 @@ const THEME = {
 // Only MON/USDC: both have a real balance, read on-chain (see
 // useTokenBalances). AQUA/yMON were removed — they were fictional tokens
 // with no real data source and no way to actually select them (the
-// selector buttons don't open a picker). The price below is a fixed,
+// selector buttons don't open a picker). The exchange rate is a fixed,
 // human-friendly demo rate (live market data swings too much to test
-// against reliably) — not a real feed.
+// against reliably) — see useVaultConfig for the authoritative value.
 const TOKENS = [
-  { symbol: "MON", name: "Native Token", price: 4, logo: "/tokens/monad.webp" },
-  { symbol: "USDC", name: "USD Coin", price: 1, logo: "/tokens/usdc.webp" },
+  { symbol: "MON", name: "Native Token", logo: "/tokens/monad.webp" },
+  { symbol: "USDC", name: "USD Coin", logo: "/tokens/usdc.webp" },
 ];
 
 function TokenIcon({ token }: { token: (typeof TOKENS)[number] }) {
@@ -58,8 +64,16 @@ export default function NovaSwap() {
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const { mon: monBalance, usdc: usdcBalance } = useTokenBalances(walletAddress ?? null);
+  const { vaultAddress, rate } = useVaultConfig();
+  const [payoutState, setPayoutState] = useState<PayoutState>("idle");
+  const [payoutText, setPayoutText] = useState<string | null>(null);
+  const [payoutTxHash, setPayoutTxHash] = useState<string | null>(null);
 
-  const outputAmount = (fromToken.price * parseFloat(amount || "0")) / toToken.price;
+  function priceFor(symbol: string): number {
+    return symbol === "MON" ? rate : 1;
+  }
+
+  const outputAmount = (priceFor(fromToken.symbol) * parseFloat(amount || "0")) / priceFor(toToken.symbol);
   const success = signature !== null;
 
   function balanceFor(symbol: string): string {
@@ -72,22 +86,45 @@ export default function NovaSwap() {
     setSignature(null);
     setResultMessage(null);
     setResultState("idle");
+    setPayoutState("idle");
+    setPayoutText(null);
+    setPayoutTxHash(null);
   }
 
   // Builds the candidate tx and sends it straight to the wallet to sign —
   // Premon's own pre-sign review happens there, not as a separate step on
-  // this page.
+  // this page. When a NovaSwap vault is configured, the tx pays the vault
+  // instead of self, and once it confirms we ask the vault to pay back the
+  // other side of the swap at the fixed rate.
   async function handleSwap() {
     if (!connected || !walletAddress) { openWalletModal(); return; }
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
+    setPayoutState("idle"); setPayoutText(null); setPayoutTxHash(null);
     try {
       const built = await buildScenario(
         dangerous ? "novaswap-danger" : "novaswap-safe",
         walletAddress,
-        { amount, tokenSymbol: fromToken.symbol },
+        { amount, tokenSymbol: fromToken.symbol, recipient: vaultAddress ?? undefined },
       );
       const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
+
+      if (vaultAddress && !dangerous) {
+        setPayoutState("pending");
+        try {
+          const payout = await fulfillSwap(sig);
+          const human =
+            payout.payoutSymbol === "USDC"
+              ? formatUnits(payout.payoutAmount, USDC_DECIMALS)
+              : formatEther(payout.payoutAmount);
+          setPayoutText(`+${Number(human).toFixed(4)} ${payout.payoutSymbol}`);
+          setPayoutTxHash(payout.payoutTxHash);
+          setPayoutState("done");
+        } catch (payoutErr) {
+          setPayoutText(payoutErr instanceof Error ? payoutErr.message : String(payoutErr));
+          setPayoutState("failed");
+        }
+      }
     } catch (e) {
       if ((e instanceof Error && /SIGN_REJECTED|POPUP_CLOSED|User cancel|declined/.test(e.message))) {
         setResultState("blocked"); setResultMessage(e.message);
@@ -189,7 +226,7 @@ export default function NovaSwap() {
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(fromToken.price * parseFloat(amount || "0")).toFixed(2)}</p>
+                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(priceFor(fromToken.symbol) * parseFloat(amount || "0")).toFixed(2)}</p>
                 </div>
 
                 {/* Flip */}
@@ -219,7 +256,7 @@ export default function NovaSwap() {
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(outputAmount * toToken.price).toFixed(2)}</p>
+                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(outputAmount * priceFor(toToken.symbol)).toFixed(2)}</p>
                 </div>
 
                 {/* Route info */}
@@ -228,15 +265,24 @@ export default function NovaSwap() {
                   <span className="flex items-center gap-1">0.3% fee <Info size={11} /></span>
                 </div>
 
-                {/* Honest disclaimer: fixed demo rate, and no real DEX liquidity
-                    behind NovaSwap on testnet, so the tx below doesn't deliver
-                    {toToken}. */}
+                {/* Honest disclaimer — wording depends on whether a demo vault
+                    is actually configured on this deployment. */}
                 <p className="flex items-start gap-1.5 rounded-lg px-2.5 py-2 text-[10.5px] leading-relaxed text-ink-400" style={{ background: "rgba(255,107,0,0.06)" }}>
                   <Info size={11} className="mt-0.5 shrink-0" style={{ color: "#C24E02" }} />
-                  Demo quote — uses a fixed 1 MON = 4 USDC rate, not a live feed. This
-                  testnet also has no real NovaSwap liquidity, so the transaction sent
-                  below moves your {fromToken.symbol} for Premon to analyze; it won't
-                  deliver {toToken.symbol}.
+                  {vaultAddress ? (
+                    <>
+                      Demo quote — fixed 1 MON = {rate} USDC rate, not a live feed.
+                      Your {fromToken.symbol} goes to NovaSwap's demo vault, which
+                      automatically pays back {toToken.symbol} at that rate.
+                    </>
+                  ) : (
+                    <>
+                      Demo quote — fixed 1 MON = {rate} USDC rate, not a live feed. This
+                      deployment has no NovaSwap vault configured, so the transaction
+                      sent below moves your {fromToken.symbol} for Premon to analyze;
+                      it won't deliver {toToken.symbol}.
+                    </>
+                  )}
                 </p>
 
                 {/* Swap button */}
@@ -245,6 +291,26 @@ export default function NovaSwap() {
                     <div className="w-full rounded-xl border border-emerald-500/30 bg-emerald-50 py-4 text-center font-bold text-emerald-600">
                       ✓ Swap Successful
                     </div>
+                    {payoutState === "pending" && (
+                      <div className="flex items-center justify-center gap-2 rounded-xl border border-black/5 bg-ink-900/[0.02] py-2.5 text-xs font-semibold text-ink-500">
+                        <Loader2 size={13} className="animate-spin" /> Waiting for the vault to send {toToken.symbol} back…
+                      </div>
+                    )}
+                    {payoutState === "done" && (
+                      <a
+                        href={`https://testnet.monadexplorer.com/tx/${payoutTxHash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block w-full rounded-xl border border-emerald-500/30 bg-emerald-50 py-2.5 text-center text-xs font-semibold text-emerald-600 hover:underline"
+                      >
+                        {payoutText} received from the vault — view tx
+                      </a>
+                    )}
+                    {payoutState === "failed" && (
+                      <div className="rounded-xl border border-red-500/30 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600">
+                        Vault payout didn't go through: {payoutText}
+                      </div>
+                    )}
                     <button
                       onClick={reset}
                       className="w-full rounded-xl border border-black/10 py-2.5 text-xs font-semibold text-ink-500 transition-colors hover:text-ink-900"
