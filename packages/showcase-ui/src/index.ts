@@ -20,3 +20,4 @@ export { Meter, type MeterProps } from "./primitives/Meter.js";
 export { StatTile, type StatTileProps } from "./primitives/StatTile.js";
 export { Verdict, type VerdictProps, type VerdictTone } from "./primitives/Verdict.js";
 export { CompareSplit, type CompareSplitProps } from "./primitives/CompareSplit.js";
+export { DangerModeToggle, type DangerModeToggleProps } from "./primitives/DangerModeToggle.js";
