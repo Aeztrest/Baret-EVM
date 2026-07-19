@@ -96,16 +96,35 @@ export interface BuiltScenario {
 export async function buildScenario(
   scenario: ScenarioId,
   userWallet: string,
+  opts?: { amount?: string; tokenSymbol?: string },
 ): Promise<BuiltScenario> {
   const from = userWallet;
 
   switch (scenario) {
     /* ── NovaSwap ── */
-    case "novaswap-safe":
+    case "novaswap-safe": {
+      // Reflect what the user actually entered on the swap card — falls back
+      // to a token dust amount only if the field is empty/invalid.
+      const n = Number(opts?.amount);
+      const amount = Number.isFinite(n) && n > 0 ? opts!.amount! : "0.0001";
+      if (opts?.tokenSymbol === "USDC") {
+        return {
+          transaction: call(
+            from,
+            USDC_TOKEN,
+            ERC20.encodeFunctionData("transfer", [
+              userWallet,
+              parseUnits(amount, USDC_DECIMALS),
+            ]),
+          ),
+          label: `NovaSwap: ${amount} USDC self-transfer quote`,
+        };
+      }
       return {
-        transaction: tx(from, userWallet, parseEther("0.0001")),
-        label: "NovaSwap: 0.0001 MON self-transfer quote",
+        transaction: tx(from, userWallet, parseEther(amount)),
+        label: `NovaSwap: ${amount} MON self-transfer quote`,
       };
+    }
     case "novaswap-danger":
       // Unlimited ERC-20 approve to a stranger contract — the classic drainer.
       return {

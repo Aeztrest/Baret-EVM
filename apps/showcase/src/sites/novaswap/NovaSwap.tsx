@@ -92,7 +92,11 @@ export default function NovaSwap() {
     if (!connected || !walletAddress) { openWalletModal(); return; }
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
     try {
-      const built = await buildScenario(dangerous ? "novaswap-danger" : "novaswap-safe", walletAddress);
+      const built = await buildScenario(
+        dangerous ? "novaswap-danger" : "novaswap-safe",
+        walletAddress,
+        { amount, tokenSymbol: fromToken.symbol },
+      );
       const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
     } catch (e) {
