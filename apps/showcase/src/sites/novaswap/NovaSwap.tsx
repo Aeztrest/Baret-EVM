@@ -14,6 +14,7 @@ import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
 import { buildScenario } from "../../premon/transactions";
 import { useWallet } from "../../wallet/context";
 import { useTokenBalances } from "../../wallet/useBalances";
+import { useTokenPrices } from "../../wallet/usePrices";
 
 const THEME = {
   primary: "#FF6B00",
@@ -27,34 +28,22 @@ const THEME = {
   ),
 };
 
-// AQUA/yMON are fictional — NovaSwap doesn't have real pools for them, so
-// there's no real price or balance to show. MON/USDC prices below are
-// illustrative (no live price feed is wired up); their *balances* are real,
-// read on-chain for the connected wallet — see useTokenBalances below.
+// Only MON/USDC: both have a real balance (on-chain) and a real price
+// (live from CoinGecko — see useTokenPrices). AQUA/yMON were removed —
+// they were fictional tokens with no real data source and no way to
+// actually select them (the selector buttons don't open a picker).
 const TOKENS = [
-  { symbol: "MON", name: "Native Token", price: 175.0, logo: "/tokens/monad.webp" },
-  { symbol: "USDC", name: "USD Coin", price: 1.0, logo: "/tokens/usdc.webp" },
-  { symbol: "AQUA", name: "Aquarius", price: 3.4, logo: null },
-  { symbol: "yMON", name: "Yield MON", price: 178.2, logo: null },
+  { symbol: "MON", name: "Native Token", logo: "/tokens/monad.webp" },
+  { symbol: "USDC", name: "USD Coin", logo: "/tokens/usdc.webp" },
 ];
 
 function TokenIcon({ token }: { token: (typeof TOKENS)[number] }) {
-  if (token.logo) {
-    return (
-      <img
-        src={token.logo}
-        alt={token.symbol}
-        className="h-5 w-5 shrink-0 rounded-full object-cover"
-      />
-    );
-  }
   return (
-    <span
-      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-black text-white"
-      style={{ background: "linear-gradient(135deg,#FF6B00,#EA5E00)" }}
-    >
-      {token.symbol[0]}
-    </span>
+    <img
+      src={token.logo}
+      alt={token.symbol}
+      className="h-5 w-5 shrink-0 rounded-full object-cover"
+    />
   );
 }
 
@@ -68,11 +57,22 @@ export default function NovaSwap() {
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const { mon: monBalance, usdc: usdcBalance } = useTokenBalances(walletAddress ?? null);
+  const { mon: monPrice, usdc: usdcPrice } = useTokenPrices();
 
-  const outputAmount = fromToken.price * parseFloat(amount || "0") / toToken.price;
+  function priceFor(symbol: string): number | null {
+    if (symbol === "MON") return monPrice;
+    if (symbol === "USDC") return usdcPrice;
+    return null;
+  }
+
+  const fromPrice = priceFor(fromToken.symbol);
+  const toPrice = priceFor(toToken.symbol);
+  const outputAmount =
+    fromPrice !== null && toPrice
+      ? (fromPrice * parseFloat(amount || "0")) / toPrice
+      : NaN;
   const success = signature !== null;
 
-  /** Real on-chain balance for MON/USDC; no data exists for AQUA/yMON (fictional). */
   function balanceFor(symbol: string): string {
     if (symbol === "MON") return monBalance === null ? "—" : monBalance.toFixed(4);
     if (symbol === "USDC") return usdcBalance === null ? "—" : usdcBalance.toFixed(4);
@@ -200,7 +200,9 @@ export default function NovaSwap() {
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(fromToken.price * parseFloat(amount || "0")).toFixed(2)}</p>
+                  <p className="mt-1.5 text-xs text-ink-400">
+                    {fromPrice === null ? "…" : `≈ $${(fromPrice * parseFloat(amount || "0")).toFixed(2)}`}
+                  </p>
                 </div>
 
                 {/* Flip */}
@@ -230,7 +232,9 @@ export default function NovaSwap() {
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
                   </div>
-                  <p className="mt-1.5 text-xs text-ink-400">≈ ${(outputAmount * toToken.price).toFixed(2)}</p>
+                  <p className="mt-1.5 text-xs text-ink-400">
+                    {toPrice === null || isNaN(outputAmount) ? "…" : `≈ $${(outputAmount * toPrice).toFixed(2)}`}
+                  </p>
                 </div>
 
                 {/* Route info */}
@@ -238,6 +242,15 @@ export default function NovaSwap() {
                   <span className="flex items-center gap-1"><Route size={11} /> Route: NovaSwap</span>
                   <span className="flex items-center gap-1">0.3% fee <Info size={11} /></span>
                 </div>
+
+                {/* Honest disclaimer: real prices, but no real DEX liquidity behind
+                    NovaSwap on testnet, so the tx below doesn't deliver {toToken}. */}
+                <p className="flex items-start gap-1.5 rounded-lg px-2.5 py-2 text-[10.5px] leading-relaxed text-ink-400" style={{ background: "rgba(255,107,0,0.06)" }}>
+                  <Info size={11} className="mt-0.5 shrink-0" style={{ color: "#C24E02" }} />
+                  Demo quote — priced from live MON/USDC market rates, but this testnet
+                  has no real NovaSwap liquidity yet. The transaction sent below moves
+                  your {fromToken.symbol} for Premon to analyze; it won't deliver {toToken.symbol}.
+                </p>
 
                 {/* Swap button */}
                 {success ? (
