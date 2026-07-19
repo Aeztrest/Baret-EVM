@@ -276,8 +276,8 @@ function FindingRow({ finding }: { finding: RiskFindingPayload }) {
             {finding.severity}
           </span>
         </div>
-        <p className="text-[11px] text-text-muted mt-0.5 leading-relaxed">
-          {finding.message}
+        <p className="text-[11px] text-text-muted mt-0.5 leading-relaxed break-words">
+          {shortenAddresses(finding.message)}
         </p>
       </div>
     </div>
@@ -287,6 +287,13 @@ function FindingRow({ finding }: { finding: RiskFindingPayload }) {
 function shortAddr(s: string): string {
   if (s.length < 12) return s;
   return `${s.slice(0, 4)}…${s.slice(-4)}`;
+}
+
+/** Finding messages from the analyze server embed full 0x addresses inline
+ * ("...to 0xbAd0000...000.") — long enough on their own to overflow the
+ * 360px popup. Shorten any we find for display. */
+function shortenAddresses(message: string): string {
+  return message.replace(/0x[a-fA-F0-9]{40}/g, (addr) => shortAddr(addr));
 }
 
 function formatWeiAsMon(weiStr: string): string {
