@@ -20,6 +20,7 @@ interface Props {
   onClose: () => void;
   onConnect: (provider: EvmWalletProvider) => void;
   connecting: boolean;
+  connectError: string | null;
   available: EvmWalletProvider[];
 }
 
@@ -28,6 +29,7 @@ export function WalletModal({
   onClose,
   onConnect,
   connecting,
+  connectError,
   available: initialAvailable,
 }: Props) {
   const [available, setAvailable] =
@@ -158,6 +160,16 @@ export function WalletModal({
                       </span>
                     </button>
                   ))}
+                </div>
+              )}
+
+              {connectError && (
+                <div
+                  className="flex items-start gap-2 p-3 rounded-xl text-xs"
+                  style={{ background: "rgba(232,71,10,0.08)", border: "1px solid rgba(232,71,10,0.22)" }}
+                >
+                  <AlertCircle size={13} className="mt-0.5 shrink-0" style={{ color: "#E8470A" }} />
+                  <span style={{ color: "#E8470A" }}>{connectError}</span>
                 </div>
               )}
             </div>

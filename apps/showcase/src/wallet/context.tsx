@@ -44,6 +44,8 @@ export interface WalletState {
   /** Active chain id, e.g. 10143 for the configured testnet. */
   chainId: number | null;
   connecting: boolean;
+  /** Message from the most recent failed connect attempt, if any. */
+  connectError: string | null;
   openWalletModal: () => void;
   connect: (
     provider: EvmWalletProvider,
@@ -96,6 +98,7 @@ export function WalletProvider({
   }, []);
   const [bridge, setBridge] = useState<WalletStandardBridge | null>(null);
   const [connecting, setConnecting] = useState(false);
+  const [connectError, setConnectError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const connect = useCallback(
@@ -104,13 +107,19 @@ export function WalletProvider({
     ): Promise<WalletStandardBridge | null> => {
       if (!provider) return null;
       setConnecting(true);
+      setConnectError(null);
       try {
         const b = await WalletStandardBridge.connect(provider);
         setBridge(b);
         setModalOpen(false);
         return b;
       } catch (err) {
-        if (!(err instanceof WalletStandardBridgeError)) console.error(err);
+        // Every failure here was previously swallowed — a real connect
+        // rejection (popup closed, timeout, extension not responding) left
+        // the modal just sitting there with no feedback, indistinguishable
+        // from the click doing nothing at all. Always surface it.
+        console.error(err);
+        setConnectError(err instanceof Error ? err.message : String(err));
         return null;
       } finally {
         setConnecting(false);
@@ -125,6 +134,7 @@ export function WalletProvider({
   }, [bridge]);
 
   const openWalletModal = useCallback(() => {
+    setConnectError(null);
     setModalOpen(true);
   }, []);
   const closeWalletModal = useCallback(() => {
@@ -162,6 +172,7 @@ export function WalletProvider({
       shortAddress: walletAddress ? short(walletAddress) : null,
       chainId: bridge?.chainId ?? null,
       connecting,
+      connectError,
       openWalletModal,
       connect,
       disconnect,
@@ -173,6 +184,7 @@ export function WalletProvider({
       bridge,
       walletAddress,
       connecting,
+      connectError,
       openWalletModal,
       connect,
       disconnect,
@@ -191,6 +203,7 @@ export function WalletProvider({
           void connect(p);
         }}
         connecting={connecting}
+        connectError={connectError}
         available={available}
       />
     </Ctx.Provider>

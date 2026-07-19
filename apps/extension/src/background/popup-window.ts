@@ -31,9 +31,13 @@ async function computeAnchoredPosition(): Promise<{ left: number; top: number }>
     const parentLeft = parent.left ?? 0;
     const parentTop = parent.top ?? 0;
     const parentWidth = parent.width ?? 1280;
+    // Clamp non-negative: on a maximized/snapped/multi-monitor-adjacent window
+    // the raw arithmetic can push the popup partly or fully off-screen, which
+    // looks exactly like "clicking does nothing" since a real (just invisible)
+    // window is still created and just gets refocused on every later attempt.
     return {
-      left: Math.round(parentLeft + parentWidth - POPUP_WIDTH - RIGHT_MARGIN),
-      top: Math.round(parentTop + TOP_MARGIN),
+      left: Math.max(0, Math.round(parentLeft + parentWidth - POPUP_WIDTH - RIGHT_MARGIN)),
+      top: Math.max(0, Math.round(parentTop + TOP_MARGIN)),
     };
   } catch {
     return { left: 0, top: 0 };
@@ -45,7 +49,18 @@ export async function openPopupWindow(): Promise<void> {
     try {
       const existing = await browser.windows.get(currentPopupWindowId);
       if (existing) {
-        await browser.windows.update(currentPopupWindowId, { focused: true });
+        // Re-anchor too, not just focus: the parent window may have moved
+        // (different monitor, resized) since this popup was first opened, and
+        // a stale off-screen/minimized position is otherwise indistinguishable
+        // from the click doing nothing at all.
+        const { left, top } = await computeAnchoredPosition();
+        await browser.windows.update(currentPopupWindowId, {
+          focused: true,
+          drawAttention: true,
+          state: "normal",
+          left,
+          top,
+        });
         return;
       }
     } catch {
