@@ -16,13 +16,36 @@
  * fractional-rate rounding to reason about.
  */
 
-import { JsonRpcProvider, Wallet, Contract, Interface, getAddress } from "ethers";
+import {
+  JsonRpcProvider,
+  Wallet,
+  Contract,
+  Interface,
+  getAddress,
+  type Provider,
+  type TransactionReceipt,
+} from "ethers";
 import type { AppConfig } from "../config/index.js";
 
 const ERC20 = new Interface([
   "function transfer(address to, uint256 amount) returns (bool)",
   "function balanceOf(address owner) view returns (uint256)",
 ]);
+
+const RECEIPT_POLL_ATTEMPTS = 8;
+const RECEIPT_POLL_INTERVAL_MS = 1500;
+
+async function pollForReceipt(
+  provider: Provider,
+  txHash: string,
+): Promise<TransactionReceipt | null> {
+  for (let attempt = 0; attempt < RECEIPT_POLL_ATTEMPTS; attempt++) {
+    const receipt = await provider.getTransactionReceipt(txHash).catch(() => null);
+    if (receipt) return receipt;
+    await new Promise((resolve) => setTimeout(resolve, RECEIPT_POLL_INTERVAL_MS));
+  }
+  return null;
+}
 
 /** 1 MON = this many USDC. Must stay a positive integer (see file doc). */
 export const MON_PER_USDC_RATE = (() => {
@@ -79,7 +102,11 @@ export async function fulfillSwap(
   }
 
   const provider = wallet.provider!;
-  const receipt = await provider.getTransactionReceipt(txHash).catch(() => null);
+  // The caller typically arrives right after broadcasting the incoming
+  // payment — `sendTransaction` resolves with a hash as soon as the RPC
+  // accepts it, well before it's mined. Poll briefly for the receipt instead
+  // of failing on the very first check.
+  const receipt = await pollForReceipt(provider, txHash);
   if (!receipt || receipt.status !== 1) {
     return { ok: false, status: 400, error: "Transaction not found or not confirmed on-chain yet." };
   }
