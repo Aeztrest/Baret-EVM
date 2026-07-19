@@ -15,6 +15,12 @@ itself rather than by a human reviewing every payment.
 `deposit` uses `transferFrom` (caller must `approve` first); `pay`/`withdraw`
 use `transfer` from the vault.
 
+## Deployed
+
+| Network | Address | Token | Owner |
+| --- | --- | --- | --- |
+| Monad testnet (10143) | [`0x1e09E971c53bD59e481Ef02147C6CeeBf0B09717`](https://testnet.monadexplorer.com/address/0x1e09E971c53bD59e481Ef02147C6CeeBf0B09717) | USDC `0x534b2f3A21130d7a60830c2Df862319e593943A3` | `0x450aC235634BCE52eBFd90A52DFb32A0813919f4` |
+
 ## Develop
 
 ```bash
