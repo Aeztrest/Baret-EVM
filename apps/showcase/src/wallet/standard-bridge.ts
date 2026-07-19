@@ -171,6 +171,10 @@ function collectAnnounced(): Eip6963Detail[] {
   return [...found.values()];
 }
 
+function isPremonDetail(d: Eip6963Detail): boolean {
+  return d.info.rdns === PREMON_RDNS || d.info.name?.toLowerCase() === "premon";
+}
+
 /**
  * Discover wallet providers available to the page.
  *  - If the Premon EXTENSION is announced (EIP-6963), it's the primary
@@ -181,9 +185,7 @@ function collectAnnounced(): Eip6963Detail[] {
  */
 export function discoverEvmProviders(): EvmWalletProvider[] {
   const announced = collectAnnounced();
-  const premonDetail = announced.find(
-    (d) => d.info.rdns === PREMON_RDNS || d.info.name?.toLowerCase() === "premon",
-  );
+  const premonDetail = announced.find(isPremonDetail);
 
   const out: EvmWalletProvider[] = [];
 
@@ -219,6 +221,47 @@ export function discoverEvmProviders(): EvmWalletProvider[] {
   }
 
   return out;
+}
+
+/**
+ * Keep listening for EIP-6963 announcements for the page's whole lifetime.
+ *
+ * `discoverEvmProviders()` is a one-shot synchronous snapshot: it dispatches
+ * `eip6963:requestProvider` and only catches providers that already had a
+ * listener registered in that same tick. The Premon extension's inpage
+ * script is injected as an async `<script type="module">` (content scripts
+ * can't touch the page's `window` directly), so on a slow load it can
+ * finish — and announce itself — strictly AFTER the dApp's one-shot scan
+ * already ran and gave up, permanently falling back to the hosted web
+ * wallet even though the extension is installed and about to announce
+ * itself a moment later. Providers compensate for this exact race by also
+ * firing an unprompted `eip6963:announceProvider` once they finish loading
+ * (see apps/extension's inpage/provider.ts `announce()` call) — but only a
+ * page that keeps listening will ever see it.
+ *
+ * Calls `onNewProvider` for each provider announced after the initial scan,
+ * already wrapped as an `EvmWalletProvider` (with `premon: true` set
+ * correctly for the Premon extension). Returns an unsubscribe function.
+ */
+export function onProviderAnnounced(
+  onNewProvider: (provider: EvmWalletProvider) => void,
+): () => void {
+  const seen = new Set<string>();
+  const onAnnounce = (ev: Event) => {
+    const detail = (ev as CustomEvent<Eip6963Detail>).detail;
+    if (!detail?.info?.uuid || !detail.provider || seen.has(detail.info.uuid)) return;
+    seen.add(detail.info.uuid);
+    const premon = isPremonDetail(detail);
+    onNewProvider(
+      injectedProvider(detail.provider, {
+        name: premon ? "PREMON" : detail.info.name,
+        icon: premon ? PREMON_ICON : detail.info.icon,
+        premon,
+      }),
+    );
+  };
+  window.addEventListener("eip6963:announceProvider", onAnnounce as EventListener);
+  return () => window.removeEventListener("eip6963:announceProvider", onAnnounce as EventListener);
 }
 
 const PREMON_ICON = (() => {

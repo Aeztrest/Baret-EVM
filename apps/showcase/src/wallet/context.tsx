@@ -18,12 +18,14 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import {
   discoverEvmProviders,
+  onProviderAnnounced,
   WalletStandardBridge,
   WalletStandardBridgeError,
   type EvmWalletProvider,
@@ -72,11 +74,26 @@ export function WalletProvider({
   appName: string;
   children: ReactNode;
 }) {
-  // Providers are discovered synchronously from page globals; the list is
-  // stable across renders so we compute it once.
-  const [available] = useState<EvmWalletProvider[]>(() =>
+  // Initial synchronous snapshot, then keep listening: the extension's
+  // inpage script can finish loading (and announce itself) after this first
+  // scan already ran, and would otherwise stay permanently invisible for the
+  // rest of the page's life. See onProviderAnnounced's doc comment.
+  const [available, setAvailable] = useState<EvmWalletProvider[]>(() =>
     discoverEvmProviders(),
   );
+  useEffect(() => {
+    return onProviderAnnounced((provider) => {
+      setAvailable((prev) => {
+        if (provider.premon) {
+          // Replace the hosted-web-wallet fallback (or any earlier premon
+          // entry) with the real extension now that it's actually here.
+          return [provider, ...prev.filter((p) => !p.premon)];
+        }
+        if (prev.some((p) => !p.premon && p.name === provider.name)) return prev;
+        return [...prev, provider];
+      });
+    });
+  }, []);
   const [bridge, setBridge] = useState<WalletStandardBridge | null>(null);
   const [connecting, setConnecting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
