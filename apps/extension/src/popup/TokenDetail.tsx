@@ -1,14 +1,17 @@
 /**
- * Token detail overlay — shows a token's balance, its CONTRACT ADDRESS
- * (copyable + QR), and an explorer link. Lets the user copy/import the token
- * address into other wallets, the way MetaMask & co. expose token info.
+ * Token detail overlay — shows a token's balance and its CONTRACT address
+ * (copyable, no QR) for importing/verifying the token in an explorer or
+ * another wallet. This is NOT a receive address — sending funds to a token
+ * contract does not credit your wallet. A previous version showed a QR code
+ * here, which reads exactly like ReceiveScreen's "send here" QR and led to
+ * funds being sent to the contract by mistake. Removed the QR entirely and
+ * pointed users at the real receive flow instead.
  *
  * Opened from the balance rows on Home.tsx.
  */
 
-import { useEffect, useState } from "react";
-import { X, Copy, Check, ExternalLink } from "lucide-react";
-import QRCode from "qrcode";
+import { useState } from "react";
+import { X, Copy, Check, ExternalLink, Download, AlertTriangle } from "lucide-react";
 import type { EvmNetwork } from "@premon/ext-protocol";
 import { chainFor } from "../shared/chain";
 import { TokenIcon } from "./icons/TokenIcon";
@@ -20,25 +23,12 @@ interface Props {
   balance: string;
   network: string;
   onClose: () => void;
+  onReceive: () => void;
 }
 
-export function TokenDetail({ symbol, tokenAddress, balance, network, onClose }: Props) {
+export function TokenDetail({ symbol, tokenAddress, balance, network, onClose, onReceive }: Props) {
   const chain = chainFor(network as EvmNetwork);
-  const [qr, setQr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    QRCode.toDataURL(tokenAddress, {
-      errorCorrectionLevel: "M",
-      margin: 1,
-      width: 224,
-      color: { dark: "#141414", light: "#00000000" },
-    })
-      .then((url) => { if (!cancelled) setQr(url); })
-      .catch(() => { /* address still copyable */ });
-    return () => { cancelled = true; };
-  }, [tokenAddress]);
 
   const onCopy = async () => {
     try {
@@ -68,13 +58,25 @@ export function TokenDetail({ symbol, tokenAddress, balance, network, onClose }:
           <p className="text-text-faint text-[11px] mt-1">{symbol} balance on {network}</p>
         </div>
 
-        <div
-          className="rounded-card p-4 flex items-center justify-center"
-          style={{ background: "rgba(20,20,20,0.045)", border: "1px solid var(--line)" }}
+        <button
+          onClick={onReceive}
+          className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-input text-sm font-semibold text-white"
+          style={{ background: "var(--accent)" }}
         >
-          {qr
-            ? <img src={qr} alt={`${symbol} contract QR`} className="w-48 h-48" />
-            : <div className="w-48 h-48 flex items-center justify-center text-text-faint text-xs">generating…</div>}
+          <Download size={14} /> Receive {symbol}
+        </button>
+
+        <div className="w-full h-px" style={{ background: "var(--line)" }} />
+
+        <div
+          className="w-full flex items-start gap-2 p-3 rounded-input text-[11px]"
+          style={{ background: "rgba(255,136,56,0.08)", border: "1px solid rgba(255,136,56,0.25)" }}
+        >
+          <AlertTriangle size={13} className="shrink-0 mt-0.5" style={{ color: "var(--warn)" }} />
+          <span className="text-text-muted">
+            This is the {symbol} <strong>token contract</strong> — not your wallet address.
+            Sending funds here will not credit your balance. Use "Receive {symbol}" above instead.
+          </span>
         </div>
 
         <div className="w-full">

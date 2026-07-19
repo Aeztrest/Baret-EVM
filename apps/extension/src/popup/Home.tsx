@@ -69,7 +69,7 @@ export function Home() {
           <div style={{ borderTop: "1px solid var(--line)" }} />
           <BalanceRow
             asset="USDC"
-            hint="tap for contract + QR"
+            hint="tap for details"
             value={usdc === null ? "0.0000" : usdc.toFixed(4)}
             onClick={() => setOverlay("token")}
           />
@@ -132,6 +132,7 @@ export function Home() {
           balance={usdc === null ? "0.0000" : usdc.toFixed(4)}
           network={state.network}
           onClose={() => setOverlay(null)}
+          onReceive={() => setOverlay("receive")}
         />
       )}
     </div>
