@@ -5,6 +5,12 @@ A drop-in `ethers` signer + CLI that runs every transaction through Premon's
 pre-sign firewall and **refuses to sign** anything your policy blocks — so a
 poisoned prompt, a bad tool, or a malicious dependency can't drain the wallet.
 
+The policy is yours to define (`GuardPolicy` from `@premon/guard` — spend
+caps, approval blocks, gas ceilings, x402 merchant/asset allowlists), not a
+fixed tier baked into the SDK. This is what makes an autonomous agent safe to
+run against x402 paywalls: it can keep paying on its own, but every payment
+is checked against your caps before it's ever signed — no blind signing.
+
 ```bash
 pnpm add @premon/agent-kit
 ```
