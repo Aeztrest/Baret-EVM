@@ -84,7 +84,7 @@ const LAUNCH = new Interface([
 export interface BuiltScenario {
   /** Unsigned EVM transaction request. */
   transaction: TxRequest;
-  /** Short human description rendered in the RiskPreview hero. */
+  /** Short human description of the built scenario, for logging/debugging. */
   label: string;
 }
 

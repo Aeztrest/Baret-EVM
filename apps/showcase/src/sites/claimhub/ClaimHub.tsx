@@ -21,9 +21,7 @@ import { DangerModeToggle } from "@premon/showcase-ui";
 import { useWallet } from "../../wallet/context";
 import { SiteShell } from "../../components/SiteShell";
 import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
-import { RiskPreview } from "../../premon/RiskPreview";
 import { buildScenario } from "../../premon/transactions";
-import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#E8470A",
@@ -107,11 +105,7 @@ export default function ClaimHub() {
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);
   const [pendingCheck, setPendingCheck] = useState(false);
-  const [previewTx, setPreviewTx] = useState<TxRequest | null>(null);
   const success = signature !== null;
-  const scenarioLabel = dangerous
-    ? "Claim airdrop (danger scenario · native transfer to a known-malicious address)"
-    : "Claim airdrop · transfers 2,500 TOKEN to your wallet";
 
   useEffect(() => {
     if (connected && pendingCheck) {
@@ -131,24 +125,14 @@ export default function ClaimHub() {
     setResultState("idle");
   }
 
+  // Builds the candidate tx and sends it straight to the wallet to sign —
+  // Premon's own pre-sign review happens there, not as a separate step here.
   async function handleClaim() {
     if (!walletAddress) return;
-    try {
-      const built = await buildScenario(dangerous ? "claimhub-danger" : "claimhub-safe", walletAddress);
-      setPreviewTx(built.transaction);
-    } catch (e) {
-      setResultState("error");
-      setResultMessage(e instanceof Error ? e.message : String(e));
-    }
-  }
-
-  async function sendViaPremon() {
-    if (!previewTx) return;
-    const tx = previewTx;
-    setPreviewTx(null);
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
     try {
-      const { signature: sig } = await adapter.signAndSendTransaction(tx);
+      const built = await buildScenario(dangerous ? "claimhub-danger" : "claimhub-safe", walletAddress);
+      const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
     } catch (e) {
       if ((e instanceof Error && /SIGN_REJECTED|POPUP_CLOSED|User cancel|declined/.test(e.message))) {
@@ -158,7 +142,6 @@ export default function ClaimHub() {
       }
     }
   }
-  const sendRaw = sendViaPremon;
 
   // Soft, orange-tinted panel — reused across every section below.
   const panel = "card rounded-2xl";
@@ -487,16 +470,6 @@ export default function ClaimHub() {
           </section>
         </div>
       </div>
-
-      <RiskPreview
-        open={previewTx !== null}
-        transaction={previewTx}
-        userWallet={walletAddress ?? null}
-        scenarioLabel={scenarioLabel}
-        onClose={() => setPreviewTx(null)}
-        onProceedWithPremon={sendViaPremon}
-        onProceedRaw={sendRaw}
-      />
     </SiteShell>
   );
 }

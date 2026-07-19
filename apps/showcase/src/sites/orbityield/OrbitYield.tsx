@@ -18,9 +18,7 @@ import { DangerModeToggle } from "@premon/showcase-ui";
 import { useWallet } from "../../wallet/context";
 import { SiteShell } from "../../components/SiteShell";
 import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
-import { RiskPreview } from "../../premon/RiskPreview";
 import { buildScenario } from "../../premon/transactions";
-import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#D97706",
@@ -84,13 +82,9 @@ export default function OrbitYield() {
   const [resultState, setResultState] = useState<ResultState>("idle");
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
-  const [previewTx, setPreviewTx] = useState<TxRequest | null>(null);
   const [timeframe, setTimeframe] = useState<(typeof TIMEFRAMES)[number]>("1M");
   const success = signature !== null;
   const pool = POOLS[selectedPool];
-  const scenarioLabel = dangerous
-    ? `Stake ${amount} MON in an unverified pool (warn scenario)`
-    : `Stake ${amount} MON in ${pool?.name ?? "?"}`;
 
   function reset() {
     setSignature(null);
@@ -98,24 +92,14 @@ export default function OrbitYield() {
     setResultState("idle");
   }
 
+  // Builds the candidate tx and sends it straight to the wallet to sign —
+  // Premon's own pre-sign review happens there, not as a separate step here.
   async function handleStake() {
     if (!connected || !walletAddress) { openWalletModal(); return; }
-    try {
-      const built = await buildScenario(dangerous ? "orbityield-warn" : "orbityield-safe", walletAddress);
-      setPreviewTx(built.transaction);
-    } catch (e) {
-      setResultState("error");
-      setResultMessage(e instanceof Error ? e.message : String(e));
-    }
-  }
-
-  async function sendViaPremon() {
-    if (!previewTx) return;
-    const tx = previewTx;
-    setPreviewTx(null);
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
     try {
-      const { signature: sig } = await adapter.signAndSendTransaction(tx);
+      const built = await buildScenario(dangerous ? "orbityield-warn" : "orbityield-safe", walletAddress);
+      const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
     } catch (e) {
       if ((e instanceof Error && /SIGN_REJECTED|POPUP_CLOSED|User cancel|declined/.test(e.message))) {
@@ -125,7 +109,6 @@ export default function OrbitYield() {
       }
     }
   }
-  const sendRaw = sendViaPremon;
   const activeApyPct = dangerous ? DANGER_POOL.apyPct : parseFloat(pool.apy);
   const estimatedYearly = parseFloat(amount || "0") * (activeApyPct / 100);
 
@@ -489,16 +472,6 @@ export default function OrbitYield() {
           </div>
         </div>
       </div>
-
-      <RiskPreview
-        open={previewTx !== null}
-        transaction={previewTx}
-        userWallet={walletAddress ?? null}
-        scenarioLabel={scenarioLabel}
-        onClose={() => setPreviewTx(null)}
-        onProceedWithPremon={sendViaPremon}
-        onProceedRaw={sendRaw}
-      />
     </SiteShell>
   );
 }

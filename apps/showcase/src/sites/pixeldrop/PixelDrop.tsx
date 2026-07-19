@@ -24,9 +24,7 @@ import { DangerModeToggle } from "@premon/showcase-ui";
 import { useWallet } from "../../wallet/context";
 import { SiteShell } from "../../components/SiteShell";
 import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
-import { RiskPreview } from "../../premon/RiskPreview";
 import { buildScenario } from "../../premon/transactions";
-import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#141414",
@@ -154,11 +152,7 @@ export default function PixelDrop() {
   const [resultState, setResultState] = useState<ResultState>("idle");
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
-  const [previewTx, setPreviewTx] = useState<TxRequest | null>(null);
   const success = signature !== null;
-  const scenarioLabel = dangerous
-    ? `Mint ${qty} Cyber Phantom NFT(s) (danger scenario · drainer pattern)`
-    : `Mint ${qty} Cyber Phantom NFT(s) for ${(qty * 0.1).toFixed(2)} MON`;
 
   function reset() {
     setSignature(null);
@@ -166,24 +160,14 @@ export default function PixelDrop() {
     setResultState("idle");
   }
 
+  // Builds the candidate tx and sends it straight to the wallet to sign —
+  // Premon's own pre-sign review happens there, not as a separate step here.
   async function handleMint() {
     if (!connected || !walletAddress) { openWalletModal(); return; }
-    try {
-      const built = await buildScenario(dangerous ? "pixeldrop-danger" : "pixeldrop-safe", walletAddress);
-      setPreviewTx(built.transaction);
-    } catch (e) {
-      setResultState("error");
-      setResultMessage(e instanceof Error ? e.message : String(e));
-    }
-  }
-
-  async function sendViaPremon() {
-    if (!previewTx) return;
-    const tx = previewTx;
-    setPreviewTx(null);
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
     try {
-      const { signature: sig } = await adapter.signAndSendTransaction(tx);
+      const built = await buildScenario(dangerous ? "pixeldrop-danger" : "pixeldrop-safe", walletAddress);
+      const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
     } catch (e) {
       if ((e instanceof Error && /SIGN_REJECTED|POPUP_CLOSED|User cancel|declined/.test(e.message))) {
@@ -193,7 +177,6 @@ export default function PixelDrop() {
       }
     }
   }
-  const sendRaw = sendViaPremon;
 
   const pct = (NFT_COLLECTION.minted / NFT_COLLECTION.supply) * 100;
 
@@ -562,16 +545,6 @@ export default function PixelDrop() {
           </section>
         </motion.div>
       </div>
-
-      <RiskPreview
-        open={previewTx !== null}
-        transaction={previewTx}
-        userWallet={walletAddress ?? null}
-        scenarioLabel={scenarioLabel}
-        onClose={() => setPreviewTx(null)}
-        onProceedWithPremon={sendViaPremon}
-        onProceedRaw={sendRaw}
-      />
     </SiteShell>
   );
 }

@@ -13,7 +13,15 @@ import type {
   RiskFindingPayload,
 } from "@premon/ext-protocol";
 
-const DEFAULT_BASE_URL = "http://localhost:8080";
+// The extension is built once and distributed as a static zip — there's no
+// per-environment rebuild the way the showcase/wallet apps get (those pass
+// VITE_ANALYZE_URL per deploy target). A real user's machine has nothing
+// listening on localhost:8080, so every analyze call silently stalled for
+// the full 12s timeout and came back "offline" — this looked like the
+// simulation step never finishing. Default to the real deployed analyze
+// server; only override via handlers.ts for local development against a
+// server run with `pnpm dev`.
+const DEFAULT_BASE_URL = "https://baret-api.onrender.com";
 const ANALYZE_TIMEOUT_MS = 12_000;
 
 export interface AnalyzeClientOptions {

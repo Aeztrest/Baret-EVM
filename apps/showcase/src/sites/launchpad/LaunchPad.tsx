@@ -9,9 +9,7 @@ import { DangerModeToggle } from "@premon/showcase-ui";
 import { useWallet } from "../../wallet/context";
 import { SiteShell } from "../../components/SiteShell";
 import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
-import { RiskPreview } from "../../premon/RiskPreview";
 import { buildScenario } from "../../premon/transactions";
-import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#C24E02",
@@ -57,7 +55,6 @@ export default function LaunchPad() {
   const [resultState, setResultState] = useState<ResultState>("idle");
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
-  const [previewTx, setPreviewTx] = useState<TxRequest | null>(null);
   const success = signature !== null;
 
   const countdown = useCountdown(LAUNCH_AT);
@@ -67,9 +64,6 @@ export default function LaunchPad() {
   const pct = (raised / goal) * 100;
   const participants = dangerous ? 12 : 3847;
   const project = dangerous ? PROJECTS.danger : PROJECTS.safe;
-  const scenarioLabel = dangerous
-    ? `Contribute ${contribution} USDC to a rug-pull launchpad (danger scenario)`
-    : `Contribute ${contribution} USDC to a vetted token launch`;
 
   function reset() {
     setSignature(null);
@@ -77,24 +71,14 @@ export default function LaunchPad() {
     setResultState("idle");
   }
 
+  // Builds the candidate tx and sends it straight to the wallet to sign —
+  // Premon's own pre-sign review happens there, not as a separate step here.
   async function handleBuy() {
     if (!connected || !walletAddress) { openWalletModal(); return; }
-    try {
-      const built = await buildScenario(dangerous ? "launchpad-danger" : "launchpad-safe", walletAddress);
-      setPreviewTx(built.transaction);
-    } catch (e) {
-      setResultState("error");
-      setResultMessage(e instanceof Error ? e.message : String(e));
-    }
-  }
-
-  async function sendViaPremon() {
-    if (!previewTx) return;
-    const tx = previewTx;
-    setPreviewTx(null);
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
     try {
-      const { signature: sig } = await adapter.signAndSendTransaction(tx);
+      const built = await buildScenario(dangerous ? "launchpad-danger" : "launchpad-safe", walletAddress);
+      const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
     } catch (e) {
       if ((e instanceof Error && /SIGN_REJECTED|POPUP_CLOSED|User cancel|declined/.test(e.message))) {
@@ -104,7 +88,6 @@ export default function LaunchPad() {
       }
     }
   }
-  const sendRaw = sendViaPremon;
 
   // The danger project is styled as polished as the safe one on purpose. The
   // red flags are the quiet kind Premon reads for you: an 87% team allocation
@@ -622,16 +605,6 @@ export default function LaunchPad() {
           </motion.section>
         </div>
       </div>
-
-      <RiskPreview
-        open={previewTx !== null}
-        transaction={previewTx}
-        userWallet={walletAddress ?? null}
-        scenarioLabel={scenarioLabel}
-        onClose={() => setPreviewTx(null)}
-        onProceedWithPremon={sendViaPremon}
-        onProceedRaw={sendRaw}
-      />
     </SiteShell>
   );
 }

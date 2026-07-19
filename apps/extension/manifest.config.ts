@@ -71,7 +71,8 @@ export default defineManifest(({ mode }) => {
       // Default block explorers.
       "https://testnet.monadexplorer.com/*",
       "https://monadexplorer.com/*",
-      // Premon analyze server (dev + production placeholder).
+      // Premon analyze server — production (the real default) + local dev.
+      "https://baret-api.onrender.com/*",
       "http://localhost:8080/*",
     ],
 

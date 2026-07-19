@@ -18,10 +18,8 @@ import {
 import { DangerModeToggle } from "@premon/showcase-ui";
 import { SiteShell } from "../../components/SiteShell";
 import { ResultOverlay, type ResultState } from "../../premon/ResultOverlay";
-import { RiskPreview } from "../../premon/RiskPreview";
 import { buildScenario } from "../../premon/transactions";
 import { useWallet } from "../../wallet/context";
-import type { TxRequest } from "@premon/wallet-adapter";
 
 const THEME = {
   primary: "#FF6B00",
@@ -124,14 +122,10 @@ export default function NovaSwap() {
   const [resultState, setResultState] = useState<ResultState>("idle");
   const [signature, setSignature] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
-  const [previewTx, setPreviewTx] = useState<TxRequest | null>(null);
   const [timeframe, setTimeframe] = useState<(typeof TIMEFRAMES)[number]>("1D");
 
   const outputAmount = fromToken.price * parseFloat(amount || "0") / toToken.price;
   const success = signature !== null;
-  const scenarioLabel = dangerous
-    ? `Swap ${amount} ${fromToken.symbol} → ${toToken.symbol} (danger scenario · drainer pattern)`
-    : `Swap ${amount} ${fromToken.symbol} → ${outputAmount.toFixed(4)} ${toToken.symbol}`;
 
   function reset() {
     setSignature(null);
@@ -139,24 +133,15 @@ export default function NovaSwap() {
     setResultState("idle");
   }
 
+  // Builds the candidate tx and sends it straight to the wallet to sign —
+  // Premon's own pre-sign review happens there, not as a separate step on
+  // this page.
   async function handleSwap() {
     if (!connected || !walletAddress) { openWalletModal(); return; }
-    try {
-      const built = await buildScenario(dangerous ? "novaswap-danger" : "novaswap-safe", walletAddress);
-      setPreviewTx(built.transaction);   // opens RiskPreview — user decides how to send
-    } catch (e) {
-      setResultState("error");
-      setResultMessage(e instanceof Error ? e.message : String(e));
-    }
-  }
-
-  async function sendViaPremon() {
-    if (!previewTx) return;
-    const tx = previewTx;
-    setPreviewTx(null);
     setResultState("awaiting"); setSignature(null); setResultMessage(null);
     try {
-      const { signature: sig } = await adapter.signAndSendTransaction(tx);
+      const built = await buildScenario(dangerous ? "novaswap-danger" : "novaswap-safe", walletAddress);
+      const { signature: sig } = await adapter.signAndSendTransaction(built.transaction);
       setSignature(sig); setResultState("confirmed");
     } catch (e) {
       if ((e instanceof Error && /SIGN_REJECTED|POPUP_CLOSED|User cancel|declined/.test(e.message))) {
@@ -165,13 +150,6 @@ export default function NovaSwap() {
         setResultState("error"); setResultMessage(e instanceof Error ? e.message : String(e));
       }
     }
-  }
-  // "Without protection" = same path through the connected wallet, but no
-  // pre-sign review on the site side. Demo aid only — the wallet still
-  // applies its own policy, since Premon is the wallet itself. To truly
-  // bypass, swap to a different non-Premon wallet from the picker.
-  async function sendRaw() {
-    return sendViaPremon();
   }
 
   function flip() {
@@ -600,16 +578,6 @@ export default function NovaSwap() {
           </div>
         </div>
       </div>
-
-      <RiskPreview
-        open={previewTx !== null}
-        transaction={previewTx}
-        userWallet={walletAddress ?? null}
-        scenarioLabel={scenarioLabel}
-        onClose={() => setPreviewTx(null)}
-        onProceedWithPremon={sendViaPremon}
-        onProceedRaw={sendRaw}
-      />
     </SiteShell>
   );
 }
