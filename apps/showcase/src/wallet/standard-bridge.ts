@@ -24,9 +24,18 @@ import {
 /** EVM testnet chain id. */
 export const CHAIN_ID = 10143;
 
-/** Default origin of the Premon wallet popup. */
+/**
+ * Default origin of the Premon wallet popup — the hosted web-wallet fallback
+ * used when the extension isn't installed/announced. `vercel-build` copies
+ * `apps/wallet`'s build into this site's own `/wallet` path, so the correct
+ * default in any deployed environment (prod, preview, custom domain) is
+ * simply this site's own origin — never a hardcoded domain, which breaks the
+ * moment the site moves (this shipped pointing at a placeholder domain that
+ * doesn't exist and was never reachable).
+ */
 const DEFAULT_WALLET_URL =
-  import.meta.env.VITE_WALLET_URL ?? "http://localhost:5180";
+  import.meta.env.VITE_WALLET_URL ??
+  (typeof window !== "undefined" ? `${window.location.origin}/wallet` : "http://localhost:5180");
 
 export class WalletStandardBridgeError extends Error {
   constructor(

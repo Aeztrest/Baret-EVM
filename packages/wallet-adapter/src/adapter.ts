@@ -34,7 +34,18 @@ export interface ConnectedAccount {
 }
 
 const DEFAULT_TIMEOUT = 5 * 60_000;
-const DEFAULT_FEATURES = "popup=yes,width=440,height=720,top=80,left=80";
+const POPUP_WIDTH = 440;
+const POPUP_HEIGHT = 720;
+
+/** Anchors the popup near the top-right of the current window, like a real wallet dropdown. */
+function defaultPopupFeatures(): string {
+  const parentLeft = window.screenX ?? 0;
+  const parentTop = window.screenY ?? 0;
+  const parentWidth = window.outerWidth ?? 1280;
+  const left = Math.round(parentLeft + parentWidth - POPUP_WIDTH - 12);
+  const top = Math.round(parentTop + 72);
+  return `popup=yes,width=${POPUP_WIDTH},height=${POPUP_HEIGHT},top=${top},left=${left}`;
+}
 
 type Listener = (msg: PopupOutgoing) => void;
 
@@ -145,7 +156,7 @@ export class PremonAdapter {
   /* ────────────── internals ────────────── */
 
   private openPopup(url: string, name: string): Window {
-    const popup = window.open(url, name, this.opts.popupFeatures ?? DEFAULT_FEATURES);
+    const popup = window.open(url, name, this.opts.popupFeatures ?? defaultPopupFeatures());
     if (!popup) {
       throw new WalletAdapterError(
         "Popup blocked by browser. Allow popups for this site to use Premon.",
