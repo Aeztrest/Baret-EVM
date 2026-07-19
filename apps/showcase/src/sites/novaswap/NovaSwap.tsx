@@ -32,11 +32,31 @@ const THEME = {
 // illustrative (no live price feed is wired up); their *balances* are real,
 // read on-chain for the connected wallet — see useTokenBalances below.
 const TOKENS = [
-  { symbol: "MON", name: "Native Token", price: 175.0 },
-  { symbol: "USDC", name: "USD Coin", price: 1.0 },
-  { symbol: "AQUA", name: "Aquarius", price: 3.4 },
-  { symbol: "yMON", name: "Yield MON", price: 178.2 },
+  { symbol: "MON", name: "Native Token", price: 175.0, logo: "/tokens/monad.webp" },
+  { symbol: "USDC", name: "USD Coin", price: 1.0, logo: "/tokens/usdc.webp" },
+  { symbol: "AQUA", name: "Aquarius", price: 3.4, logo: null },
+  { symbol: "yMON", name: "Yield MON", price: 178.2, logo: null },
 ];
+
+function TokenIcon({ token }: { token: (typeof TOKENS)[number] }) {
+  if (token.logo) {
+    return (
+      <img
+        src={token.logo}
+        alt={token.symbol}
+        className="h-5 w-5 shrink-0 rounded-full object-cover"
+      />
+    );
+  }
+  return (
+    <span
+      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-black text-white"
+      style={{ background: "linear-gradient(135deg,#FF6B00,#EA5E00)" }}
+    >
+      {token.symbol[0]}
+    </span>
+  );
+}
 
 export default function NovaSwap() {
   const { connected, openWalletModal, walletAddress, adapter } = useWallet();
@@ -171,7 +191,7 @@ export default function NovaSwap() {
                       placeholder="0"
                     />
                     <button className="flex items-center gap-2 rounded-xl border border-black/5 bg-white px-3 py-1.5 text-sm font-semibold text-ink-900 shadow-sm">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full text-xs font-black text-white" style={{ background: "linear-gradient(135deg,#FF6B00,#EA5E00)" }}>✦</span>
+                      <TokenIcon token={fromToken} />
                       {fromToken.symbol}
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
@@ -201,7 +221,7 @@ export default function NovaSwap() {
                       {isNaN(outputAmount) ? "0" : outputAmount.toFixed(2)}
                     </span>
                     <button className="flex items-center gap-2 rounded-xl border border-black/5 bg-white px-3 py-1.5 text-sm font-semibold text-ink-900 shadow-sm">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full text-xs font-black text-white" style={{ background: "#2775CA" }}>$</span>
+                      <TokenIcon token={toToken} />
                       {toToken.symbol}
                       <ChevronDown size={13} className="text-ink-400" />
                     </button>
